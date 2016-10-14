@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/fast.unity
+- path: Assets/Simoda/Scene1.unity
   isLoaded: 1
   isActive: 1
