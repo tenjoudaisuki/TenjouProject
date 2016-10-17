@@ -26,7 +26,10 @@ public class CameraControl : MonoBehaviour
         NextPointMove();
 
         Ray ray = new Ray(Target.position, nextPoint.normalized);
-        CameraMove(nextPoint * Offset);
+
+        //Debug.DrawRay(Target.position,nextPoint);
+
+        CameraMove(Target.position + nextPoint * Offset);
         RaycastHit hit;
         if (Physics.Raycast(ray,out hit,10))
         {
