@@ -6,9 +6,11 @@ public class CameraControl : MonoBehaviour
     [SerializeField, TooltipAttribute("注視点の対象")]
     public Transform Target;
     [SerializeField, TooltipAttribute("注視点との距離")]
-    public float Offset;
+    public float Distance;
     [SerializeField, TooltipAttribute("X回転の上限下限")]
     public float XAngleLimit;
+    [SerializeField, TooltipAttribute("注視点の調整")]
+    public Vector3 TargetOffset;
 
     private Vector3 nextPoint;
     private float XRotationTotal = 0;
@@ -22,14 +24,14 @@ public class CameraControl : MonoBehaviour
 
     public void LateUpdate()
     {
-        transform.LookAt(Target);
+        transform.LookAt(Target.position + TargetOffset);
         NextPointMove();
 
-        Ray ray = new Ray(Target.position, nextPoint.normalized);
+        Ray ray = new Ray(Target.position + TargetOffset, nextPoint.normalized);
 
-        //Debug.DrawRay(Target.position,nextPoint);
+        Debug.DrawRay(Target.position + TargetOffset, nextPoint);
 
-        CameraMove(Target.position + nextPoint * Offset);
+        CameraMove((Target.position + TargetOffset) + nextPoint * Distance);
         RaycastHit hit;
         if (Physics.Raycast(ray,out hit,10))
         {
