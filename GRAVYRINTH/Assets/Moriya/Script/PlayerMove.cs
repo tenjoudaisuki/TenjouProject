@@ -14,6 +14,7 @@ public class PlayerMove : MonoBehaviour
     /*==所持コンポーネント==*/
     private Transform tr;
     private GravityDirection m_GravityDirection;
+    private Animator m_Animator;
 
     /*==外部設定変数==*/
     [SerializeField, TooltipAttribute("移動速度")]
@@ -32,6 +33,7 @@ public class PlayerMove : MonoBehaviour
     {
         //コンポーネント取得
         tr = GetComponent<Transform>();
+        m_Animator = GetComponent<Animator>();
     }
 
 	void Start ()
