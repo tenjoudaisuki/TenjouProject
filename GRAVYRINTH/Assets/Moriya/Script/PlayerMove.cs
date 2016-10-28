@@ -58,7 +58,7 @@ public class PlayerMove : MonoBehaviour
     private Matrix4x4 m_RotateMatrix;
 
 
-    Vector3 up;
+    Vector3 up = Vector3.up;
 
     /*==外部参照変数==*/
 
@@ -83,14 +83,17 @@ public class PlayerMove : MonoBehaviour
 	
 	void Update() 
     {
-        //移動処理
-        Move();
+        ////移動処理
+        //Move();
 
-        //重力の方向を設定
-        m_GravityDir.SetDirection(GetDown());
+        ////重力の方向を設定
+        //m_GravityDir.SetDirection(GetDown());
 
         //ジャンプ処理
         //Jump();
+
+        Testmove();
+
     }
 
     /// <summary>
@@ -154,7 +157,7 @@ public class PlayerMove : MonoBehaviour
         result.hit = hit;
         
         //レイをデバッグ表示
-        Debug.DrawRay(reyPos, GetDown() * m_Height, Color.grey, 1.0f, false);       
+        //Debug.DrawRay(reyPos, GetDown() * m_Height, Color.grey, 1.0f, false);       
 
         return result;
     }
@@ -212,10 +215,56 @@ public class PlayerMove : MonoBehaviour
             up = hitInfo.hit.normal;
 
             //前
-            Vector3 f = Vector3.Cross( up, m_Camera.right);
-            tr.rotation = Quaternion.LookRotation(f, up);
+            //Vector3 f = Vector3.Cross( up, m_Camera.right);
+            //tr.rotation = Quaternion.LookRotation(f, up);
         }
 
+
+        //ジャンプ処理
+        Jump(hitInfo.isHit);
+    }
+
+    void Testmove()
+    {
+        //地面との判定
+        RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
+        //重力で下方向に移動する
+        Gravity(hitInfo.isHit);
+        if (hitInfo.isHit)
+        {
+            //上方向と平面の法線方向のなす角
+            float angle = Vector3.Angle(tr.up, hitInfo.hit.normal);
+            //斜面として認識する角度以上なら何もしない
+            if (angle > m_SlopeDeg) return;
+
+            //当たった地点に移動
+            tr.position = hitInfo.hit.point;
+
+            //上方向を当たった平面の法線方向に変更
+            up = hitInfo.hit.normal;
+        }
+
+        //前方向を求める
+        Vector3 f = -Vector3.Cross(up, m_Camera.right).normalized;
+        //プレイヤーの回転を計算、代入
+        tr.rotation = Quaternion.LookRotation(f, up);
+
+        Debug.DrawRay(tr.position, tr.up * 20, Color.green, 0.1f, false);
+        Debug.DrawRay(tr.position, tr.forward * 20, Color.blue, 0.1f, false);
+        Debug.DrawRay(tr.position, tr.right * 20, Color.red, 0.1f, false);
+
+
+        //移動方向入力
+        Vector2 inputVec = GetMoveInputAxis();
+        //アニメーション
+        m_Animator.SetBool("InputMove", inputVec.magnitude > 0.5f);
+
+        //入力された値を移動用に補正
+        Vector2 moveVec = MoveInputCorrection(inputVec);
+        //移動方向を計算
+        m_MoveVec = (tr.forward * moveVec.y + tr.right * moveVec.x) * m_MoveSpeed;
+        //移動
+        tr.position += m_MoveVec * Time.deltaTime;
 
         //ジャンプ処理
         Jump(hitInfo.isHit);
@@ -279,7 +328,6 @@ public class PlayerMove : MonoBehaviour
         //}
         //Debug.Log(hitInfo.isHit);
 
-
         if (isGround && Input.GetKeyDown(KeyCode.Space))
             rb.AddForce(tr.up * m_JumpPower);
     }
@@ -298,7 +346,7 @@ public class PlayerMove : MonoBehaviour
         //{
         //    tr.GetComponent<Rigidbody>().velocity = Vector3.zero;
         //}
-        if (isGround)
+        if (!isGround)
             rb.AddForce(GetDown() * m_GravityPower);
         else
             rb.velocity = Vector3.zero;
