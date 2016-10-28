@@ -99,7 +99,7 @@ public class CameraControl : MonoBehaviour
         XAxisTotal = Mathf.Clamp(XAxisTotal, -XAngleLimit, XAngleLimit);
 
         CameraPosDirection = Quaternion.AngleAxis(XAxisTotal, Target.right) * -Target.forward;
-        CameraPosDirection += Quaternion.AngleAxis(30, Target.up) * Vector3.back;
+        CameraPosDirection += Quaternion.AngleAxis(YAxisTotal, Target.up) * Vector3.back;
         //CameraPosDirection = Quaternion.AngleAxis(YAxisTotal, transform.up) * Quaternion.AngleAxis(XAxisTotal, transform.right) * new Vector3(0,0,-1); //プレイヤーの後方ベクトルを使わない
     }
 
