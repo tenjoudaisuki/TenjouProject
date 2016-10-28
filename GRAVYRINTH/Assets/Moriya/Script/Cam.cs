@@ -12,20 +12,18 @@ public class Cam : MonoBehaviour
     [SerializeField, TooltipAttribute("注視点の調整")]
     public Vector3 TargetOffset;
 
+    private Vector3 offset;
     private Vector3 nextPoint;
-    private float XRotationTotal = 0;
+    private float XAxisTotal = 0;
+    private float YAxisTotal = 0;
+    private Transform FastTransform;
 
     // Use this for initialization
     void Start()
     {
-        nextPoint = new Vector3(0, 0, -1);
-        //transform.position = Target.position * Offset;
-    }
+        nextPoint = -Target.forward;
 
-    public void LateUpdate()
-    {
-
-
+        transform.LookAt(Target.position + TargetOffset);
         NextPointMove();
 
         Ray ray = new Ray(Target.position + TargetOffset, nextPoint.normalized);
@@ -34,13 +32,36 @@ public class Cam : MonoBehaviour
 
         CameraMove((Target.position + TargetOffset) + nextPoint * Distance);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 10))
+        if (Physics.Raycast(ray, out hit, Distance))
         {
             CameraMove(hit.point);
         }
 
-        transform.up = Target.up;
-        transform.LookAt(Target.position + TargetOffset);
+        FastTransform = transform;
+    }
+
+    public void LateUpdate()
+    {
+        offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
+
+        transform.LookAt(Target.position + offset, Target.up);
+        NextPointMove();
+
+        Ray ray = new Ray(Target.position + offset, nextPoint.normalized);
+
+        Debug.DrawRay(Target.position + offset, nextPoint);
+
+        CameraMove((Target.position + offset) + nextPoint * Distance);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, Distance))
+        {
+            CameraMove(hit.point);
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            CameraReset();
+        }
     }
 
     //カメラが次に行きたい位置を変更
@@ -49,18 +70,30 @@ public class Cam : MonoBehaviour
         float X = -Input.GetAxis("Horizontal2");
         float Y = -Input.GetAxis("Vertical2");
 
-        nextPoint = Quaternion.Euler(0, X, 0) * nextPoint;
+        YAxisTotal += X;
+        XAxisTotal += Y;
+        XAxisTotal = Mathf.Clamp(XAxisTotal, -XAngleLimit, XAngleLimit);
 
-        XRotationTotal += Y;
-        XRotationTotal = Mathf.Clamp(XRotationTotal, -XAngleLimit, XAngleLimit);
-        if (XRotationTotal < XAngleLimit && -XAngleLimit < XRotationTotal)
-        {
-            nextPoint = Quaternion.AngleAxis(Y, transform.right) * nextPoint;
-        }
+        //nextPoint = Target.localRotation * nextPoint; * Target.localRotation * nextPoint;
+        nextPoint = Quaternion.AngleAxis(YAxisTotal, Target.up) * Quaternion.AngleAxis(XAxisTotal, Target.right) * -Target.forward;
+
+        //XAxisTotal += Y;
+        //XAxisTotal = Mathf.Clamp(XAxisTotal, -XAngleLimit, XAngleLimit);
+        //if (XAxisTotal < XAngleLimit && -XAngleLimit < XAxisTotal){
+        //   nextPoint = Quaternion.AngleAxis(Y, Target.right) * -Target.forward;
+        //}
     }
 
     private void CameraMove(Vector3 next)
     {
         transform.position = Vector3.Lerp(transform.position, next, 0.8f);
+    }
+
+    private void CameraReset()
+    {
+        nextPoint = new Vector3(0, 0, -1);
+        transform.position = FastTransform.position;
+        transform.localRotation = FastTransform.localRotation;
+        XAxisTotal = 0;
     }
 }
