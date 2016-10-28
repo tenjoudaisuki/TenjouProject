@@ -13,7 +13,10 @@ public class CameraControl : MonoBehaviour
     public Vector3 TargetOffset;
 
     private Vector3 offset;
-    private Vector3 nextPoint;
+    /// <summary>
+    /// カメラの位置の方向
+    /// </summary>
+    private Vector3 CameraPosDirection;
     private float XAxisTotal = 0;
     private float YAxisTotal = 0;
     private Transform FastTransform;
@@ -21,20 +24,25 @@ public class CameraControl : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        nextPoint = -Target.forward;
+        offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
 
-        transform.LookAt(Target.position + TargetOffset);
-        NextPointMove();
+        transform.localRotation = Quaternion.Slerp(transform.localRotation,
+            Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up), 0.5f);
 
-        Ray ray = new Ray(Target.position + TargetOffset, nextPoint.normalized);
+        CameraPosDirectionRotation();
 
-        Debug.DrawRay(Target.position + TargetOffset, nextPoint);
+        Ray ray = new Ray(Target.position + offset, CameraPosDirection.normalized);
 
-        CameraMove((Target.position + TargetOffset) + nextPoint * Distance);
+        Debug.DrawRay(Target.position + offset, CameraPosDirection, Color.yellow);
+
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, Distance))
         {
             CameraMove(hit.point);
+        }
+        else
+        {
+            CameraMove((Target.position + offset) + (CameraPosDirection * Distance));
         }
 
         FastTransform = transform;
@@ -44,18 +52,23 @@ public class CameraControl : MonoBehaviour
     {
         offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
 
-        transform.LookAt(Target.position + offset,Target.up);
-        NextPointMove();
+        transform.localRotation = Quaternion.Slerp(transform.localRotation,
+            Quaternion.LookRotation((Target.position + offset) - transform.position,Target.up),0.5f);
 
-        Ray ray = new Ray(Target.position + offset, nextPoint.normalized);
+        CameraPosDirectionRotation();
 
-        Debug.DrawRay(Target.position + offset, nextPoint);
+        Ray ray = new Ray(Target.position + offset, CameraPosDirection.normalized);
 
-        CameraMove((Target.position + offset) + nextPoint * Distance);
+        Debug.DrawRay(Target.position + offset, CameraPosDirection,Color.yellow);
+
         RaycastHit hit;
         if (Physics.Raycast(ray,out hit,Distance))
         {
             CameraMove(hit.point);
+        }
+        else
+        {
+            CameraMove((Target.position + offset) + (CameraPosDirection * Distance));
         }
 
         if(Input.GetKeyDown(KeyCode.T))
@@ -64,34 +77,38 @@ public class CameraControl : MonoBehaviour
         }
     }
 
-    //カメラが次に行きたい位置を変更
-    private void NextPointMove()
+    /// <summary>
+    /// カメラの位置の方向を回転させる
+    /// </summary>
+    private void CameraPosDirectionRotation()
     {
-        float X = -Input.GetAxis("Horizontal2");
-        float Y = -Input.GetAxis("Vertical2");
+        float horizontal = -Input.GetAxis("Horizontal2");
+        float vertical = -Input.GetAxis("Vertical2");
 
-        YAxisTotal += X;
-        XAxisTotal += Y;
+        YAxisTotal += horizontal;
+        XAxisTotal += vertical;
         XAxisTotal = Mathf.Clamp(XAxisTotal, -XAngleLimit, XAngleLimit);
 
-        //nextPoint = Target.localRotation * nextPoint; * Target.localRotation * nextPoint;
-        nextPoint = Quaternion.AngleAxis(YAxisTotal, Target.up) * Quaternion.AngleAxis(XAxisTotal, Target.right) * -Target.forward;
-
-        //XAxisTotal += Y;
-        //XAxisTotal = Mathf.Clamp(XAxisTotal, -XAngleLimit, XAngleLimit);
-        //if (XAxisTotal < XAngleLimit && -XAngleLimit < XAxisTotal){
-        //   nextPoint = Quaternion.AngleAxis(Y, Target.right) * -Target.forward;
-        //}
+        CameraPosDirection = Quaternion.AngleAxis(YAxisTotal, Target.up) * Quaternion.AngleAxis(XAxisTotal, Target.right) * -Target.forward;
+        //確認用
+        //nextPoint = Quaternion.AngleAxis(YAxisTotal, Target.up) * Quaternion.AngleAxis(XAxisTotal, Target.right) * new Vector3(0,0,-1);
     }
 
+    /// <summary>
+    /// カメラ位置を移動させる
+    /// </summary>
+    /// <param name="next">移動先</param>
     private void CameraMove(Vector3 next)
     {
-         transform.position = Vector3.Lerp(transform.position,next,0.8f);
+         transform.position = Vector3.Lerp(transform.position,next,0.08f);
     }
 
+    /// <summary>
+    /// カメラを最初の状態に
+    /// </summary>
     private void CameraReset()
     {
-        nextPoint = new Vector3(0, 0, -1);
+        CameraPosDirection = new Vector3(0, 0, -1);
         transform.position = FastTransform.position;
         transform.localRotation = FastTransform.localRotation;
         XAxisTotal = 0;
