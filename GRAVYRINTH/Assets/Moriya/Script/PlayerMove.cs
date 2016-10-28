@@ -48,10 +48,6 @@ public class PlayerMove : MonoBehaviour
     //移動方向
     private Vector3 m_MoveVec;
 
-    private Vector3 up;
-    private Vector3 forward;
-    private Vector3 right;
-
     /*==外部参照変数==*/
 
     void Awake()
@@ -66,7 +62,7 @@ public class PlayerMove : MonoBehaviour
         //オブジェクト取得
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
         m_ModelTr = tr.FindChild("Model");
-        m_Camera = Camera.main.transform;;
+        m_Camera = Camera.main.transform;
 
         //値初期化
         m_ModelRotateY = 0.0f;
@@ -81,7 +77,7 @@ public class PlayerMove : MonoBehaviour
         m_GravityDir.SetDirection(GetDown());
 
         //ジャンプ処理
-        Jump();
+        //Jump();
     }
 
     /// <summary>
@@ -201,10 +197,14 @@ public class PlayerMove : MonoBehaviour
             tr.position = hitInfo.hit.point;
 
             //上方向を当たった平面の法線方向に変更
-            up = hitInfo.hit.normal;
-        }
+            tr.up = hitInfo.hit.normal;
 
-        tr.up = up;
+            //ジャンプ
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                tr.GetComponent<Rigidbody>().AddForce(tr.up * 200);
+            }
+        }
     }
 
     /// <summary>
@@ -263,6 +263,7 @@ public class PlayerMove : MonoBehaviour
         }
         Debug.Log(hitInfo.isHit);
     }
+
     /// <summary>
     /// 重力（仮）
     /// </summary>
