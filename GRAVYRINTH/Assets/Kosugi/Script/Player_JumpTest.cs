@@ -10,7 +10,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerMove : MonoBehaviour 
+public class Player_JumpTest : MonoBehaviour
 {
     //当たったかどうか付のRaycastHit
     struct RayHitInfo
@@ -48,9 +48,8 @@ public class PlayerMove : MonoBehaviour
     //移動方向
     private Vector3 m_MoveVec;
 
-    private Vector3 up;
-    private Vector3 forward;
-    private Vector3 right;
+    //ジャンプ判定
+    private bool isJump;
 
     /*==外部参照変数==*/
 
@@ -61,18 +60,18 @@ public class PlayerMove : MonoBehaviour
         m_Animator = GetComponent<Animator>();
     }
 
-	void Start()
+    void Start()
     {
         //オブジェクト取得
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
         m_ModelTr = tr.FindChild("Model");
-        m_Camera = Camera.main.transform;;
+        m_Camera = Camera.main.transform; ;
 
         //値初期化
         m_ModelRotateY = 0.0f;
-	}
-	
-	void Update() 
+    }
+
+    void Update()
     {
         //移動処理
         Move();
@@ -143,9 +142,9 @@ public class PlayerMove : MonoBehaviour
         RaycastHit hit;
         result.isHit = Physics.Raycast(ray, out hit, m_Height);
         result.hit = hit;
-        
+
         //レイをデバッグ表示
-        Debug.DrawRay(reyPos, GetDown() * m_Height, Color.grey, 1.0f, false);       
+        Debug.DrawRay(reyPos, GetDown() * m_Height, Color.grey, 1.0f, false);
 
         return result;
     }
@@ -156,24 +155,22 @@ public class PlayerMove : MonoBehaviour
     private void NormalMove()
     {
         //移動方向入力
-        Vector2 inputVec = GetMoveInputWASD();
+        Vector2 inputVec = GetMoveInputAxis();
 
         //アニメーション
         m_Animator.SetBool("InputMove", inputVec.magnitude > 0.0f);
-
-        ////入力方向からモデルの回転量を求める（上手くいかないっぽい。ほかの方法を考える。）
-        //if (inputVec.magnitude > 0.1f)
-        //{
-        //    //入力方向を角度に変換
-        //    m_ModelRotateY = Mathf.Atan2(-inputVec.y, inputVec.x) * Mathf.Rad2Deg;
-        //    //カメラの向きとプレイヤーのデフォルト向きを加味して補正
-        //    m_ModelRotateY += m_Camera.localEulerAngles.y + 90.0f;
-        //    //回転
-        //    Vector3 angles = m_ModelTr.localEulerAngles;
-        //    angles.y = m_ModelRotateY;
-        //    m_ModelTr.localEulerAngles = angles;
-        //}
-
+        //入力方向からモデルの回転量を求める（あまりイケてないのでいい方法あったら教えて）
+        if (inputVec.magnitude > 0.1f)
+        {
+            //入力方向を角度に変換
+            m_ModelRotateY = Mathf.Atan2(-inputVec.y, inputVec.x) * Mathf.Rad2Deg;
+            //カメラの向きとプレイヤーのデフォルト向きを加味して補正
+            m_ModelRotateY += m_Camera.localEulerAngles.y + 90.0f;
+            //回転
+            Vector3 angles = m_ModelTr.localEulerAngles;
+            angles.y = m_ModelRotateY;
+            m_ModelTr.localEulerAngles = angles;
+        }
 
         //入力された値を移動用に補正
         Vector2 moveVec = MoveInputCorrection(inputVec);
@@ -199,12 +196,9 @@ public class PlayerMove : MonoBehaviour
 
             //当たった地点に移動
             tr.position = hitInfo.hit.point;
-
             //上方向を当たった平面の法線方向に変更
-            up = hitInfo.hit.normal;
+            tr.up = hitInfo.hit.normal;
         }
-
-        tr.up = up;
     }
 
     /// <summary>
@@ -249,19 +243,18 @@ public class PlayerMove : MonoBehaviour
 
 
     /// <summary>
-    /// ジャンプ処理（小杉さんのタスク）
+    /// ジャンプ処理
     /// </summary>
     private void Jump()
     {
         RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
         if (hitInfo.isHit)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if(Input.GetKeyDown(KeyCode.Space))
             {
                 tr.GetComponent<Rigidbody>().AddForce(tr.up * 200);
             }
         }
-        Debug.Log(hitInfo.isHit);
     }
     /// <summary>
     /// 重力（仮）
