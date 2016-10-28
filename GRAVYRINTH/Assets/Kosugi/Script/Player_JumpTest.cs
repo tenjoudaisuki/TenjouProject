@@ -10,7 +10,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerMove : MonoBehaviour 
+public class Player_JumpTest : MonoBehaviour
 {
     //当たったかどうか付のRaycastHit
     struct RayHitInfo
@@ -48,6 +48,9 @@ public class PlayerMove : MonoBehaviour
     //移動方向
     private Vector3 m_MoveVec;
 
+    //ジャンプ判定
+    private bool isJump;
+
     /*==外部参照変数==*/
 
     void Awake()
@@ -57,18 +60,18 @@ public class PlayerMove : MonoBehaviour
         m_Animator = GetComponent<Animator>();
     }
 
-	void Start()
+    void Start()
     {
         //オブジェクト取得
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
         m_ModelTr = tr.FindChild("Model");
-        m_Camera = Camera.main.transform;;
+        m_Camera = Camera.main.transform; ;
 
         //値初期化
         m_ModelRotateY = 0.0f;
-	}
-	
-	void Update() 
+    }
+
+    void Update()
     {
         //移動処理
         Move();
@@ -139,9 +142,9 @@ public class PlayerMove : MonoBehaviour
         RaycastHit hit;
         result.isHit = Physics.Raycast(ray, out hit, m_Height);
         result.hit = hit;
-        
+
         //レイをデバッグ表示
-        Debug.DrawRay(reyPos, GetDown() * m_Height, Color.grey, 1.0f, false);       
+        Debug.DrawRay(reyPos, GetDown() * m_Height, Color.grey, 1.0f, false);
 
         return result;
     }
@@ -240,19 +243,18 @@ public class PlayerMove : MonoBehaviour
 
 
     /// <summary>
-    /// ジャンプ処理（小杉さんのタスク）
+    /// ジャンプ処理
     /// </summary>
     private void Jump()
     {
         RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
         if (hitInfo.isHit)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if(Input.GetKeyDown(KeyCode.Space))
             {
                 tr.GetComponent<Rigidbody>().AddForce(tr.up * 200);
             }
         }
-        Debug.Log(hitInfo.isHit);
     }
     /// <summary>
     /// 重力（仮）
