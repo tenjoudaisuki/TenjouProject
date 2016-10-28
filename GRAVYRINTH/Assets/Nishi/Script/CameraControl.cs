@@ -48,18 +48,26 @@ public class CameraControl : MonoBehaviour
         FastTransform = transform;
     }
 
-    public void LateUpdate()
+    public void Update()
     {
         offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
 
         transform.localRotation = Quaternion.Slerp(transform.localRotation,
             Quaternion.LookRotation((Target.position + offset) - transform.position,Target.up),0.5f);
+        Vector3 f = (Target.position + offset) - transform.position;
+        Vector3 up = Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up;
+
+        transform.localRotation = Quaternion.LookRotation(f.normalized, up);
 
         CameraPosDirectionRotation();
 
         Ray ray = new Ray(Target.position + offset, CameraPosDirection.normalized);
 
         Debug.DrawRay(Target.position + offset, CameraPosDirection,Color.yellow);
+
+        Debug.DrawRay(transform.position, transform.up * 20, Color.green, 0.1f, false);
+        Debug.DrawRay(transform.position, transform.forward * 20, Color.blue, 0.1f, false);
+        Debug.DrawRay(transform.position, transform.right * 20, Color.red, 0.1f, false);
 
         //RaycastHit hit;
         //if (Physics.Raycast(ray,out hit,Distance))
@@ -83,15 +91,16 @@ public class CameraControl : MonoBehaviour
     /// </summary>
     private void CameraPosDirectionRotation()
     {
-        float horizontal = -Input.GetAxis("Horizontal2");
-        float vertical = -Input.GetAxis("Vertical2");
+        float horizontal = -Input.GetAxisRaw("Horizontal2");
+        float vertical = -Input.GetAxisRaw("Vertical2");
 
         YAxisTotal += horizontal;
         XAxisTotal += vertical;
         XAxisTotal = Mathf.Clamp(XAxisTotal, -XAngleLimit, XAngleLimit);
 
-        //CameraPosDirection = Quaternion.AngleAxis(YAxisTotal, Target.up) * Quaternion.AngleAxis(XAxisTotal, Target.right) * -Target.forward;
-        CameraPosDirection = Quaternion.AngleAxis(YAxisTotal, transform.up) * Quaternion.AngleAxis(XAxisTotal, transform.right) * new Vector3(0,0,-1); //プレイヤーの後方ベクトルを使わない
+        CameraPosDirection = Quaternion.AngleAxis(XAxisTotal, Target.right) * -Target.forward;
+        CameraPosDirection += Quaternion.AngleAxis(30, Target.up) * Vector3.back;
+        //CameraPosDirection = Quaternion.AngleAxis(YAxisTotal, transform.up) * Quaternion.AngleAxis(XAxisTotal, transform.right) * new Vector3(0,0,-1); //プレイヤーの後方ベクトルを使わない
     }
 
     /// <summary>
@@ -100,7 +109,8 @@ public class CameraControl : MonoBehaviour
     /// <param name="next">移動先</param>
     private void CameraMove(Vector3 next)
     {
-         transform.position = Vector3.Lerp(transform.position,next,0.08f);
+        transform.position = Vector3.Lerp(transform.position, next, 0.08f);
+        //transform.position = next;
     }
 
     /// <summary>
