@@ -35,15 +35,15 @@ public class CameraControl : MonoBehaviour
 
         Debug.DrawRay(Target.position + offset, CameraPosDirection, Color.yellow);
 
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, Distance))
-        {
-            CameraMove(hit.point);
-        }
-        else
-        {
-            CameraMove((Target.position + offset) + (CameraPosDirection * Distance));
-        }
+        //RaycastHit hit;
+        //if (Physics.Raycast(ray, out hit, Distance))
+        //{
+        //    CameraMove(hit.point);
+        //}
+        //else
+        //{
+        //    CameraMove((Target.position + offset) + (CameraPosDirection * Distance));
+        //}
 
         FastTransform = transform;
     }
@@ -61,17 +61,18 @@ public class CameraControl : MonoBehaviour
 
         Debug.DrawRay(Target.position + offset, CameraPosDirection,Color.yellow);
 
-        RaycastHit hit;
-        if (Physics.Raycast(ray,out hit,Distance))
-        {
-            CameraMove(hit.point);
-        }
-        else
-        {
-            CameraMove((Target.position + offset) + (CameraPosDirection * Distance));
-        }
+        //RaycastHit hit;
+        //if (Physics.Raycast(ray,out hit,Distance))
+        //{
+        //    CameraMove(hit.point);
+        //}
+        //else
+        //{
+        //    CameraMove((Target.position + offset) + (CameraPosDirection * Distance));
+        //}
+        CameraMove((Target.position + offset) + (CameraPosDirection * Distance));
 
-        if(Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.T))
         {
             CameraReset();
         }
