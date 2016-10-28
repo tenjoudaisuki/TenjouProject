@@ -22,7 +22,7 @@ public class PlayerMove : MonoBehaviour
 
     /*==所持コンポーネント==*/
     private Transform tr;
-
+    private Rigidbody rb;
     private Animator m_Animator;
 
 
@@ -33,6 +33,12 @@ public class PlayerMove : MonoBehaviour
     private float m_Height = 2.0f;
     [SerializeField, TooltipAttribute("斜面と認識する角度（壁と斜面の境界値）")]
     private float m_SlopeDeg = 45.0f;
+    [SerializeField, TooltipAttribute("ジャンプ力")]
+    private float m_JumpPower = 200.0f;
+    [SerializeField, TooltipAttribute("重力の強さ")]
+    private float m_GravityPower = 4.0f;
+
+
 
     /*==内部設定変数==*/
     //重力の方向を所持するクラス。プレイヤー以外で重力を扱う場合こちらのクラスを使用してください。
@@ -48,12 +54,19 @@ public class PlayerMove : MonoBehaviour
     //移動方向
     private Vector3 m_MoveVec;
 
+    //プレイヤーの回転行列
+    private Matrix4x4 m_RotateMatrix;
+
+
+    Vector3 up;
+
     /*==外部参照変数==*/
 
     void Awake()
     {
         //コンポーネント取得
         tr = GetComponent<Transform>();
+        rb = GetComponent<Rigidbody>();
         m_Animator = GetComponent<Animator>();
     }
 
@@ -152,7 +165,7 @@ public class PlayerMove : MonoBehaviour
     private void NormalMove()
     {
         //移動方向入力
-        Vector2 inputVec = GetMoveInputWASD();
+        Vector2 inputVec = GetMoveInputAxis();
 
         //アニメーション
         m_Animator.SetBool("InputMove", inputVec.magnitude > 0.0f);
@@ -170,7 +183,6 @@ public class PlayerMove : MonoBehaviour
         //    m_ModelTr.localEulerAngles = angles;
         //}
 
-
         //入力された値を移動用に補正
         Vector2 moveVec = MoveInputCorrection(inputVec);
         //進行方向である右方向と前方向を決定
@@ -181,11 +193,11 @@ public class PlayerMove : MonoBehaviour
         //移動
         tr.position += m_MoveVec * Time.deltaTime;
 
-        //仮重力
-        //tr.position += GetDown() * 1.98f * Time.deltaTime;
-        Gravity();
+
         //地面との判定
         RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
+        //重力で下方向に移動する
+        Gravity(hitInfo.isHit);
         if (hitInfo.isHit)
         {
             //上方向と平面の法線方向のなす角
@@ -197,14 +209,16 @@ public class PlayerMove : MonoBehaviour
             tr.position = hitInfo.hit.point;
 
             //上方向を当たった平面の法線方向に変更
-            tr.up = hitInfo.hit.normal;
+            up = hitInfo.hit.normal;
 
-            //ジャンプ
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                tr.GetComponent<Rigidbody>().AddForce(tr.up * 200);
-            }
+            //前
+            Vector3 f = Vector3.Cross( up, m_Camera.right);
+            tr.rotation = Quaternion.LookRotation(f, up);
         }
+
+
+        //ジャンプ処理
+        Jump(hitInfo.isHit);
     }
 
     /// <summary>
@@ -219,7 +233,7 @@ public class PlayerMove : MonoBehaviour
 
         //仮重力
         //tr.position += GetDown() * 1.98f * Time.deltaTime;
-        Gravity();
+        //Gravity();
         //地面との判定
         RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
         if (hitInfo.isHit)
@@ -236,12 +250,14 @@ public class PlayerMove : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.LeftShift))
         {
+            //転がり移動
             m_Animator.SetBool("InputRoll", true);
             m_Animator.SetBool("InputMove", false);
             RollMove();
         }
         else
         {
+            //通常移動
             m_Animator.SetBool("InputRoll", false);
             NormalMove();
         }
@@ -251,32 +267,40 @@ public class PlayerMove : MonoBehaviour
     /// <summary>
     /// ジャンプ処理（小杉さんのタスク）
     /// </summary>
-    private void Jump()
+    private void Jump(bool isGround)
     {
-        RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
-        if (hitInfo.isHit)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                tr.GetComponent<Rigidbody>().AddForce(tr.up * 200);
-            }
-        }
-        Debug.Log(hitInfo.isHit);
+        //RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
+        //if (hitInfo.isHit)
+        //{
+        //    if (Input.GetKeyDown(KeyCode.Space))
+        //    {
+        //        tr.GetComponent<Rigidbody>().AddForce(tr.up * m_JumpPower);
+        //    }
+        //}
+        //Debug.Log(hitInfo.isHit);
+
+
+        if (isGround && Input.GetKeyDown(KeyCode.Space))
+            rb.AddForce(tr.up * m_JumpPower);
     }
 
     /// <summary>
     /// 重力（仮）
     /// </summary>
-    private void Gravity()
+    private void Gravity(bool isGround)
     {
-        RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
-        if (!hitInfo.isHit)
-        {
-            tr.GetComponent<Rigidbody>().AddForce(GetDown() * 9.8f);
-        }
+        //RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
+        //if (!hitInfo.isHit)
+        //{
+        //    tr.GetComponent<Rigidbody>().AddForce(GetDown() * m_GravityPower);
+        //}
+        //else
+        //{
+        //    tr.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        //}
+        if (isGround)
+            rb.AddForce(GetDown() * m_GravityPower);
         else
-        {
-            tr.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        }
+            rb.velocity = Vector3.zero;
     }
 }
