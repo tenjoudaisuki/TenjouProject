@@ -59,6 +59,8 @@ public class PlayerMove : MonoBehaviour
 
 
     Vector3 up = Vector3.up;
+    float y;
+    private Vector3 front = Vector3.forward;
 
     /*==外部参照変数==*/
 
@@ -92,7 +94,8 @@ public class PlayerMove : MonoBehaviour
         //ジャンプ処理
         //Jump();
 
-        Testmove();
+        NormalMove2();
+        //Testmove();
 
     }
 
@@ -266,6 +269,64 @@ public class PlayerMove : MonoBehaviour
         //移動
         tr.position += m_MoveVec * Time.deltaTime;
 
+        //ジャンプ処理
+        Jump(hitInfo.isHit);
+    }
+
+    /// <summary>
+    /// 通常移動
+    /// 作成　西
+    /// </summary>
+    private void NormalMove2()
+    {
+        //移動方向入力
+        Vector2 inputVec = GetMoveInputAxis();
+        //Debug.Log(inputVec);
+
+        //アニメーション
+        m_Animator.SetBool("InputMove", inputVec.magnitude > 0.0f);
+
+        //地面との判定
+        RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
+        //重力で下方向に移動する
+        Gravity(hitInfo.isHit);
+        if (hitInfo.isHit)
+        {
+            //上方向と平面の法線方向のなす角
+            float angle = Vector3.Angle(tr.up, hitInfo.hit.normal);
+            //斜面として認識する角度以上なら何もしない
+            if (angle > m_SlopeDeg) return;
+
+            //当たった地点に移動
+            tr.position = hitInfo.hit.point;
+
+            //上方向を当たった平面の法線方向に変更
+            up = hitInfo.hit.normal;
+        }
+
+        //スティックが入力されたら向きを変える
+        if (inputVec.magnitude > 0.1f)
+        {
+            //スティックの傾きを↑を0°として計算
+            y = Vector2.Angle(Vector2.up, inputVec);
+            //ステイックが左に傾いていればyをマイナスに
+            if (inputVec.x < 0) y = -y;
+        }
+
+        //地面の上方向とカメラの右方向で外積を取得
+        Vector3 camerafoward = -Vector3.Cross(up, m_Camera.right);
+        //外積をスティックの角度で回転させて前ベクトルを計算
+        front = Quaternion.AngleAxis(y, up) * camerafoward;
+
+        //プレイヤーの前ベクトルと上ベクトルを決定
+        //tr.localRotation = Quaternion.LookRotation(front, up);
+        Quaternion rotate = Quaternion.LookRotation(front, up);
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
+
+        //前ベクトル×スティックの傾き
+        m_MoveVec = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
+        //移動
+        tr.position += m_MoveVec * Time.deltaTime;
         //ジャンプ処理
         Jump(hitInfo.isHit);
     }
