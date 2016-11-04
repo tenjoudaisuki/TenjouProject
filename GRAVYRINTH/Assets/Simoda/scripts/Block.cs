@@ -7,7 +7,7 @@ public class Block : MonoBehaviour
     private Transform tr;
     private Vector3 offset;
     private Vector3 moveDirection;
-    private Vector3 moveVec;
+    public Vector3 moveVec;
     public bool isPush;
     public float offsetY;
     public float pushDistance;
@@ -22,20 +22,19 @@ public class Block : MonoBehaviour
 
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.T))
-        //{
-        //    moveDirection = Vector3.Normalize(GetPlayerDirection().normal);
-        //    isPush = true;
-        //    player.GetComponent<PlayerBlockPush>().SetCollisionBlock(gameObject);
-        //}
+        //print(moveDirection);
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            moveDirection = Vector3.Normalize(GetPlayerDirection().normal);
+            isPush = true;
+            player.GetComponent<PlayerBlockPush>().SetCollisionBlock(gameObject);
+        }
 
-        //if (Input.GetKeyUp(KeyCode.T))
-        //{
-        //    isPush = false;
-        //    player.GetComponent<PlayerBlockPush>().SetCollisionBlock(null);
-        //}
-
-        print(moveDirection);
+        if (Input.GetKeyUp(KeyCode.T))
+        {
+            isPush = false;
+            player.GetComponent<PlayerBlockPush>().SetCollisionBlock(null);
+        }
 
         BlockMove();
     }
@@ -44,7 +43,19 @@ public class Block : MonoBehaviour
     {
         if (isPush == false) return;
 
-        if (Vector3.Dot(player.up, GetPlayerDirection().normal) != 0) return;
+        //print(player.up);
+        //print(GetPlayerDirection().normal);
+        //print(player.up + " " + GetPlayerDirection().normal + " " + Vector3.Dot(Vector3.Normalize(player.up), Vector3.Normalize(GetPlayerDirection().normal)));
+        //print("up,-forward" + tr.up + " " + -tr.forward + " " + Vector3.Dot(tr.up, -tr.forward));
+        float dot = Vector3.Dot(player.up, GetPlayerDirection().normal);
+        float dotAbs = Mathf.Abs(dot);
+        float dotInt = Mathf.FloorToInt(dotAbs);
+        print(dotInt);
+        //dot = Mathf.Clamp(dot, 0.0f, 1.0f);
+        //print(player.up);
+        //print(GetPlayerDirection().normal);
+        if (dotInt != 0) return;
+
 
         tr.position += moveVec * Time.deltaTime;
     }
