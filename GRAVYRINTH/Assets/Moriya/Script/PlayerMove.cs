@@ -47,15 +47,12 @@ public class PlayerMove : MonoBehaviour
     private Transform m_ModelTr;
     //プレイヤーモデルのＹ軸回転量
     private float m_ModelRotateY;
-
     //カメラ
     private Transform m_Camera;
-
     //移動方向
     private Vector3 m_MoveVec;
-
-    //プレイヤーの回転行列
-    private Matrix4x4 m_RotateMatrix;
+    //地面とのヒット情報
+    RayHitInfo m_GroundHitInfo;
 
 
     Vector3 up = Vector3.up;
@@ -81,22 +78,43 @@ public class PlayerMove : MonoBehaviour
 
         //値初期化
         m_ModelRotateY = 0.0f;
+
+        m_GroundHitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
 	}
 	
 	void Update() 
     {
-        ////移動処理
-        //Move();
+        //移動処理
+        Move();
 
-        ////重力の方向を設定
-        //m_GravityDir.SetDirection(GetDown());
+    }
 
-        //ジャンプ処理
-        //Jump();
+    void LateUpdate()
+    {
+        //地面との判定
+        m_GroundHitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
+        print(m_GroundHitInfo.isHit);
+    }
 
-        NormalMove2();
-        //Testmove();
-
+    /// <summary>
+    /// 移動処理
+    /// </summary>
+    private void Move()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {            
+            //転がり移動
+            m_Animator.SetBool("InputRoll", true);
+            m_Animator.SetBool("InputMove", false);
+            m_Animator.SetBool("InputJump", false);
+            RollMove();
+        }
+        else
+        {
+            //通常移動
+            m_Animator.SetBool("InputRoll", false);
+            NormalMove();
+        }
     }
 
     /// <summary>
@@ -166,65 +184,53 @@ public class PlayerMove : MonoBehaviour
     }
 
     /// <summary>
-    /// 通常移動処理
+    /// 地面の移動処理
     /// </summary>
     private void NormalMove()
     {
         //移動方向入力
         Vector2 inputVec = GetMoveInputAxis();
-
-        //アニメーション
+        //アニメーション変更
         m_Animator.SetBool("InputMove", inputVec.magnitude > 0.0f);
 
-        ////入力方向からモデルの回転量を求める（上手くいかないっぽい。ほかの方法を考える。）
-        //if (inputVec.magnitude > 0.1f)
-        //{
-        //    //入力方向を角度に変換
-        //    m_ModelRotateY = Mathf.Atan2(-inputVec.y, inputVec.x) * Mathf.Rad2Deg;
-        //    //カメラの向きとプレイヤーのデフォルト向きを加味して補正
-        //    m_ModelRotateY += m_Camera.localEulerAngles.y + 90.0f;
-        //    //回転
-        //    Vector3 angles = m_ModelTr.localEulerAngles;
-        //    angles.y = m_ModelRotateY;
-        //    m_ModelTr.localEulerAngles = angles;
-        //}
-
-        //入力された値を移動用に補正
-        Vector2 moveVec = MoveInputCorrection(inputVec);
-        //進行方向である右方向と前方向を決定
-        Vector3 right = m_Camera.transform.right;
-        Vector3 front = -Vector3.Cross(tr.up, right);
-        //移動方向を計算
-        m_MoveVec = (front * moveVec.y + right * moveVec.x) * m_MoveSpeed;
-        //移動
-        tr.position += m_MoveVec * Time.deltaTime;
-
-
-        //地面との判定
-        RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
         //重力で下方向に移動する
-        Gravity(hitInfo.isHit);
-        if (hitInfo.isHit)
+        Gravity(m_GroundHitInfo.isHit);
+        if (m_GroundHitInfo.isHit)
         {
             //上方向と平面の法線方向のなす角
-            float angle = Vector3.Angle(tr.up, hitInfo.hit.normal);
+            float angle = Vector3.Angle(tr.up, m_GroundHitInfo.hit.normal);
             //斜面として認識する角度以上なら何もしない
             if (angle > m_SlopeDeg) return;
-
             //当たった地点に移動
-            tr.position = hitInfo.hit.point;
-
+            tr.position = m_GroundHitInfo.hit.point;
             //上方向を当たった平面の法線方向に変更
-            up = hitInfo.hit.normal;
-
-            //前
-            //Vector3 f = Vector3.Cross( up, m_Camera.right);
-            //tr.rotation = Quaternion.LookRotation(f, up);
+            up = m_GroundHitInfo.hit.normal;
         }
 
+        //スティックが入力されたら向きを変える
+        if (inputVec.magnitude > 0.1f)
+        {
+            //スティックの傾きを↑を0°として計算
+            y = Vector2.Angle(Vector2.up, inputVec);
+            //ステイックが左に傾いていればyをマイナスに
+            if (inputVec.x < 0) y = -y;
+        }
 
+        //地面の上方向とカメラの右方向で外積を取得
+        Vector3 camerafoward = -Vector3.Cross(up, m_Camera.right);
+        //外積をスティックの角度で回転させて前ベクトルを計算
+        front = Quaternion.AngleAxis(y, up) * camerafoward;
+
+        //プレイヤーの前ベクトルと上ベクトルを決定
+        Quaternion rotate = Quaternion.LookRotation(front, up);
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
+
+        //前ベクトル×スティックの傾き
+        m_MoveVec = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
+        //移動
+        tr.position += m_MoveVec * Time.deltaTime;
         //ジャンプ処理
-        Jump(hitInfo.isHit);
+        Jump(m_GroundHitInfo.isHit);
     }
 
     void Testmove()
@@ -354,43 +360,15 @@ public class PlayerMove : MonoBehaviour
     }
 
     /// <summary>
-    /// 移動処理
-    /// </summary>
-    private void Move()
-    {
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            //転がり移動
-            m_Animator.SetBool("InputRoll", true);
-            m_Animator.SetBool("InputMove", false);
-            RollMove();
-        }
-        else
-        {
-            //通常移動
-            m_Animator.SetBool("InputRoll", false);
-            NormalMove();
-        }
-    }
-
-
-    /// <summary>
     /// ジャンプ処理（小杉さんのタスク）
     /// </summary>
     private void Jump(bool isGround)
     {
-        //RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
-        //if (hitInfo.isHit)
-        //{
-        //    if (Input.GetKeyDown(KeyCode.Space))
-        //    {
-        //        tr.GetComponent<Rigidbody>().AddForce(tr.up * m_JumpPower);
-        //    }
-        //}
-        //Debug.Log(hitInfo.isHit);
-
         if (isGround && Input.GetKeyDown(KeyCode.Space))
+        {
             rb.AddForce(tr.up * m_JumpPower);
+            m_Animator.SetBool("InputJump", true);
+        }
     }
 
     /// <summary>
@@ -398,15 +376,6 @@ public class PlayerMove : MonoBehaviour
     /// </summary>
     private void Gravity(bool isGround)
     {
-        //RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
-        //if (!hitInfo.isHit)
-        //{
-        //    tr.GetComponent<Rigidbody>().AddForce(GetDown() * m_GravityPower);
-        //}
-        //else
-        //{
-        //    tr.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        //}
         if (!isGround)
             rb.AddForce(GetDown() * m_GravityPower);
         else
