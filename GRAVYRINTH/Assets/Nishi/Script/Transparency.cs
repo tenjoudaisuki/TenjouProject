@@ -28,7 +28,20 @@ public class Transparency : MonoBehaviour {
             {
                 if (i == 3) return;
                 Color color = materials[i].color;
-                color.a = Mathf.Clamp(f, 0.2f, 1.0f) / 2;
+                color.a = Mathf.Lerp(0.0f,1.0f,f) / 2;
+                materials[i].color = color;
+            }
+        }
+        else
+        {
+            var skr = transform.GetComponent<SkinnedMeshRenderer>();
+            var materials = skr.materials;
+            float f = (distance / m_Start);
+            for (int i = 0; i < 4; i++)
+            {
+                if (i == 3) return;
+                Color color = materials[i].color;
+                color.a = 1;
                 materials[i].color = color;
             }
         }
