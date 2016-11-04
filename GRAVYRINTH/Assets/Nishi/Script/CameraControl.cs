@@ -11,17 +11,30 @@ public class CameraControl : MonoBehaviour
     public float XAngleLimit;
     [SerializeField, TooltipAttribute("注視点の調整")]
     public Vector3 TargetOffset;
+    [SerializeField, TooltipAttribute("回転のスピード")]
+    public Vector2 m_RotateSpeed = new Vector2(2.0f,2.0f);
 
+    /// <summary>
+    /// offsetをモデル座標化
+    /// </summary>
     private Vector3 offset;
     /// <summary>
     /// カメラの位置の方向
     /// </summary>
     private Vector3 CameraPosDirection;
+    /// <summary>
+    /// X軸（right）の回転合計
+    /// </summary>
     private float XAxisTotal = 0;
+    /// <summary>
+    /// Y軸（up）の回転合計
+    /// </summary>
     private float YAxisTotal = 0;
+    /// <summary>
+    /// 最初のカメラ位置
+    /// </summary>
     private Transform FastTransform;
 
-    // Use this for initialization
     void Start()
     {
         offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
@@ -29,7 +42,7 @@ public class CameraControl : MonoBehaviour
         transform.localRotation = Quaternion.Slerp(transform.localRotation,
             Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up), 0.5f);
 
-        CameraPosDirectionRotation();
+        TargetAroundMove();
 
         Ray ray = new Ray(Target.position + offset, CameraPosDirection.normalized);
 
@@ -48,69 +61,84 @@ public class CameraControl : MonoBehaviour
         FastTransform = transform;
     }
 
-    public void Update()
+    public void LateUpdate()
     {
+        //モデル座標でのオフセット座標を求める
         offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
 
-        transform.localRotation = Quaternion.Slerp(transform.localRotation,
-            Quaternion.LookRotation((Target.position + offset) - transform.position,Target.up),0.5f);
-        Vector3 f = (Target.position + offset) - transform.position;
+        //ターゲットの周りをステイックによって回転移動
+        TargetAroundMove();
+
+        //ターゲットから見てカメラの方向でカメラの前ベクトルを求める
+        Vector3 f = CameraPosDirection;
+        //ターゲットの上ベクトルを　右ベクトルを軸にXAxisTotal度回転して　カメラの上ベクトルを求める
         Vector3 up = Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up;
 
-        transform.localRotation = Quaternion.LookRotation(f.normalized, up);
+        //カメラを回転させる
+        transform.localRotation = Quaternion.Slerp(transform.localRotation,
+          Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up), 0.8f);
+        //補間なし版
+        //transform.localRotation = Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up);
 
-        CameraPosDirectionRotation();
-
-        Ray ray = new Ray(Target.position + offset, CameraPosDirection.normalized);
-
-        Debug.DrawRay(Target.position + offset, CameraPosDirection,Color.yellow);
-
-        Debug.DrawRay(transform.position, transform.up * 20, Color.green, 0.1f, false);
-        Debug.DrawRay(transform.position, transform.forward * 20, Color.blue, 0.1f, false);
-        Debug.DrawRay(transform.position, transform.right * 20, Color.red, 0.1f, false);
-
-        //RaycastHit hit;
-        //if (Physics.Raycast(ray,out hit,Distance))
-        //{
-        //    CameraMove(hit.point);
-        //}
-        //else
-        //{
-        //    CameraMove((Target.position + offset) + (CameraPosDirection * Distance));
-        //}
-        CameraMove((Target.position + offset) + (CameraPosDirection * Distance));
-
+        //Tキーが押されたら
         if (Input.GetKeyDown(KeyCode.T))
         {
+            //カメラを元の位置に移動
             CameraReset();
         }
     }
 
     /// <summary>
-    /// カメラの位置の方向を回転させる
+    /// ターゲットの周りを回転移動
     /// </summary>
-    private void CameraPosDirectionRotation()
+    private void TargetAroundMove()
     {
-        float horizontal = -Input.GetAxisRaw("Horizontal2");
-        float vertical = -Input.GetAxisRaw("Vertical2");
+        float horizontal = -Input.GetAxisRaw("Horizontal2") * m_RotateSpeed.x;
+        float vertical = -Input.GetAxisRaw("Vertical2") * m_RotateSpeed.y;
 
-        YAxisTotal += horizontal;
         XAxisTotal += vertical;
+        //X軸の回転の限界を設定
         XAxisTotal = Mathf.Clamp(XAxisTotal, -XAngleLimit, XAngleLimit);
 
-        CameraPosDirection = Quaternion.AngleAxis(XAxisTotal, Target.right) * -Target.forward;
-        CameraPosDirection += Quaternion.AngleAxis(YAxisTotal, Target.up) * Vector3.back;
-        //CameraPosDirection = Quaternion.AngleAxis(YAxisTotal, transform.up) * Quaternion.AngleAxis(XAxisTotal, transform.right) * new Vector3(0,0,-1); //プレイヤーの後方ベクトルを使わない
+        //ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
+        Vector3 parallel = Vector3.Cross(Target.up, transform.right);
+        //平行ベクトルをターゲットの上ベクトルを軸に回転さらに自身の横ベクトルを軸に回転しカメラの位置を計算
+        CameraPosDirection = Quaternion.AngleAxis(XAxisTotal, transform.right) * Quaternion.AngleAxis(horizontal, Target.up) * parallel;
+        //カメラを移動させる
+        CameraMove();
     }
 
     /// <summary>
     /// カメラ位置を移動させる
     /// </summary>
-    /// <param name="next">移動先</param>
-    private void CameraMove(Vector3 next)
+    private void CameraMove()
     {
-        transform.position = Vector3.Lerp(transform.position, next, 0.08f);
-        //transform.position = next;
+        //移動先
+        Vector3 next;
+        //ターゲットを原点にrayを飛ばす
+        Ray ray = new Ray(Target.position + offset, CameraPosDirection.normalized);
+
+        //RaycastHit hit;
+        //rayの方向の指定距離以内に障害物が無いか？
+        //if (Physics.Raycast(ray, out hit, Distance))
+        //{
+        //    //壁に当たった位置をカメラ位置に
+        //    next = hit.point;
+        //}
+        //else
+        //{
+        //    //当たらなかったらray* Disをカメラ位置に
+        //    next = Target.position + offset) + (CameraPosDirection * Distance;
+        //｝
+        next = (Target.position + offset) + (CameraPosDirection * Distance);
+        //デバック表示
+        Debug.DrawRay(Target.position + offset, CameraPosDirection, Color.yellow);
+
+        //補間あり移動
+        //transform.position = Vector3.Lerp(transform.position, next, 0.1f);
+        //補間なし移動
+        transform.position = next;
+
     }
 
     /// <summary>
