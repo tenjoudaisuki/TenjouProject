@@ -3,6 +3,12 @@ using System.Collections;
 
 public class CameraControl : MonoBehaviour
 {
+    private enum State
+    {
+        Normal,
+        BraDown
+    }
+
     [SerializeField, TooltipAttribute("注視点の対象")]
     public Transform Target;
     [SerializeField, TooltipAttribute("注視点との距離")]
@@ -35,6 +41,8 @@ public class CameraControl : MonoBehaviour
     /// </summary>
     private Transform FastTransform;
 
+    private State mCurrentState = State.Normal;
+
     void Start()
     {
         offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
@@ -63,22 +71,8 @@ public class CameraControl : MonoBehaviour
 
     public void LateUpdate()
     {
-        //モデル座標でのオフセット座標を求める
-        offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
 
-        //ターゲットの周りをステイックによって回転移動
-        TargetAroundMove();
-
-        //ターゲットから見てカメラの方向でカメラの前ベクトルを求める
-        Vector3 f = CameraPosDirection;
-        //ターゲットの上ベクトルを　右ベクトルを軸にXAxisTotal度回転して　カメラの上ベクトルを求める
-        Vector3 up = Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up;
-
-        //カメラを回転させる
-        transform.localRotation = Quaternion.Slerp(transform.localRotation,
-          Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up), 0.8f);
-        //補間なし版
-        //transform.localRotation = Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up);
+        StateUpdate();
 
         //Tキーが押されたら
         if (Input.GetKeyDown(KeyCode.T))
@@ -142,6 +136,34 @@ public class CameraControl : MonoBehaviour
     }
 
     /// <summary>
+    /// 通常時カメラ
+    /// </summary>
+    private void Normal()
+    {
+        //モデル座標でのオフセット座標を求める
+        offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
+
+        //ターゲットの周りをステイックによって回転移動
+        TargetAroundMove();
+
+        //ターゲットから見てカメラの方向でカメラの前ベクトルを求める
+        Vector3 f = CameraPosDirection;
+        //ターゲットの上ベクトルを　右ベクトルを軸にXAxisTotal度回転して　カメラの上ベクトルを求める
+        Vector3 up = Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up;
+
+        //カメラを回転させる
+        transform.localRotation = Quaternion.Slerp(transform.localRotation,
+          Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up), 0.8f);
+        //補間なし版
+        //transform.localRotation = Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up);
+    }
+
+    private void BraDown()
+    {
+
+    }
+
+    /// <summary>
     /// カメラを最初の状態に
     /// </summary>
     private void CameraReset()
@@ -150,5 +172,14 @@ public class CameraControl : MonoBehaviour
         transform.position = FastTransform.position;
         transform.localRotation = FastTransform.localRotation;
         XAxisTotal = 0;
+    }
+
+    private void StateUpdate()
+    {
+        switch (mCurrentState)
+        {
+            case State.Normal: Normal(); break;
+            case State.BraDown: BraDown(); break;
+        }
     }
 }
