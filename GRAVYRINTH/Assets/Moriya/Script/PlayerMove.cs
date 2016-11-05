@@ -25,11 +25,10 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody rb;
     private Animator m_Animator;
 
-
     /*==外部設定変数==*/
     [SerializeField, TooltipAttribute("移動速度")]
     private float m_MoveSpeed = 3.0f;
-    [SerializeField, TooltipAttribute("身長(地面との判定を行うRayで使用)")]
+    [SerializeField, TooltipAttribute("身長")]
     private float m_Height = 2.0f;
     [SerializeField, TooltipAttribute("斜面と認識する角度（壁と斜面の境界値）")]
     private float m_SlopeDeg = 45.0f;
@@ -37,22 +36,28 @@ public class PlayerMove : MonoBehaviour
     private float m_JumpPower = 200.0f;
     [SerializeField, TooltipAttribute("重力の強さ")]
     private float m_GravityPower = 4.0f;
-
-
+    [SerializeField, TooltipAttribute("地面との判定のレイの長さ")]
+    private float m_RayLength = 4.0f;
+    [SerializeField, TooltipAttribute("ジャンプ後の地面と判定を行わない時間の長さ")]
+    private float m_JumpedTime = 1.0f;
 
     /*==内部設定変数==*/
     //重力の方向を所持するクラス。プレイヤー以外で重力を扱う場合こちらのクラスを使用してください。
     private GravityDirection m_GravityDir;
-    //プレイヤーモデルのトランスフォーム（子オブジェクト）
-    private Transform m_ModelTr;
-    //プレイヤーモデルのＹ軸回転量
-    private float m_ModelRotateY;
     //カメラ
     private Transform m_Camera;
     //移動方向
     private Vector3 m_MoveVec;
     //地面とのヒット情報
-    RayHitInfo m_GroundHitInfo;
+    private RayHitInfo m_GroundHitInfo;
+    //地面との判定を行うか？
+    private bool m_IsCheckGround = true;
+    //ジャンプしてからの経過時間を計るタイマー
+    private float m_JumpedTimer = 0.0f;
+    //1フレーム前の地面と当たっているかの結果(現在のフレームはm_GroundHitInfo.isHit)
+    private bool m_IsPrevGroundHit = false;
+    //地面と当たった瞬間かどうか？
+    private bool m_IsGroundHitTrigger = false;
 
 
     Vector3 up = Vector3.up;
@@ -73,27 +78,33 @@ public class PlayerMove : MonoBehaviour
     {
         //オブジェクト取得
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
-        m_ModelTr = tr.FindChild("Model");
         m_Camera = Camera.main.transform;
 
-        //値初期化
-        m_ModelRotateY = 0.0f;
-
-        m_GroundHitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
+        //地面との判定
+        CheckGroundHit();
 	}
 	
 	void Update() 
     {
-        //移動処理
-        Move();
+        //地面との判定
+        if (m_IsCheckGround)//ジャンプ直後は判定しない
+            CheckGroundHit();
 
+        //地面にヒットした瞬間かどうかを判定
+        if (!m_IsPrevGroundHit && m_GroundHitInfo.isHit)
+            m_IsGroundHitTrigger = true;
+        else
+            m_IsGroundHitTrigger = false;
+        //1フレーム前の情報として使うために渡す
+        m_IsPrevGroundHit = m_GroundHitInfo.isHit;
+
+        //移動処理
+        Move();            
     }
 
     void LateUpdate()
     {
-        //地面との判定
-        m_GroundHitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
-        print(m_GroundHitInfo.isHit);
+        print(m_IsGroundHitTrigger);
     }
 
     /// <summary>
@@ -165,36 +176,28 @@ public class PlayerMove : MonoBehaviour
     }
 
     /// <summary>
-    /// 現在向いている下方向にレイを飛ばし、ヒットした情報を返す。
+    /// 現在向いている下方向にレイを飛ばし、ヒットした情報をm_GroundHitInfoに入れる。
     /// </summary>
-    /// <param name="reyPos">レイを飛ばす位置</param>
-    /// <returns></returns>
-    private RayHitInfo CheckGroundHit(Vector3 reyPos)
+    private void CheckGroundHit()
     {
-        RayHitInfo result;
-        Ray ray = new Ray(reyPos, GetDown());
+        Vector3 rayPos = tr.position + tr.up * m_Height;
+        Ray ray = new Ray(rayPos, GetDown());
         RaycastHit hit;
-        result.isHit = Physics.Raycast(ray, out hit, m_Height);
-        result.hit = hit;
+        m_GroundHitInfo.isHit = Physics.Raycast(ray, out hit, m_RayLength);
+        m_GroundHitInfo.hit = hit;
         
         //レイをデバッグ表示
-        //Debug.DrawRay(reyPos, GetDown() * m_Height, Color.grey, 1.0f, false);       
-
-        return result;
+        Debug.DrawRay(rayPos, GetDown() * m_RayLength, Color.grey, 1.0f, false);       
     }
+
+
 
     /// <summary>
     /// 地面の移動処理
     /// </summary>
     private void NormalMove()
     {
-        //移動方向入力
-        Vector2 inputVec = GetMoveInputAxis();
-        //アニメーション変更
-        m_Animator.SetBool("InputMove", inputVec.magnitude > 0.0f);
-
-        //重力で下方向に移動する
-        Gravity(m_GroundHitInfo.isHit);
+        //地面と当たっていたら
         if (m_GroundHitInfo.isHit)
         {
             //上方向と平面の法線方向のなす角
@@ -207,109 +210,10 @@ public class PlayerMove : MonoBehaviour
             up = m_GroundHitInfo.hit.normal;
         }
 
-        //スティックが入力されたら向きを変える
-        if (inputVec.magnitude > 0.1f)
-        {
-            //スティックの傾きを↑を0°として計算
-            y = Vector2.Angle(Vector2.up, inputVec);
-            //ステイックが左に傾いていればyをマイナスに
-            if (inputVec.x < 0) y = -y;
-        }
-
-        //地面の上方向とカメラの右方向で外積を取得
-        Vector3 camerafoward = -Vector3.Cross(up, m_Camera.right);
-        //外積をスティックの角度で回転させて前ベクトルを計算
-        front = Quaternion.AngleAxis(y, up) * camerafoward;
-
-        //プレイヤーの前ベクトルと上ベクトルを決定
-        Quaternion rotate = Quaternion.LookRotation(front, up);
-        transform.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
-
-        //前ベクトル×スティックの傾き
-        m_MoveVec = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
-        //移動
-        tr.position += m_MoveVec * Time.deltaTime;
-        //ジャンプ処理
-        Jump(m_GroundHitInfo.isHit);
-    }
-
-    void Testmove()
-    {
-        //地面との判定
-        RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
-        //重力で下方向に移動する
-        Gravity(hitInfo.isHit);
-        if (hitInfo.isHit)
-        {
-            //上方向と平面の法線方向のなす角
-            float angle = Vector3.Angle(tr.up, hitInfo.hit.normal);
-            //斜面として認識する角度以上なら何もしない
-            if (angle > m_SlopeDeg) return;
-
-            //当たった地点に移動
-            tr.position = hitInfo.hit.point;
-
-            //上方向を当たった平面の法線方向に変更
-            up = hitInfo.hit.normal;
-        }
-
-        //前方向を求める
-        Vector3 f = -Vector3.Cross(up, m_Camera.right).normalized;
-        //プレイヤーの回転を計算、代入
-        tr.rotation = Quaternion.LookRotation(f, up);
-
-        Debug.DrawRay(tr.position, tr.up * 20, Color.green, 0.1f, false);
-        Debug.DrawRay(tr.position, tr.forward * 20, Color.blue, 0.1f, false);
-        Debug.DrawRay(tr.position, tr.right * 20, Color.red, 0.1f, false);
-
-
         //移動方向入力
         Vector2 inputVec = GetMoveInputAxis();
-        //アニメーション
-        m_Animator.SetBool("InputMove", inputVec.magnitude > 0.5f);
-
-        //入力された値を移動用に補正
-        Vector2 moveVec = MoveInputCorrection(inputVec);
-        //移動方向を計算
-        m_MoveVec = (tr.forward * moveVec.y + tr.right * moveVec.x) * m_MoveSpeed;
-        //移動
-        tr.position += m_MoveVec * Time.deltaTime;
-
-        //ジャンプ処理
-        Jump(hitInfo.isHit);
-    }
-
-    /// <summary>
-    /// 通常移動
-    /// 作成　西
-    /// </summary>
-    private void NormalMove2()
-    {
-        //移動方向入力
-        Vector2 inputVec = GetMoveInputAxis();
-        //Debug.Log(inputVec);
-
-        //アニメーション
+        //アニメーション変更
         m_Animator.SetBool("InputMove", inputVec.magnitude > 0.0f);
-
-        //地面との判定
-        RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
-        //重力で下方向に移動する
-        Gravity(hitInfo.isHit);
-        if (hitInfo.isHit)
-        {
-            //上方向と平面の法線方向のなす角
-            float angle = Vector3.Angle(tr.up, hitInfo.hit.normal);
-            //斜面として認識する角度以上なら何もしない
-            if (angle > m_SlopeDeg) return;
-
-            //当たった地点に移動
-            tr.position = hitInfo.hit.point;
-
-            //上方向を当たった平面の法線方向に変更
-            up = hitInfo.hit.normal;
-        }
-
         //スティックが入力されたら向きを変える
         if (inputVec.magnitude > 0.1f)
         {
@@ -318,24 +222,82 @@ public class PlayerMove : MonoBehaviour
             //ステイックが左に傾いていればyをマイナスに
             if (inputVec.x < 0) y = -y;
         }
-
         //地面の上方向とカメラの右方向で外積を取得
         Vector3 camerafoward = -Vector3.Cross(up, m_Camera.right);
         //外積をスティックの角度で回転させて前ベクトルを計算
         front = Quaternion.AngleAxis(y, up) * camerafoward;
 
         //プレイヤーの前ベクトルと上ベクトルを決定
-        //tr.localRotation = Quaternion.LookRotation(front, up);
         Quaternion rotate = Quaternion.LookRotation(front, up);
         transform.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
-
         //前ベクトル×スティックの傾き
         m_MoveVec = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
         //移動
         tr.position += m_MoveVec * Time.deltaTime;
+
+        //重力で下方向に移動する
+        Gravity();
         //ジャンプ処理
-        Jump(hitInfo.isHit);
+        Jump();
     }
+
+    ///// <summary>
+    ///// 通常移動
+    ///// 作成　西
+    ///// </summary>
+    //private void NormalMove2()
+    //{
+    //    //移動方向入力
+    //    Vector2 inputVec = GetMoveInputAxis();
+    //    //Debug.Log(inputVec);
+
+    //    //アニメーション
+    //    m_Animator.SetBool("InputMove", inputVec.magnitude > 0.0f);
+
+    //    //地面との判定
+    //    RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
+    //    //重力で下方向に移動する
+    //    Gravity();
+    //    if (hitInfo.isHit)
+    //    {
+    //        //上方向と平面の法線方向のなす角
+    //        float angle = Vector3.Angle(tr.up, hitInfo.hit.normal);
+    //        //斜面として認識する角度以上なら何もしない
+    //        if (angle > m_SlopeDeg) return;
+
+    //        //当たった地点に移動
+    //        tr.position = hitInfo.hit.point;
+
+    //        //上方向を当たった平面の法線方向に変更
+    //        up = hitInfo.hit.normal;
+    //    }
+
+    //    //スティックが入力されたら向きを変える
+    //    if (inputVec.magnitude > 0.1f)
+    //    {
+    //        //スティックの傾きを↑を0°として計算
+    //        y = Vector2.Angle(Vector2.up, inputVec);
+    //        //ステイックが左に傾いていればyをマイナスに
+    //        if (inputVec.x < 0) y = -y;
+    //    }
+
+    //    //地面の上方向とカメラの右方向で外積を取得
+    //    Vector3 camerafoward = -Vector3.Cross(up, m_Camera.right);
+    //    //外積をスティックの角度で回転させて前ベクトルを計算
+    //    front = Quaternion.AngleAxis(y, up) * camerafoward;
+
+    //    //プレイヤーの前ベクトルと上ベクトルを決定
+    //    //tr.localRotation = Quaternion.LookRotation(front, up);
+    //    Quaternion rotate = Quaternion.LookRotation(front, up);
+    //    transform.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
+
+    //    //前ベクトル×スティックの傾き
+    //    m_MoveVec = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
+    //    //移動
+    //    tr.position += m_MoveVec * Time.deltaTime;
+    //    //ジャンプ処理
+    //    Jump();
+    //}
 
     /// <summary>
     /// 転がり移動処理
@@ -346,37 +308,47 @@ public class PlayerMove : MonoBehaviour
         tr.position += m_MoveVec * Time.deltaTime;
         //減速
         m_MoveVec *= 0.99f;
-
-        //仮重力
-        //tr.position += GetDown() * 1.98f * Time.deltaTime;
-        //Gravity();
-        //地面との判定
-        RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
-        if (hitInfo.isHit)
-        {
-            //当たった地点に移動
-            tr.position = hitInfo.hit.point;
-        }
     }
 
     /// <summary>
-    /// ジャンプ処理（小杉さんのタスク）
+    /// ジャンプ処理
     /// </summary>
-    private void Jump(bool isGround)
+    private void Jump()
     {
-        if (isGround && Input.GetKeyDown(KeyCode.Space))
+        //地面にいるときのジャンプ始動処理
+        if (m_GroundHitInfo.isHit && Input.GetKeyDown(KeyCode.Space))
         {
-            rb.AddForce(tr.up * m_JumpPower);
+            //アニメーションの設定
             m_Animator.SetBool("InputJump", true);
+            //力を加えてジャンプ
+            rb.AddForce(tr.up * m_JumpPower);
+            //しばらく地面との判定を行わない
+            m_IsCheckGround = false;
+            //判定の結果も切っておく
+            m_GroundHitInfo.isHit = false;
+            //タイマーも初期化
+            m_JumpedTimer = 0.0f;
+        }
+        //ジャンプした直後の、地面と判定させないための処理
+        else if (!m_IsCheckGround)
+        {
+            //指定時間が経過したら地面との判定を再開
+            m_JumpedTimer += Time.deltaTime;
+            if (m_JumpedTimer > m_JumpedTime)
+            {
+                m_JumpedTimer = 0.0f;
+                m_IsCheckGround = true;
+            }
         }
     }
 
     /// <summary>
     /// 重力（仮）
     /// </summary>
-    private void Gravity(bool isGround)
+    private void Gravity()
     {
-        if (!isGround)
+        //地面にいないときは重力をかける
+        if (!m_GroundHitInfo.isHit)
             rb.AddForce(GetDown() * m_GravityPower);
         else
             rb.velocity = Vector3.zero;
