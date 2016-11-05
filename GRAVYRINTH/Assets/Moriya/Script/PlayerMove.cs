@@ -221,11 +221,20 @@ public class PlayerMove : MonoBehaviour
             y = Vector2.Angle(Vector2.up, inputVec);
             //ステイックが左に傾いていればyをマイナスに
             if (inputVec.x < 0) y = -y;
+            //地面の上方向とカメラの右方向で外積を取得
+            Vector3 camerafoward = -Vector3.Cross(up, m_Camera.right);
+            //外積をスティックの角度で回転させて前ベクトルを計算
+            front = Quaternion.AngleAxis(y, up) * camerafoward;
+
         }
-        //地面の上方向とカメラの右方向で外積を取得
-        Vector3 camerafoward = -Vector3.Cross(up, m_Camera.right);
-        //外積をスティックの角度で回転させて前ベクトルを計算
-        front = Quaternion.AngleAxis(y, up) * camerafoward;
+        //着地した瞬間に向きを変更
+        if (m_IsGroundHitTrigger)
+        {
+            //地面の上方向とカメラの右方向で外積を取得
+            Vector3 camerafoward = -Vector3.Cross(up, m_Camera.right);
+            //外積をスティックの角度で回転させて前ベクトルを計算
+            front = Quaternion.AngleAxis(y, up) * camerafoward;
+        }
 
         //プレイヤーの前ベクトルと上ベクトルを決定
         Quaternion rotate = Quaternion.LookRotation(front, up);
