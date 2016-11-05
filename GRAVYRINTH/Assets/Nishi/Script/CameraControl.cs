@@ -168,9 +168,10 @@ public class CameraControl : MonoBehaviour
     /// </summary>
     private void CameraReset()
     {
-        CameraPosDirection = new Vector3(0, 0, -1);
-        transform.position = FastTransform.position;
-        transform.localRotation = FastTransform.localRotation;
+        CameraPosDirection = -Target.forward;
+        CameraMove();
+        //カメラを回転させる
+        transform.localRotation = Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up);
         XAxisTotal = 0;
     }
 
