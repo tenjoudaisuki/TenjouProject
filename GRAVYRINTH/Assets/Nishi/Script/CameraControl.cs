@@ -6,7 +6,8 @@ public class CameraControl : MonoBehaviour
     private enum State
     {
         Normal,
-        BraDown
+        BraDown,
+        Roll
     }
 
     [SerializeField, TooltipAttribute("注視点の対象")]
@@ -43,14 +44,19 @@ public class CameraControl : MonoBehaviour
 
     private State mCurrentState = State.Normal;
 
+    //重力の方向
+    private GravityDirection m_GravityDir;
+
     void Start()
     {
+        m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
+
         offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
 
         transform.localRotation = Quaternion.Slerp(transform.localRotation,
             Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up), 0.5f);
 
-        TargetAroundMove();
+        TargetAroundMove(Target.up, transform.right);
 
         Ray ray = new Ray(Target.position + offset, CameraPosDirection.normalized);
 
@@ -85,7 +91,7 @@ public class CameraControl : MonoBehaviour
     /// <summary>
     /// ターゲットの周りを回転移動
     /// </summary>
-    private void TargetAroundMove()
+    private void TargetAroundMove(Vector3 up,Vector3 right)
     {
         float horizontal = -Input.GetAxisRaw("Horizontal2") * m_RotateSpeed.x;
         float vertical = -Input.GetAxisRaw("Vertical2") * m_RotateSpeed.y;
@@ -94,10 +100,16 @@ public class CameraControl : MonoBehaviour
         //X軸の回転の限界を設定
         XAxisTotal = Mathf.Clamp(XAxisTotal, -XAngleLimit, XAngleLimit);
 
+        ////ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
+        //Vector3 parallel = Vector3.Cross(Target.up, transform.right);
+        ////平行ベクトルをターゲットの上ベクトルを軸に回転さらに自身の横ベクトルを軸に回転しカメラの位置を計算
+        //CameraPosDirection = Quaternion.AngleAxis(XAxisTotal, transform.right) * Quaternion.AngleAxis(horizontal, Target.up) * parallel;
+
         //ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
-        Vector3 parallel = Vector3.Cross(Target.up, transform.right);
+        Vector3 parallel = Vector3.Cross(up, right);
         //平行ベクトルをターゲットの上ベクトルを軸に回転さらに自身の横ベクトルを軸に回転しカメラの位置を計算
-        CameraPosDirection = Quaternion.AngleAxis(XAxisTotal, transform.right) * Quaternion.AngleAxis(horizontal, Target.up) * parallel;
+        CameraPosDirection = Quaternion.AngleAxis(XAxisTotal,right) * Quaternion.AngleAxis(horizontal,up) * parallel;
+
         //カメラを移動させる
         CameraMove();
     }
@@ -143,17 +155,17 @@ public class CameraControl : MonoBehaviour
         //モデル座標でのオフセット座標を求める
         offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
 
-        //ターゲットの周りをステイックによって回転移動
-        TargetAroundMove();
-
         //ターゲットから見てカメラの方向でカメラの前ベクトルを求める
         Vector3 f = CameraPosDirection;
         //ターゲットの上ベクトルを　右ベクトルを軸にXAxisTotal度回転して　カメラの上ベクトルを求める
         Vector3 up = Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up;
 
+        //ターゲットの周りをステイックによって回転移動
+        TargetAroundMove(Target.up, transform.right);
+
         //カメラを回転させる
         transform.localRotation = Quaternion.Slerp(transform.localRotation,
-          Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up), 0.8f);
+          Quaternion.LookRotation((Target.position + offset) - transform.position,Target.up), 0.8f);
         //補間なし版
         //transform.localRotation = Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up);
     }
@@ -161,6 +173,23 @@ public class CameraControl : MonoBehaviour
     private void BraDown()
     {
 
+    }
+
+    private void Roll()
+    {
+        //モデル座標でのオフセット座標を求める
+        offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
+
+        Vector3 f = CameraPosDirection.normalized;
+        Vector3 up = -m_GravityDir.GetDirection().normalized;
+
+        //ターゲットの周りをステイックによって回転移動
+        TargetAroundMove(up, transform.right);
+        //transform.position = (Target.position + offset) + new Vector3(0, 0, -3);
+
+        //カメラを回転させる
+        transform.localRotation = Quaternion.Slerp(transform.localRotation,
+          Quaternion.LookRotation((Target.position + offset) - transform.position, up), 0.8f);
     }
 
     /// <summary>
@@ -177,10 +206,13 @@ public class CameraControl : MonoBehaviour
 
     private void StateUpdate()
     {
-        switch (mCurrentState)
-        {
-            case State.Normal: Normal(); break;
-            case State.BraDown: BraDown(); break;
-        }
+        if (Input.GetKey(KeyCode.LeftShift)) mCurrentState = State.Roll;
+        else mCurrentState = State.Normal;
+            switch (mCurrentState)
+            {
+                case State.Normal: Normal(); break;
+                case State.BraDown: BraDown(); break;
+                case State.Roll: Roll(); break;
+            }
     }
 }
