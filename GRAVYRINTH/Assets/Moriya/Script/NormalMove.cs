@@ -10,7 +10,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerMove : MonoBehaviour 
+public class NormalMove : MonoBehaviour
 {
     //当たったかどうか付のRaycastHit
     struct RayHitInfo
@@ -23,13 +23,13 @@ public class PlayerMove : MonoBehaviour
     /*==所持コンポーネント==*/
     private Transform tr;
     private Rigidbody rb;
-    private Animator m_Animator;
+    private Animator anm;
 
     /*==外部設定変数==*/
     [SerializeField, TooltipAttribute("移動速度")]
     private float m_MoveSpeed = 3.0f;
     [SerializeField, TooltipAttribute("身長")]
-    private float m_Height = 2.0f;
+    private float m_Height = 0.5f;
     [SerializeField, TooltipAttribute("斜面と認識する角度（壁と斜面の境界値）")]
     private float m_SlopeDeg = 45.0f;
     [SerializeField, TooltipAttribute("ジャンプ力")]
@@ -37,7 +37,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField, TooltipAttribute("重力の強さ")]
     private float m_GravityPower = 4.0f;
     [SerializeField, TooltipAttribute("地面との判定のレイの長さ")]
-    private float m_RayLength = 4.0f;
+    private float m_RayLength = 0.7f;
     [SerializeField, TooltipAttribute("ジャンプ後の地面と判定を行わない時間の長さ")]
     private float m_JumpedTime = 1.0f;
 
@@ -46,8 +46,8 @@ public class PlayerMove : MonoBehaviour
     private GravityDirection m_GravityDir;
     //カメラ
     private Transform m_Camera;
-    //移動方向
-    private Vector3 m_MoveVec;
+    //移動方向と移動量
+    private Vector3 m_MoveVelocity;
     //地面とのヒット情報
     private RayHitInfo m_GroundHitInfo;
     //地面との判定を行うか？
@@ -65,8 +65,6 @@ public class PlayerMove : MonoBehaviour
     //入力方向に応じてＹ軸を回転させる
     private float m_InputAngleY = 0.0f;
 
-
-
     /*==外部参照変数==*/
 
     void Awake()
@@ -74,10 +72,10 @@ public class PlayerMove : MonoBehaviour
         //コンポーネント取得
         tr = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
-        m_Animator = GetComponent<Animator>();
+        anm = GetComponent<Animator>();
     }
 
-	void Start()
+    void Start()
     {
         //オブジェクト取得
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
@@ -85,10 +83,22 @@ public class PlayerMove : MonoBehaviour
 
         //地面との判定
         CheckGroundHit();
-	}
+    }
 
     void Update()
     {
+        //ジャンプした直後の、地面と判定させない時間計測処理
+        if (!m_IsCheckGround)
+        {
+            //指定時間が経過したら地面との判定を再開
+            m_JumpedTimer += Time.deltaTime;
+            if (m_JumpedTimer > m_JumpedTime)
+            {
+                m_JumpedTimer = 0.0f;
+                m_IsCheckGround = true;
+            }
+        }
+
         //丸まりボタンを押していないときは通常移動
         if (!Input.GetKey(KeyCode.LeftShift))
         {
@@ -110,16 +120,12 @@ public class PlayerMove : MonoBehaviour
             //重力をセット
             m_GravityDir.SetDirection(GetDown());
         }
+
     }
 
-    /// <summary>
-    /// 移動処理
-    /// </summary>
-    private void Move()
+    void LateUpdate()
     {
-        //通常移動
-        m_Animator.SetBool("InputRoll", false);
-        NormalMove();
+
     }
 
     /// <summary>
@@ -179,16 +185,22 @@ public class PlayerMove : MonoBehaviour
         RaycastHit hit;
         m_GroundHitInfo.isHit = Physics.Raycast(ray, out hit, m_RayLength);
         m_GroundHitInfo.hit = hit;
-        
+
         //レイをデバッグ表示
-        Debug.DrawRay(rayPos, GetDown() * m_RayLength, Color.grey, 1.0f, false);       
+        Debug.DrawRay(rayPos, GetDown() * m_RayLength, Color.grey, 1.0f, false);
     }
 
     /// <summary>
-    /// 地面の移動処理
+    /// 移動処理
     /// </summary>
-    private void NormalMove()
+    private void Move()
     {
+        //アニメーションをセット
+        anm.SetBool("InputRoll", false);
+
+        //ジャンプ関連の移動処理
+        //重力で下方向に移動する
+        Gravity();
         //地面と当たっていたら
         if (m_GroundHitInfo.isHit)
         {
@@ -205,7 +217,7 @@ public class PlayerMove : MonoBehaviour
         //移動方向入力
         Vector2 inputVec = GetMoveInputAxis();
         //アニメーション変更
-        m_Animator.SetBool("InputMove", inputVec.magnitude > 0.0f);
+        anm.SetBool("InputMove", inputVec.magnitude > 0.0f);
         //スティックが入力されたら向きを変える
         if (inputVec.magnitude > 0.1f)
         {
@@ -217,13 +229,13 @@ public class PlayerMove : MonoBehaviour
             Vector3 camerafoward = -Vector3.Cross(m_Up, m_Camera.right);
             //外積をスティックの角度で回転させて前ベクトルを計算
             m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * camerafoward;
-
         }
-        //着地した瞬間に向きを変更
+
+        //着地した瞬間の処理
         if (m_IsGroundHitTrigger)
         {
             //アニメーション変更
-            m_Animator.SetBool("InputJump", false);
+            anm.SetBool("InputJump", false);
 
             //地面の上方向とカメラの右方向で外積を取得
             Vector3 camerafoward = -Vector3.Cross(m_Up, m_Camera.right);
@@ -231,16 +243,15 @@ public class PlayerMove : MonoBehaviour
             m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * camerafoward;
         }
 
+        //前、右方向への移動処理
         //プレイヤーの前ベクトルと上ベクトルを決定
         Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
         transform.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
         //前ベクトル×スティックの傾き
-        m_MoveVec = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
+        m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
         //移動
-        tr.position += m_MoveVec * Time.deltaTime;
+        tr.position += m_MoveVelocity * Time.deltaTime;
 
-        //重力で下方向に移動する
-        Gravity();
         //ジャンプ処理
         Jump();
     }
@@ -256,7 +267,7 @@ public class PlayerMove : MonoBehaviour
     //    //Debug.Log(inputVec);
 
     //    //アニメーション
-    //    m_Animator.SetBool("InputMove", inputVec.magnitude > 0.0f);
+    //    anm.SetBool("InputMove", inputVec.magnitude > 0.0f);
 
     //    //地面との判定
     //    RayHitInfo hitInfo = CheckGroundHit(tr.position + tr.up * m_Height);
@@ -296,9 +307,9 @@ public class PlayerMove : MonoBehaviour
     //    transform.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
 
     //    //前ベクトル×スティックの傾き
-    //    m_MoveVec = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
+    //    m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
     //    //移動
-    //    tr.position += m_MoveVec * Time.deltaTime;
+    //    tr.position += m_MoveVelocity * Time.deltaTime;
     //    //ジャンプ処理
     //    Jump();
     //}
@@ -312,31 +323,20 @@ public class PlayerMove : MonoBehaviour
         if (m_GroundHitInfo.isHit && Input.GetKeyDown(KeyCode.Space))
         {
             //アニメーションの設定
-            m_Animator.SetBool("InputJump", true);
+            anm.SetBool("InputJump", true);
             //力を加えてジャンプ
             rb.AddForce(tr.up * m_JumpPower);
-            //しばらく地面との判定を行わない
+            //一定時間経過まで地面との判定を行わない
             m_IsCheckGround = false;
             //判定の結果も切っておく
             m_GroundHitInfo.isHit = false;
             //タイマーも初期化
             m_JumpedTimer = 0.0f;
         }
-        //ジャンプした直後の、地面と判定させないための処理
-        else if (!m_IsCheckGround)
-        {
-            //指定時間が経過したら地面との判定を再開
-            m_JumpedTimer += Time.deltaTime;
-            if (m_JumpedTimer > m_JumpedTime)
-            {
-                m_JumpedTimer = 0.0f;
-                m_IsCheckGround = true;
-            }
-        }
     }
 
     /// <summary>
-    /// 重力（仮）
+    /// 重力
     /// </summary>
     private void Gravity()
     {
@@ -345,5 +345,13 @@ public class PlayerMove : MonoBehaviour
             rb.AddForce(GetDown() * m_GravityPower);
         else
             rb.velocity = Vector3.zero;
+    }
+
+    /// <summary>
+    /// 最終的な前右方向の移動量を取得する
+    /// </summary>
+    public Vector3 GetMoveVelocity()
+    {
+        return m_MoveVelocity;
     }
 }
