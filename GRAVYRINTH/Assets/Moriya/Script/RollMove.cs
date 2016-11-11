@@ -66,16 +66,15 @@ public class RollMove : MonoBehaviour
         }
         else
         {
+            //アニメーションをセット
+            anm.SetBool("InputRoll", false);
             //当たり判定を無効にする
             col.enabled = false;
 
-            //rb.velocity = Vector3.zero;
+            //地面にいるなら移動量初期化
+            if (m_NormalMove.GetIsGroundHit())
+                rb.velocity = Vector3.zero;
         }
 
-    }
-
-    void LateUpdate()
-    {
-        print(rb.velocity);
     }
 }
