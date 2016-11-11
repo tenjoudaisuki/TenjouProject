@@ -12,7 +12,7 @@ public class GravityDirection : MonoBehaviour
 {
     /*==内部設定変数==*/
     [SerializeField, TooltipAttribute("重力の方向")]
-    private Vector3 m_GravityDirection;
+    private Vector3 m_GravityDirection = Vector3.down;
 
     /*============================外部参照関数============================*/
     /// <summary>
