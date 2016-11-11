@@ -38,6 +38,8 @@ public class NormalMove : MonoBehaviour
     private float m_GravityPower = 4.0f;
     [SerializeField, TooltipAttribute("地面との判定のレイの長さ")]
     private float m_RayLength = 0.7f;
+    [SerializeField, TooltipAttribute("プレイヤー正面と壁との判定のレイの長さ")]
+    private float m_WallRayLength = 4.0f;
     [SerializeField, TooltipAttribute("ジャンプ後の地面と判定を行わない時間の長さ")]
     private float m_JumpedTime = 1.0f;
 
@@ -64,6 +66,8 @@ public class NormalMove : MonoBehaviour
     Vector3 m_Front = Vector3.forward;
     //入力方向に応じてＹ軸を回転させる
     private float m_InputAngleY = 0.0f;
+    // 移動速度保存用
+    private float m_Save;
 
     /*==外部参照変数==*/
 
@@ -83,6 +87,9 @@ public class NormalMove : MonoBehaviour
 
         //地面との判定
         CheckGroundHit();
+
+        // 移動速度保存
+        m_Save = m_MoveSpeed;
     }
 
     void Update()
@@ -257,6 +264,15 @@ public class NormalMove : MonoBehaviour
 
         //ジャンプ処理
         Jump();
+
+        if (Collision())
+        {
+            m_MoveSpeed = 0;
+        }
+        else
+        {
+            m_MoveSpeed = m_Save;
+        }
     }
 
     ///// <summary>
@@ -364,5 +380,40 @@ public class NormalMove : MonoBehaviour
     public bool GetIsGroundHit()
     {
         return m_GroundHitInfo.isHit;
+    }
+
+    /// <summary>
+    /// 壁との当たり判定用Ray(スマートじゃない)
+    /// </summary>
+    /// <returns></returns>
+    private bool Collision()
+    {
+        Vector3 rayPos = tr.position + tr.up / 3;
+        Ray ray_front = new Ray(rayPos, tr.forward);
+        Ray ray_left = new Ray(rayPos, tr.forward - tr.right);
+        Ray ray_right = new Ray(rayPos, tr.forward + tr.right);
+
+        RaycastHit hit_front, hit_left, hit_right;
+        RayHitInfo m_WallHitInfoFront, m_WallHitInfoLeft, m_WallHitInfoRight;
+
+        m_WallHitInfoFront.isHit = Physics.Raycast(ray_front, out hit_front, m_WallRayLength);
+        m_WallHitInfoLeft.isHit = Physics.Raycast(ray_left, out hit_left, m_WallRayLength);
+        m_WallHitInfoRight.isHit = Physics.Raycast(ray_right, out hit_right, m_WallRayLength);
+
+        m_WallHitInfoFront.hit = hit_front;
+        m_WallHitInfoLeft.hit = hit_left;
+        m_WallHitInfoRight.hit = hit_right;
+
+        //レイをデバッグ表示
+        //Debug.DrawRay(rayPos, tr.forward, Color.grey, m_WallRayLength, false);
+        //Debug.DrawRay(rayPos, tr.forward - tr.right, Color.grey, m_WallRayLength, false);
+        //Debug.DrawRay(rayPos, tr.forward+tr.right, Color.grey, m_WallRayLength, false);
+
+        if (m_WallHitInfoFront.isHit ||
+            m_WallHitInfoLeft.isHit ||
+            m_WallHitInfoRight.isHit)
+            return true;
+        else
+            return false;
     }
 }
