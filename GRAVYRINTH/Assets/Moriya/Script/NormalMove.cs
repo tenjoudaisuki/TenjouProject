@@ -120,12 +120,16 @@ public class NormalMove : MonoBehaviour
             //重力をセット
             m_GravityDir.SetDirection(GetDown());
         }
+        //丸まりをやめた直後
+        else if(Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            CheckGroundHit();
+        }
 
     }
-
     void LateUpdate()
     {
-
+        print(GetDown());
     }
 
     /// <summary>
@@ -185,7 +189,6 @@ public class NormalMove : MonoBehaviour
         RaycastHit hit;
         m_GroundHitInfo.isHit = Physics.Raycast(ray, out hit, m_RayLength);
         m_GroundHitInfo.hit = hit;
-
         //レイをデバッグ表示
         Debug.DrawRay(rayPos, GetDown() * m_RayLength, Color.grey, 1.0f, false);
     }
@@ -353,5 +356,13 @@ public class NormalMove : MonoBehaviour
     public Vector3 GetMoveVelocity()
     {
         return m_MoveVelocity;
+    }
+
+    /// <summary>
+    /// 地面に接地しているか？
+    /// </summary>
+    public bool GetIsGroundHit()
+    {
+        return m_GroundHitInfo.isHit;
     }
 }
