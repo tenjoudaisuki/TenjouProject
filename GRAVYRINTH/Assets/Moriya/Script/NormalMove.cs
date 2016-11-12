@@ -35,7 +35,7 @@ public class NormalMove : MonoBehaviour
     [SerializeField, TooltipAttribute("ジャンプ力")]
     private float m_JumpPower = 200.0f;
     [SerializeField, TooltipAttribute("重力の強さ")]
-    private float m_GravityPower = 4.0f;
+    private float m_GravityPower = 8.0f;
     [SerializeField, TooltipAttribute("地面との判定のレイの長さ")]
     private float m_RayLength = 0.7f;
     [SerializeField, TooltipAttribute("プレイヤー正面と壁との判定のレイの長さ")]
@@ -68,6 +68,10 @@ public class NormalMove : MonoBehaviour
     private float m_InputAngleY = 0.0f;
     // 移動速度保存用
     private float m_Save;
+
+
+    private Quaternion m_RollPrevRotation;
+    private float t = 0.0f;
 
     /*==外部参照変数==*/
 
@@ -127,16 +131,31 @@ public class NormalMove : MonoBehaviour
             //重力をセット
             m_GravityDir.SetDirection(GetDown());
         }
-        //丸まりをやめた直後
+        //丸まり入力をした瞬間
         else if(Input.GetKeyUp(KeyCode.LeftShift))
         {
+            m_RollPrevRotation = tr.rotation;
+        }
+        //丸まりをやめた直後
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            //地面との判定
             CheckGroundHit();
+            if (m_GroundHitInfo.isHit)
+            {
+                Vector3 up = m_GroundHitInfo.hit.normal;
+                //地面の上方向とカメラの右方向で前を求める
+                Vector3 f = Vector3.Cross(m_GroundHitInfo.hit.normal, m_Camera.right);
+                Quaternion rotate = Quaternion.LookRotation(f, up);
+                transform.localRotation = rotate;
+            }
         }
 
     }
+
     void LateUpdate()
     {
-        print(GetDown());
+
     }
 
     /// <summary>
@@ -256,7 +275,9 @@ public class NormalMove : MonoBehaviour
         //前、右方向への移動処理
         //プレイヤーの前ベクトルと上ベクトルを決定
         Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
-        transform.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
+        //transform.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
+        tr.localRotation = rotate;
+
         //前ベクトル×スティックの傾き
         m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
         //移動
