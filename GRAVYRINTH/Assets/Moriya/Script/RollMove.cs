@@ -16,6 +16,9 @@ public class RollMove : MonoBehaviour
     private Animator anm;
     private NormalMove m_NormalMove;
 
+    /*==外部設定変数==*/
+    [SerializeField, TooltipAttribute("重力の強さ")]
+    private float m_GravityPower = 8.0f;
 
     /*==内部設定変数==*/
     //重力の方向
@@ -58,9 +61,9 @@ public class RollMove : MonoBehaviour
             //当たり判定を有効にする
             col.enabled = true;
             //力を加える方向を計算
-            Vector3 velocity = m_GravityDir.GetDirection() * 5.0f + m_LastMoveVelocity;
+            Vector3 velocity = m_GravityDir.GetDirection() * m_GravityPower + m_LastMoveVelocity;
             //転がる
-            rb.AddForce(velocity);
+            rb.AddForce(velocity * m_GravityPower);
             //減速
             m_LastMoveVelocity *= 0.99f;
         }
