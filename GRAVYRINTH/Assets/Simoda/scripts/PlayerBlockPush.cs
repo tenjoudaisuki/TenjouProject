@@ -95,7 +95,7 @@ public class PlayerBlockPush : MonoBehaviour
 
     private void BlockPushMove()
     {
-        tr.GetComponent<PlayerMove>().enabled = true;
+        tr.GetComponent<NormalMove>().enabled = true;
 
         if (collisionBlock == null) return;
         collisionBlock.IsPushDistance();
@@ -103,7 +103,7 @@ public class PlayerBlockPush : MonoBehaviour
 
         if (collisionBlock.isPush == false) return;
 
-        tr.GetComponent<PlayerMove>().enabled = false;
+        tr.GetComponent<NormalMove>().enabled = false;
 
         //移動方向入力
         Vector2 inputVec = GetMoveInputAxis();

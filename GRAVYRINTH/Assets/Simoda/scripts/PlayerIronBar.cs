@@ -105,10 +105,19 @@ public class PlayerIronBar : MonoBehaviour
         {
             tr.parent = null;
             touchIronBar = false;
-            m_GravityDir.SetDirection(-tr.up);
-            rb.AddForce(-tr.up * 50.0f);
-            //GetComponent<PlayerMove>().enabled = true;
-            //GetComponent<PlayerBlockPush>().enabled = true;
+
+            switch (barType)
+            {
+                case BarType.IRON_BAR:
+
+                    m_GravityDir.SetDirection(-tr.up);
+                    rb.AddForce(-tr.up * 50.0f);
+
+                    break;
+                case BarType.POLE:
+
+                    break;
+            }
         }
     }
 
@@ -121,7 +130,7 @@ public class PlayerIronBar : MonoBehaviour
         {
             rb.isKinematic = true;
 
-            GetComponent<PlayerMove>().enabled = false;
+            GetComponent<NormalMove>().enabled = false;
             GetComponent<PlayerBlockPush>().enabled = false;
 
             tr = touchTr;
@@ -145,8 +154,6 @@ public class PlayerIronBar : MonoBehaviour
                     SetPlayerDirection(-tr.up, tr.position - collisionIronBarPosition);
 
                 tr.right = barVectorNor;
-                //tr.up = -(tr.position - collisionIronBarPosition);
-                //tr.up = -(tr.position - collisionIronBarPosition);
             }
             else
             {
@@ -155,6 +162,10 @@ public class PlayerIronBar : MonoBehaviour
                     SetPlayerDirection(-tr.forward, tr.position - collisionIronBarPosition);
 
                 tr.up = barVectorNor;
+
+                //Vector3 a = ironBar.transform.position;
+                //a.y = tr.position.y;
+                //tr.forward = a;
             }
 
             print(barType);
@@ -166,7 +177,7 @@ public class PlayerIronBar : MonoBehaviour
         }
         else
         {
-            GetComponent<PlayerMove>().enabled = true;
+            GetComponent<NormalMove>().enabled = true;
             GetComponent<PlayerBlockPush>().enabled = true;
         }
     }

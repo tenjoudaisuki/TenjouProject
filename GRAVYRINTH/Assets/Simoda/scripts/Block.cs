@@ -23,14 +23,14 @@ public class Block : MonoBehaviour
     void Update()
     {
         //print(moveDirection);
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.B))
         {
             moveDirection = Vector3.Normalize(GetPlayerDirection().normal);
             isPush = true;
             player.GetComponent<PlayerBlockPush>().SetCollisionBlock(gameObject);
         }
 
-        if (Input.GetKeyUp(KeyCode.T))
+        if (Input.GetKeyUp(KeyCode.B))
         {
             isPush = false;
             player.GetComponent<PlayerBlockPush>().SetCollisionBlock(null);
@@ -50,7 +50,7 @@ public class Block : MonoBehaviour
         float dot = Vector3.Dot(player.up, GetPlayerDirection().normal);
         float dotAbs = Mathf.Abs(dot);
         float dotInt = Mathf.FloorToInt(dotAbs);
-        print(dotInt);
+        //print(dotInt);
         //dot = Mathf.Clamp(dot, 0.0f, 1.0f);
         //print(player.up);
         //print(GetPlayerDirection().normal);
@@ -72,14 +72,14 @@ public class Block : MonoBehaviour
 
     public void OnCollisionStay(Collision collision)
     {
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.B))
         {
             moveDirection = Vector3.Normalize(GetPlayerDirection().normal);
             isPush = true;
             player.GetComponent<PlayerBlockPush>().SetCollisionBlock(gameObject);
         }
 
-        if (Input.GetKeyUp(KeyCode.T))
+        if (Input.GetKeyUp(KeyCode.B))
         {
             isPush = false;
             player.GetComponent<PlayerBlockPush>().SetCollisionBlock(null);
@@ -90,14 +90,14 @@ public class Block : MonoBehaviour
     {
         if (Vector3.Distance(tr.position, player.position + offset) > pushDistance) return;
 
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.B))
         {
             moveDirection = Vector3.Normalize(GetPlayerDirection().normal);
             isPush = true;
             player.GetComponent<PlayerBlockPush>().SetCollisionBlock(gameObject);
         }
 
-        if (Input.GetKeyUp(KeyCode.T))
+        if (Input.GetKeyUp(KeyCode.B))
         {
             isPush = false;
             player.GetComponent<PlayerBlockPush>().SetCollisionBlock(null);
