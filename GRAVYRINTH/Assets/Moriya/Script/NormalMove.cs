@@ -42,6 +42,9 @@ public class NormalMove : MonoBehaviour
     private float m_WallRayLength = 4.0f;
     [SerializeField, TooltipAttribute("ジャンプ後の地面と判定を行わない時間の長さ")]
     private float m_JumpedTime = 1.0f;
+    [SerializeField, TooltipAttribute("アニメーション再生速度")]
+    private float m_AnimSpeed = 1.5f;
+
 
     /*==内部設定変数==*/
     //重力の方向を所持するクラス。プレイヤー以外で重力を扱う場合こちらのクラスを使用してください。
@@ -94,6 +97,8 @@ public class NormalMove : MonoBehaviour
 
         // 移動速度保存
         m_Save = m_MoveSpeed;
+
+        anm.speed = m_AnimSpeed;
     }
 
     void Update()
@@ -426,9 +431,9 @@ public class NormalMove : MonoBehaviour
         m_WallHitInfoRight.hit = hit_right;
 
         //レイをデバッグ表示
-        //Debug.DrawRay(rayPos, tr.forward, Color.grey, m_WallRayLength, false);
-        //Debug.DrawRay(rayPos, tr.forward - tr.right, Color.grey, m_WallRayLength, false);
-        //Debug.DrawRay(rayPos, tr.forward+tr.right, Color.grey, m_WallRayLength, false);
+        Debug.DrawRay(rayPos, tr.forward, Color.grey, m_WallRayLength, false);
+        Debug.DrawRay(rayPos, tr.forward - tr.right, Color.grey, m_WallRayLength, false);
+        Debug.DrawRay(rayPos, tr.forward + tr.right, Color.grey, m_WallRayLength, false);
 
         if (m_WallHitInfoFront.isHit ||
             m_WallHitInfoLeft.isHit ||
