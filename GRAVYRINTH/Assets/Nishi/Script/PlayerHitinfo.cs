@@ -10,6 +10,7 @@ public class PlayerHitinfo : MonoBehaviour
         if(other.name == "CheckPoint")
         {
             m_CheckPoint = other.gameObject.transform.position;
+            Debug.Log("チェックポイント" + m_CheckPoint);
         }
     }
 

@@ -218,7 +218,9 @@ public class NormalMove : MonoBehaviour
         Vector3 rayPos = tr.position + tr.up * m_Height;
         Ray ray = new Ray(rayPos, GetDown());
         RaycastHit hit;
-        m_GroundHitInfo.isHit = Physics.Raycast(ray, out hit, m_RayLength);
+        //[IgnoredObj]レイヤー以外と判定させる
+        int layermask = ~(1 << 10);
+        m_GroundHitInfo.isHit = Physics.Raycast(ray, out hit, m_RayLength,layermask);
         m_GroundHitInfo.hit = hit;
         //レイをデバッグ表示
         Debug.DrawRay(rayPos, GetDown() * m_RayLength, Color.grey, 1.0f, false);
@@ -422,9 +424,11 @@ public class NormalMove : MonoBehaviour
         RaycastHit hit_front, hit_left, hit_right;
         RayHitInfo m_WallHitInfoFront, m_WallHitInfoLeft, m_WallHitInfoRight;
 
-        m_WallHitInfoFront.isHit = Physics.Raycast(ray_front, out hit_front, m_WallRayLength);
-        m_WallHitInfoLeft.isHit = Physics.Raycast(ray_left, out hit_left, m_WallRayLength);
-        m_WallHitInfoRight.isHit = Physics.Raycast(ray_right, out hit_right, m_WallRayLength);
+        //[IgnoredObj]レイヤー以外と判定させる
+        int layermask = ~(1 << 10);
+        m_WallHitInfoFront.isHit = Physics.Raycast(ray_front, out hit_front, m_WallRayLength, layermask);
+        m_WallHitInfoLeft.isHit = Physics.Raycast(ray_left, out hit_left, m_WallRayLength, layermask);
+        m_WallHitInfoRight.isHit = Physics.Raycast(ray_right, out hit_right, m_WallRayLength, layermask);
 
         m_WallHitInfoFront.hit = hit_front;
         m_WallHitInfoLeft.hit = hit_left;
