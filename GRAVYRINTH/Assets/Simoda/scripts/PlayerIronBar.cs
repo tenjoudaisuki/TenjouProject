@@ -111,7 +111,7 @@ public class PlayerIronBar : MonoBehaviour
                 case BarType.IRON_BAR:
 
                     m_GravityDir.SetDirection(-tr.up);
-                    rb.AddForce(-tr.up * 50.0f);
+                    rb.AddForce(-tr.up * 200.0f);
 
                     break;
                 case BarType.POLE:
