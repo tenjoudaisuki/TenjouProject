@@ -12,18 +12,12 @@ using System.Collections;
 
 public class NormalMove : MonoBehaviour
 {
-    //当たったかどうか付のRaycastHit
-    struct RayHitInfo
-    {
-        public RaycastHit hit;
-        //当たったか？
-        public bool isHit;
-    };
-
     /*==所持コンポーネント==*/
     private Transform tr;
     private Rigidbody rb;
     private Animator anm;
+    //プレイヤーの状態管理クラス
+    private PlayerMoveManager m_MoveManager;
 
     /*==外部設定変数==*/
     [SerializeField, TooltipAttribute("移動速度")]
@@ -72,10 +66,6 @@ public class NormalMove : MonoBehaviour
     // 移動速度保存用
     private float m_Save;
 
-
-    private Quaternion m_RollPrevRotation;
-    private float t = 0.0f;
-
     /*==外部参照変数==*/
 
     void Awake()
@@ -84,11 +74,13 @@ public class NormalMove : MonoBehaviour
         tr = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
         anm = GetComponent<Animator>();
+        m_MoveManager = GetComponent<PlayerMoveManager>();
     }
 
     void Start()
     {
         //オブジェクト取得
+        
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
         m_Camera = Camera.main.transform;
 
@@ -97,7 +89,6 @@ public class NormalMove : MonoBehaviour
 
         // 移動速度保存
         m_Save = m_MoveSpeed;
-
         anm.speed = m_AnimSpeed;
     }
 
@@ -115,48 +106,34 @@ public class NormalMove : MonoBehaviour
             }
         }
 
-        //丸まりボタンを押していないときは通常移動
-        if (!Input.GetKey(KeyCode.LeftShift))
-        {
-            //地面との判定
-            if (m_IsCheckGround)//ジャンプ直後は判定しない
-                CheckGroundHit();
-
-            //地面にヒットした瞬間かどうかを判定
-            if (!m_IsPrevGroundHit && m_GroundHitInfo.isHit)
-                m_IsGroundHitTrigger = true;
-            else
-                m_IsGroundHitTrigger = false;
-            //1フレーム前の情報として使うために渡す
-            m_IsPrevGroundHit = m_GroundHitInfo.isHit;
-
-            //移動処理
-            Move();
-
-            //重力をセット
-            m_GravityDir.SetDirection(GetDown());
-        }
-        //丸まり入力をした瞬間
-        else if(Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            m_RollPrevRotation = tr.rotation;
-        }
-        //丸まりをやめた直後
-        else if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            //地面との判定
+        //地面との判定
+        if (m_IsCheckGround)//ジャンプ直後は判定しない
             CheckGroundHit();
-            if (m_GroundHitInfo.isHit)
-            {
-                Vector3 up = m_GroundHitInfo.hit.normal;
-                //地面の上方向とカメラの右方向で前を求める
-                Vector3 f = Vector3.Cross(m_GroundHitInfo.hit.normal, m_Camera.right);
-                Quaternion rotate = Quaternion.LookRotation(f, up);
-                transform.localRotation = rotate;
-            }
-        }
 
+        //地面にヒットした瞬間かどうかを判定
+        if (!m_IsPrevGroundHit && m_GroundHitInfo.isHit)
+            m_IsGroundHitTrigger = true;
+        else
+            m_IsGroundHitTrigger = false;
+        //1フレーム前の情報として使うために渡す
+        m_IsPrevGroundHit = m_GroundHitInfo.isHit;
+
+        //移動処理
+        Move();
+
+        //重力をセット
+        m_GravityDir.SetDirection(GetDown());
     }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        //鉄棒にあたった瞬間
+        if (collision.gameObject.tag == "IronBar")
+        {
+            m_MoveManager.SetState(PlayerState.DANGLE);
+        }
+    }
+
 
     void LateUpdate()
     {
@@ -231,9 +208,6 @@ public class NormalMove : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        //アニメーションをセット
-        anm.SetBool("InputRoll", false);
-
         //ジャンプ関連の移動処理
         //重力で下方向に移動する
         Gravity();
@@ -282,8 +256,7 @@ public class NormalMove : MonoBehaviour
         //前、右方向への移動処理
         //プレイヤーの前ベクトルと上ベクトルを決定
         Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
-        //transform.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
-        tr.localRotation = rotate;
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
 
         //前ベクトル×スティックの傾き
         m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
@@ -293,14 +266,11 @@ public class NormalMove : MonoBehaviour
         //ジャンプ処理
         Jump();
 
-        if (Collision())
-        {
+        //進行方向に壁がある場合は移動量を0にする
+        if (CollisionWall())
             m_MoveSpeed = 0;
-        }
         else
-        {
             m_MoveSpeed = m_Save;
-        }
     }
 
     ///// <summary>
@@ -361,13 +331,14 @@ public class NormalMove : MonoBehaviour
     //    Jump();
     //}
 
+
     /// <summary>
     /// ジャンプ処理
     /// </summary>
     private void Jump()
     {
         //地面にいるときのジャンプ始動処理
-        if (m_GroundHitInfo.isHit && Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             //アニメーションの設定
             anm.SetBool("InputJump", true);
@@ -413,8 +384,7 @@ public class NormalMove : MonoBehaviour
     /// <summary>
     /// 壁との当たり判定用Ray(スマートじゃない)
     /// </summary>
-    /// <returns></returns>
-    private bool Collision()
+    private bool CollisionWall()
     {
         Vector3 rayPos = tr.position + tr.up / 3;
         Ray ray_front = new Ray(rayPos, tr.forward);
