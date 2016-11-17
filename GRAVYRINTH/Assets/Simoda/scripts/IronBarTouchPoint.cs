@@ -35,6 +35,7 @@ public class IronBarTouchPoint : MonoBehaviour
 
         if (other.gameObject.tag != "IronBar") return;
 
+        //プレイヤー方向に当たらなくなるまで移動
         if (isHit == true)
             tr.position += playerDirection * 0.01f;
     }
@@ -48,14 +49,30 @@ public class IronBarTouchPoint : MonoBehaviour
 
     public void TriggerExit(Collider other)
     {
+        //鉄棒が持っているベクトルを右に設定
         tr.right = other.GetComponent<IronBar>().GetBarVector();
+
+        if (player.GetComponent<PlayerIronBar>().barType == PlayerIronBar.BarType.POLE)
+        {
+            //POLE方を向かせる
+            tr.position = new Vector3(tr.position.x, player.position.y, tr.position.z);
+            Vector3 a = other.transform.position;
+            a.y = player.position.y;
+            player.LookAt(a);
+        }
+
+        //プレイヤーの親を自分に
         player.parent = tr;
+
         if (player.GetComponent<PlayerIronBar>().barType == PlayerIronBar.BarType.IRON_BAR)
         {
+            //プレイヤーの位置・回転を設定
             player.localPosition = new Vector3(0, -6.2f, 0);
             player.up = -direction;
-            player.localRotation = Quaternion.Euler(player.localRotation.eulerAngles.x, 0.0f, player.localRotation.eulerAngles.z);
+            //player.localRotation = Quaternion.Euler(player.localRotation.eulerAngles.x, 0.0f, player.localRotation.eulerAngles.z);
+            player.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
         }
+
         isHit = false;
     }
 
