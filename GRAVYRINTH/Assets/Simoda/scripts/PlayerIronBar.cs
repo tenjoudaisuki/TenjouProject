@@ -31,6 +31,8 @@ public class PlayerIronBar : MonoBehaviour
     private Collision barCollision;
     private Vector3 barVectorNor;
     private GravityDirection m_GravityDir;
+    //プレイヤーの状態管理クラス
+    private PlayerMoveManager m_MoveManager;
 
 
     void Start()
@@ -38,11 +40,13 @@ public class PlayerIronBar : MonoBehaviour
         tr = gameObject.transform;
         rb = gameObject.GetComponent<Rigidbody>();
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
+        m_MoveManager = GetComponent<PlayerMoveManager>();
 
     }
 
     void Update()
     {
+        Debug.DrawRay(tr.position, tr.up,Color.red,1.0f,false);
         Debug.DrawRay(tr.position, tr.right);
         //Debug.DrawRay(ironBarTouchPoint.transform.position, ironBarTouchPoint.transform.right);
 
@@ -111,7 +115,9 @@ public class PlayerIronBar : MonoBehaviour
                 case BarType.IRON_BAR:
 
                     m_GravityDir.SetDirection(-tr.up);
-                    rb.AddForce(-tr.up * 200.0f);
+                    m_MoveManager.SetState(PlayerState.NORMAL);
+                    m_MoveManager.SetPlayerUpFront(tr.up, Vector3.Cross(tr.up, Camera.main.transform.right));
+                    //rb.AddForce(-tr.up * 200.0f);
 
                     break;
                 case BarType.POLE:
@@ -119,6 +125,11 @@ public class PlayerIronBar : MonoBehaviour
                     break;
             }
         }
+    }
+
+    void LateUpdate()
+    {
+        //print(tr.up);
     }
 
     public void OnCollisionEnter(Collision collision)
@@ -144,7 +155,7 @@ public class PlayerIronBar : MonoBehaviour
 
             ironBar = collision.gameObject;
             barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetBarVector());
-            print(Vector3.Dot(transform.up, barVectorNor));
+            //print(Vector3.Dot(transform.up, barVectorNor));
 
 
             if (Vector3.Dot(transform.up, barVectorNor) < 0.7071068)
@@ -168,7 +179,7 @@ public class PlayerIronBar : MonoBehaviour
                 //tr.forward = a;
             }
 
-            print(barType);
+            //print(barType);
 
             ironBarTouchPoint.transform.position = collisionIronBarPosition;
 

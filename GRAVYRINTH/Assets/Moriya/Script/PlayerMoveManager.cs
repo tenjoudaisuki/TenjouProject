@@ -13,13 +13,16 @@ public class PlayerMoveManager : MonoBehaviour
     ///*==所持コンポーネント==*/
 
     ///*==外部設定変数==*/
+    [SerializeField, TooltipAttribute("最初の状態")]
+    private PlayerState m_StartState = PlayerState.NORMAL;
 
     ///*==内部設定変数==*/
     //現在のプレイヤーの状態
     private PlayerState m_PlayerState;
+    //１つ前のプレイヤーの状態
+    private PlayerState m_PrevPlayerState;
     //各状態中の処理はこの配列へ格納
     private Dictionary<PlayerState,MonoBehaviour> m_Moves;
-
 
     ///*==外部参照変数==*/
     void Awake()
@@ -29,7 +32,8 @@ public class PlayerMoveManager : MonoBehaviour
 
     void Start()
     {
-        m_PlayerState = PlayerState.NORMAL;
+        m_PrevPlayerState = PlayerState.NONE;
+        m_PlayerState = m_StartState;
         m_Moves = new Dictionary<PlayerState, MonoBehaviour>()
         {
             {PlayerState.NORMAL, GetComponent<NormalMove>() },
@@ -67,6 +71,20 @@ public class PlayerMoveManager : MonoBehaviour
     /// </summary>
     public void SetState(PlayerState state)
     {
+        m_PrevPlayerState = m_PlayerState;
         m_PlayerState = state;
+
+        //特定の変更時に行う処理
+        if(m_PrevPlayerState==PlayerState.DANGLE && m_PlayerState == PlayerState.NORMAL)
+            //地面との当たり判定を有効にする
+            m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().DangleToNormal();
+    }
+
+    /// <summary>
+    ///　プレイヤーの上と前を更新する
+    /// </summary>
+    public void SetPlayerUpFront(Vector3 up,Vector3 front)
+    {
+        m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().SetUpFront(up, front);
     }
 }
