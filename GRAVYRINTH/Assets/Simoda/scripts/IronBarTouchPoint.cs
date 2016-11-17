@@ -30,7 +30,7 @@ public class IronBarTouchPoint : MonoBehaviour
 
     public void OnTriggerStay(Collider other)
     {
-        print("Hit");
+        //print("Hit");
         //print(other.gameObject.tag + " " + other.gameObject.transform.position);
 
         if (other.gameObject.tag != "IronBar") return;
@@ -81,7 +81,7 @@ public class IronBarTouchPoint : MonoBehaviour
     {
         playerDirection = down;
         this.direction = direction;
-        print(this.direction);
+        //print(this.direction);
     }
 
     public void SetIsHit(bool hit)
