@@ -121,6 +121,8 @@ public class PlayerIronBar : MonoBehaviour
 
                     break;
                 case BarType.POLE:
+                    m_MoveManager.SetState(PlayerState.NORMAL);
+                    m_MoveManager.PlayerPoleKick(new Vector3(1,0,1));
 
                     break;
             }
