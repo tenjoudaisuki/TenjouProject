@@ -22,7 +22,7 @@ public class Block : MonoBehaviour
 
     void Update()
     {
-        print(moveDirection);
+        //print(moveDirection);
 
         //プレイヤーとの距離がpushDistanceより離れたら強制的にisPushをfalseに
         if (Vector3.Distance(tr.position, player.position + offset) > pushDistance) isPush = false;

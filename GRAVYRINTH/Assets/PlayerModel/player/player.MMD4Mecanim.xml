@@ -152,9 +152,12 @@
       <string>Assets/PlayerModel/player/vmd/player_polehorizontale.vmd</string>
       <string>Assets/PlayerModel/player/vmd/player_polehorizontalewait.vmd</string>
       <string>Assets/PlayerModel/player/vmd/player_poleverticale.vmd</string>
+      <string>Assets/PlayerModel/player/vmd/player_poleverticalejump.vmd</string>
       <string>Assets/PlayerModel/player/vmd/player_poleverticalewait.vmd</string>
       <string>Assets/PlayerModel/player/vmd/player_pull.vmd</string>
       <string>Assets/PlayerModel/player/vmd/player_push.vmd</string>
+      <string>Assets/PlayerModel/player/vmd/player_wall.vmd</string>
+      <string>Assets/PlayerModel/player/vmd/player_walljump.vmd</string>
     </vmdAssetPathList>
     <fbxOutputPath>Assets/PlayerModel/player/player.fbx</fbxOutputPath>
     <bulletPhysicsVersion>_275</bulletPhysicsVersion>
