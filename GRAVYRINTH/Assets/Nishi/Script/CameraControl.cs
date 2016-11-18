@@ -107,7 +107,8 @@ public class CameraControl : MonoBehaviour
         //ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
         Vector3 parallel = Vector3.Cross(up, right);
         //平行ベクトルをターゲットの上ベクトルを軸に回転さらに自身の横ベクトルを軸に回転しカメラの位置を計算
-        CameraPosDirection = Quaternion.AngleAxis(XAxisTotal,right) * Quaternion.AngleAxis(horizontal,up) * parallel;
+        Vector3 temp = Quaternion.AngleAxis(XAxisTotal, right) * Quaternion.AngleAxis(horizontal, up) * parallel;
+        CameraPosDirection = Vector3.Lerp(CameraPosDirection,temp,0.1f);
 
         //カメラを移動させる
         CameraMove();
