@@ -72,7 +72,7 @@ public class Block : MonoBehaviour
     {
         //プレイヤーと当たったらブロック（自分）をセットする
         if (collision.gameObject.tag == "Player")
-            player.GetComponent<PlayerBlockPush>().SetCollisionBlock(gameObject);
+            player.GetComponent<NormalMove>().SetCollisionBlock(gameObject);
     }
 
     //public void OnCollisionStay(Collision collision)
