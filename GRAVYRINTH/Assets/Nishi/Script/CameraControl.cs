@@ -46,6 +46,8 @@ public class CameraControl : MonoBehaviour
     //重力の方向
     private GravityDirection m_GravityDir;
 
+    private Vector3 mParallel;
+
     void Start()
     {
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
@@ -106,8 +108,9 @@ public class CameraControl : MonoBehaviour
 
         //ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
         Vector3 parallel = Vector3.Cross(up, right);
+        mParallel = Vector3.Lerp(mParallel, parallel, 0.3f);
         //平行ベクトルをターゲットの上ベクトルを軸に回転さらに自身の横ベクトルを軸に回転しカメラの位置を計算
-        Vector3 temp = Quaternion.AngleAxis(XAxisTotal, right) * Quaternion.AngleAxis(horizontal, up) * parallel;
+        Vector3 temp = Quaternion.AngleAxis(XAxisTotal, right) * Quaternion.AngleAxis(horizontal, up) * mParallel;
         CameraPosDirection = Vector3.Lerp(CameraPosDirection,temp,0.1f);
 
         //カメラを移動させる
@@ -165,7 +168,7 @@ public class CameraControl : MonoBehaviour
 
         //カメラを回転させる
         transform.localRotation = Quaternion.Slerp(transform.localRotation,
-          Quaternion.LookRotation((Target.position + offset) - transform.position,Target.up), 0.8f);
+          Quaternion.LookRotation((Target.position + offset) - transform.position,Target.up), 0.5f);
         //補間なし版
         //transform.localRotation = Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up);
     }
