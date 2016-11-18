@@ -46,7 +46,7 @@ public class PlayerIronBar : MonoBehaviour
 
     void Update()
     {
-        Debug.DrawRay(tr.position, tr.up,Color.red,1.0f,false);
+        Debug.DrawRay(tr.position, tr.up, Color.red, 1.0f, false);
         Debug.DrawRay(tr.position, tr.right);
         //Debug.DrawRay(ironBarTouchPoint.transform.position, ironBarTouchPoint.transform.right);
 
@@ -122,7 +122,7 @@ public class PlayerIronBar : MonoBehaviour
                     break;
                 case BarType.POLE:
                     m_MoveManager.SetState(PlayerState.NORMAL);
-                    m_MoveManager.PlayerPoleKick(new Vector3(1,0,1));
+                    m_MoveManager.PlayerPoleKick(new Vector3(1, 0, 1));
 
                     break;
             }
@@ -157,12 +157,14 @@ public class PlayerIronBar : MonoBehaviour
 
             ironBar = collision.gameObject;
             barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetBarVector());
+            //barVectorNor = ironBar.GetComponent<IronBar>().GetBarVector();
             //print(Vector3.Dot(transform.up, barVectorNor));
 
 
             if (Vector3.Dot(transform.up, barVectorNor) < 0.7071068)
             {
                 barType = BarType.IRON_BAR;
+
                 ironBarTouchPoint.GetComponent<IronBarTouchPoint>().
                     SetPlayerDirection(-tr.up, tr.position - collisionIronBarPosition);
 
