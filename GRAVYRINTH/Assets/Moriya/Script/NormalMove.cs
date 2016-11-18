@@ -110,7 +110,7 @@ public class NormalMove : MonoBehaviour
         //鉄棒にあたった瞬間
         if (collision.gameObject.tag == "IronBar")
         {
-            m_MoveManager.SetState(PlayerState.DANGLE);
+            m_MoveManager.SetState(PlayerState.IRON_BAR);
         }
     }
 
@@ -398,7 +398,7 @@ public class NormalMove : MonoBehaviour
     /// <summary>
     /// ぶら下がりを解除時の処理
     /// </summary>
-    public void DangleToNormal()
+    public void IronbarToNormal()
     {
         //地面との判定を再開
         m_IsCheckGround = true;
@@ -412,5 +412,13 @@ public class NormalMove : MonoBehaviour
     {
         m_Up = up;
         m_Front = front;
+    }
+
+    /// <summary>
+    /// ポールをキックしたときの移動
+    /// </summary>
+    public void StartPoleKick(Vector3 v)
+    {
+        rb.AddForce(v * 40);
     }
 }

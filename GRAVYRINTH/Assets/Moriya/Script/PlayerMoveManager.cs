@@ -37,7 +37,7 @@ public class PlayerMoveManager : MonoBehaviour
         m_Moves = new Dictionary<PlayerState, MonoBehaviour>()
         {
             {PlayerState.NORMAL, GetComponent<NormalMove>() },
-            {PlayerState.DANGLE, GetComponent<PlayerIronBar>() }
+            {PlayerState.IRON_BAR, GetComponent<PlayerIronBar>() }
         };
     }
 
@@ -45,7 +45,7 @@ public class PlayerMoveManager : MonoBehaviour
     {
         //m_Moves[PlayerState.NORMAL].enabled = true;
         //m_Moves[PlayerState.JUMP].enabled = true;
-        //m_Moves[PlayerState.DANGLE].enabled = true;
+        //m_Moves[PlayerState.IRON_BAR].enabled = true;
 
         //現在の状態のみを実行
         Action(m_PlayerState);
@@ -75,9 +75,9 @@ public class PlayerMoveManager : MonoBehaviour
         m_PlayerState = state;
 
         //特定の変更時に行う処理
-        if(m_PrevPlayerState==PlayerState.DANGLE && m_PlayerState == PlayerState.NORMAL)
+        if(m_PrevPlayerState==PlayerState.IRON_BAR && m_PlayerState == PlayerState.NORMAL)
             //地面との当たり判定を有効にする
-            m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().DangleToNormal();
+            m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().IronbarToNormal();
     }
 
     /// <summary>
@@ -86,5 +86,13 @@ public class PlayerMoveManager : MonoBehaviour
     public void SetPlayerUpFront(Vector3 up,Vector3 front)
     {
         m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().SetUpFront(up, front);
+    }
+
+    /// <summary>
+    /// 鉄棒よじ登り状態からジャンプして背面に飛ばせる
+    /// </summary>
+    public void PlayerPoleKick(Vector3 v)
+    {
+        m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().StartPoleKick(v);
     }
 }

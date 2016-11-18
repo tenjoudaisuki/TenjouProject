@@ -3,14 +3,19 @@ using System.Collections;
 
 public class PlayerHitinfo : MonoBehaviour
 {
-    public Vector3 m_CheckPoint;
+    Vector3 m_CheckPoint;
+    Quaternion m_Rotate;
+    Vector3 m_GravityDir;
+
 
     public void OnTriggerEnter(Collider other)
     {
         if(other.name == "CheckPoint")
         {
-            m_CheckPoint = other.gameObject.transform.position;
-            Debug.Log("チェックポイント" + m_CheckPoint);
+            m_CheckPoint = other.transform.position;
+            m_Rotate = transform.parent.localRotation;
+            m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>().GetDirection();
+            Debug.Log("チェックポイント" + m_GravityDir);
         }
     }
 
@@ -18,7 +23,10 @@ public class PlayerHitinfo : MonoBehaviour
     {
         if (other.name == "Inside")
         {
+            Debug.Log("もどれ" + m_GravityDir);
+            GameObject.Find("GravityDirection").GetComponent<GravityDirection>().SetDirection(m_GravityDir);
             transform.parent.transform.position = m_CheckPoint;
+            transform.parent.transform.localRotation = m_Rotate;
         }
     }
 }

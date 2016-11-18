@@ -6,8 +6,7 @@ public class CameraControl : MonoBehaviour
     private enum State
     {
         Normal,
-        BraDown,
-        Roll
+        BraDown
     }
 
     [SerializeField, TooltipAttribute("注視点の対象")]
@@ -175,23 +174,6 @@ public class CameraControl : MonoBehaviour
 
     }
 
-    private void Roll()
-    {
-        //モデル座標でのオフセット座標を求める
-        offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
-
-        Vector3 f = CameraPosDirection.normalized;
-        Vector3 up = -m_GravityDir.GetDirection().normalized;
-
-        //ターゲットの周りをステイックによって回転移動
-        TargetAroundMove(up, transform.right);
-        //transform.position = (Target.position + offset) + new Vector3(0, 0, -3);
-
-        //カメラを回転させる
-        transform.localRotation = Quaternion.Slerp(transform.localRotation,
-          Quaternion.LookRotation((Target.position + offset) - transform.position, up), 0.8f);
-    }
-
     /// <summary>
     /// カメラを最初の状態に
     /// </summary>
@@ -206,13 +188,11 @@ public class CameraControl : MonoBehaviour
 
     private void StateUpdate()
     {
-        if (Input.GetKey(KeyCode.LeftShift)) mCurrentState = State.Roll;
-        else mCurrentState = State.Normal;
-            switch (mCurrentState)
-            {
-                case State.Normal: Normal(); break;
-                case State.BraDown: BraDown(); break;
-                case State.Roll: Roll(); break;
-            }
+        mCurrentState = State.Normal;
+        switch (mCurrentState)
+        {
+            case State.Normal: Normal(); break;
+            case State.BraDown: BraDown(); break;
+        }
     }
 }
