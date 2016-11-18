@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: be7109c63734dff4b90b49cd29c787c8
-timeCreated: 1479428878
+timeCreated: 1479438709
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -11,14 +11,14 @@ ModelImporter:
     100006: 11.joint_LeftHip
     100008: 12.joint_LeftKnee
     100010: 13.!joint_knee_L_end
-    100012: 14.joint_shoulder_L_Mirror
-    100014: 15.joint_leg_L_Mirror
-    100016: 16.joint_arm_L_Mirror
-    100018: 17.joint_elbow_L_Mirror
-    100020: 18.!joint_elbow_L_end_Mirror
-    100022: 19.joint_knee_L_Mirror
+    100012: 14.joint_RightShoulder
+    100014: 15.joint_RightHip
+    100016: 16.joint_RightArm
+    100018: 17.joint_RightElbow
+    100020: 18.!joint_elbow_R_end
+    100022: 19.joint_RightKnee
     100024: 2.joint_Torso
-    100026: 20.!joint_knee_L_end_Mirror
+    100026: 20.!joint_knee_R_end
     100028: 21.!Root
     100030: 3.joint_Neck
     100032: 4.!joint_neck_end
@@ -35,14 +35,14 @@ ModelImporter:
     400006: 11.joint_LeftHip
     400008: 12.joint_LeftKnee
     400010: 13.!joint_knee_L_end
-    400012: 14.joint_shoulder_L_Mirror
-    400014: 15.joint_leg_L_Mirror
-    400016: 16.joint_arm_L_Mirror
-    400018: 17.joint_elbow_L_Mirror
-    400020: 18.!joint_elbow_L_end_Mirror
-    400022: 19.joint_knee_L_Mirror
+    400012: 14.joint_RightShoulder
+    400014: 15.joint_RightHip
+    400016: 16.joint_RightArm
+    400018: 17.joint_RightElbow
+    400020: 18.!joint_elbow_R_end
+    400022: 19.joint_RightKnee
     400024: 2.joint_Torso
-    400026: 20.!joint_knee_L_end_Mirror
+    400026: 20.!joint_knee_R_end
     400028: 21.!Root
     400030: 3.joint_Neck
     400032: 4.!joint_neck_end
@@ -64,9 +64,12 @@ ModelImporter:
     7400014: player_polehorizontale_vmd
     7400016: player_polehorizontalewait_vmd
     7400018: player_poleverticale_vmd
-    7400020: player_poleverticalewait_vmd
-    7400022: player_pull_vmd
-    7400024: player_push_vmd
+    7400020: player_poleverticalejump_vmd
+    7400022: player_poleverticalewait_vmd
+    7400024: player_pull_vmd
+    7400026: player_push_vmd
+    7400028: player_wall_vmd
+    7400030: player_walljump_vmd
     9500000: //RootNode
     13700000: U_Char
   materials:
@@ -79,13 +82,7 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
-    animationImportErrors: '
-
-      Imported file ''player'' conversion failed: Required human bone ''RightUpperLeg''
-      not found
-
-
-'
+    animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0

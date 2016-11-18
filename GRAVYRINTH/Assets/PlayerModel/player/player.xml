@@ -475,9 +475,9 @@
             <followCoef>0.000000</followCoef>
         </Bone>
         <Bone>
-            <nameJp>shoulder_L_Mirror</nameJp>
+            <nameJp>右肩</nameJp>
             <nameEn></nameEn>
-            <skeletonName>14.joint_shoulder_L_Mirror</skeletonName>
+            <skeletonName>14.joint_RightShoulder</skeletonName>
             <parentBoneID>2</parentBoneID>
             <sortedBoneID>15</sortedBoneID>
             <originalParentBoneID>2</originalParentBoneID>
@@ -495,9 +495,9 @@
             <followCoef>0.000000</followCoef>
         </Bone>
         <Bone>
-            <nameJp>leg_L_Mirror</nameJp>
+            <nameJp>右足</nameJp>
             <nameEn></nameEn>
-            <skeletonName>15.joint_leg_L_Mirror</skeletonName>
+            <skeletonName>15.joint_RightHip</skeletonName>
             <parentBoneID>9</parentBoneID>
             <sortedBoneID>16</sortedBoneID>
             <originalParentBoneID>9</originalParentBoneID>
@@ -515,9 +515,9 @@
             <followCoef>0.000000</followCoef>
         </Bone>
         <Bone>
-            <nameJp>arm_L_Mirror</nameJp>
+            <nameJp>右腕</nameJp>
             <nameEn></nameEn>
-            <skeletonName>16.joint_arm_L_Mirror</skeletonName>
+            <skeletonName>16.joint_RightArm</skeletonName>
             <parentBoneID>14</parentBoneID>
             <sortedBoneID>17</sortedBoneID>
             <originalParentBoneID>14</originalParentBoneID>
@@ -535,9 +535,9 @@
             <followCoef>0.000000</followCoef>
         </Bone>
         <Bone>
-            <nameJp>elbow_L_Mirror</nameJp>
+            <nameJp>右ひじ</nameJp>
             <nameEn></nameEn>
-            <skeletonName>17.joint_elbow_L_Mirror</skeletonName>
+            <skeletonName>17.joint_RightElbow</skeletonName>
             <parentBoneID>16</parentBoneID>
             <sortedBoneID>18</sortedBoneID>
             <originalParentBoneID>16</originalParentBoneID>
@@ -555,9 +555,9 @@
             <followCoef>0.000000</followCoef>
         </Bone>
         <Bone>
-            <nameJp>elbow_L_end_Mirror</nameJp>
+            <nameJp>elbow_R_end</nameJp>
             <nameEn></nameEn>
-            <skeletonName>18.!joint_elbow_L_end_Mirror</skeletonName>
+            <skeletonName>18.!joint_elbow_R_end</skeletonName>
             <parentBoneID>17</parentBoneID>
             <sortedBoneID>19</sortedBoneID>
             <originalParentBoneID>17</originalParentBoneID>
@@ -575,9 +575,9 @@
             <followCoef>0.000000</followCoef>
         </Bone>
         <Bone>
-            <nameJp>knee_L_Mirror</nameJp>
-            <nameEn>r</nameEn>
-            <skeletonName>19.joint_knee_L_Mirror</skeletonName>
+            <nameJp>右ひざ</nameJp>
+            <nameEn></nameEn>
+            <skeletonName>19.joint_RightKnee</skeletonName>
             <parentBoneID>15</parentBoneID>
             <sortedBoneID>20</sortedBoneID>
             <originalParentBoneID>15</originalParentBoneID>
@@ -587,17 +587,17 @@
                 <y>2.423735</y>
                 <z>1.368472</z>
             </origin>
-            <additionalFlags>0</additionalFlags>
-            <isLimitAngleX>0</isLimitAngleX>
+            <additionalFlags>1</additionalFlags>
+            <isLimitAngleX>1</isLimitAngleX>
             <boneType>Rotate</boneType>
             <targetBoneID>0</targetBoneID>
             <childBoneID>20</childBoneID>
             <followCoef>0.000000</followCoef>
         </Bone>
         <Bone>
-            <nameJp>knee_L_end_Mirror</nameJp>
+            <nameJp>knee_R_end</nameJp>
             <nameEn></nameEn>
-            <skeletonName>20.!joint_knee_L_end_Mirror</skeletonName>
+            <skeletonName>20.!joint_knee_R_end</skeletonName>
             <parentBoneID>19</parentBoneID>
             <sortedBoneID>21</sortedBoneID>
             <originalParentBoneID>19</originalParentBoneID>
