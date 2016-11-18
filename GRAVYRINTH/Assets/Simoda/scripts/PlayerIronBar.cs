@@ -46,7 +46,7 @@ public class PlayerIronBar : MonoBehaviour
 
     void Update()
     {
-        Debug.DrawRay(tr.position, tr.up, Color.red, 1.0f, false);
+        Debug.DrawRay(tr.position, tr.up,Color.red,1.0f,false);
         Debug.DrawRay(tr.position, tr.right);
         //Debug.DrawRay(ironBarTouchPoint.transform.position, ironBarTouchPoint.transform.right);
 
@@ -116,13 +116,15 @@ public class PlayerIronBar : MonoBehaviour
 
                     m_GravityDir.SetDirection(-tr.up);
                     m_MoveManager.SetState(PlayerState.NORMAL);
+                    //プレイヤーの向きを更新する
                     m_MoveManager.SetPlayerUpFront(tr.up, Vector3.Cross(tr.up, Camera.main.transform.right));
                     //rb.AddForce(-tr.up * 200.0f);
 
                     break;
                 case BarType.POLE:
                     m_MoveManager.SetState(PlayerState.NORMAL);
-                    m_MoveManager.PlayerPoleKick(new Vector3(1, 0, 1));
+                    //背面斜め上方向に方向にジャンプする
+                    m_MoveManager.PlayerPoleKick(Vector3.Normalize(-tr.forward + tr.up));
 
                     break;
             }
@@ -157,14 +159,12 @@ public class PlayerIronBar : MonoBehaviour
 
             ironBar = collision.gameObject;
             barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetBarVector());
-            //barVectorNor = ironBar.GetComponent<IronBar>().GetBarVector();
             //print(Vector3.Dot(transform.up, barVectorNor));
 
 
             if (Vector3.Dot(transform.up, barVectorNor) < 0.7071068)
             {
                 barType = BarType.IRON_BAR;
-
                 ironBarTouchPoint.GetComponent<IronBarTouchPoint>().
                     SetPlayerDirection(-tr.up, tr.position - collisionIronBarPosition);
 
