@@ -10,13 +10,14 @@ public class IronBarTouchPoint : MonoBehaviour
     private Vector3 direction;
 
     //public GameObject headPoint;
-    public Transform player;
+    private Transform player;
     public float offsetY;
 
     void Start()
     {
         tr = gameObject.transform;
         rb = GetComponent<Rigidbody>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     void Update()
@@ -56,9 +57,9 @@ public class IronBarTouchPoint : MonoBehaviour
         {
             //POLE方を向かせる
             tr.position = new Vector3(tr.position.x, player.position.y, tr.position.z);
-            Vector3 a = other.transform.position;
-            a.y = player.position.y;
-            player.LookAt(a);
+            Vector3 holeDirection = other.transform.position;
+            holeDirection.y = player.position.y;
+            player.LookAt(holeDirection);
         }
 
         //プレイヤーの親を自分に
