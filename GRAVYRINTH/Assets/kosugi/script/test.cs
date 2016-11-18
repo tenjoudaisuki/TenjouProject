@@ -1,17 +1,7 @@
-﻿/**==========================================================================*/
-/**
- * プレイヤーの移動（通常時）
- * 歩く、斜面を歩く、段差を登る。
- * アニメーションも行う。
- * 重力の方向のセットもここで行う。
- * 作成者：守屋   作成日：16/10/14
-/**==========================================================================*/
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
-public class NormalMove : MonoBehaviour
-{
+public class test : MonoBehaviour {
     /*==所持コンポーネント==*/
     private Transform tr;
     private Rigidbody rb;
@@ -40,8 +30,6 @@ public class NormalMove : MonoBehaviour
     private float m_AnimSpeed = 1.5f;
     [SerializeField, TooltipAttribute("ポールからジャンプするときの強さ")]
     private float m_PoleJumpPower = 140.0f;
-    [SerializeField, TooltipAttribute("壁ジャンプ力")]
-    private float m_WallJumpPower = 200;
 
 
     /*==内部設定変数==*/
@@ -71,10 +59,6 @@ public class NormalMove : MonoBehaviour
     private float m_Save;
     //ヒットしているブロック（動かすブロック）
     private Block m_CollisionBlock;
-    //壁との当たり判定用前方レイ
-    RayHitInfo m_WallHitInfoFront;
-    //壁ずり、壁ジャンプ用フラグ
-    bool isWallJump, isWallTouch;
 
     /*==外部参照変数==*/
 
@@ -112,8 +96,7 @@ public class NormalMove : MonoBehaviour
         //重力をセット
         m_GravityDir.SetDirection(GetDown());
 
-        //壁ジャンプ
-        WallJump();
+        WallKick();
     }
 
     public void OnCollisionEnter(Collision collision)
@@ -127,7 +110,7 @@ public class NormalMove : MonoBehaviour
 
     void LateUpdate()
     {
-        print(rb.velocity);
+        //print(rb.velocity);
     }
 
     /// <summary>
@@ -269,13 +252,13 @@ public class NormalMove : MonoBehaviour
         RaycastHit hit;
         //[IgnoredObj]レイヤー以外と判定させる
         int layermask = ~(1 << 10);
-        m_GroundHitInfo.isHit = Physics.Raycast(ray, out hit, m_RayLength,layermask);
+        m_GroundHitInfo.isHit = Physics.Raycast(ray, out hit, m_RayLength, layermask);
         m_GroundHitInfo.hit = hit;
         //レイをデバッグ表示
         Debug.DrawRay(rayPos, GetDown() * m_RayLength, Color.grey, 1.0f, false);
     }
 
-    
+
 
     ///// <summary>
     ///// 通常移動
@@ -371,7 +354,7 @@ public class NormalMove : MonoBehaviour
             {
                 rb.velocity = Vector3.zero;
             }
-        }   
+        }
     }
 
     /// <summary>
@@ -406,8 +389,8 @@ public class NormalMove : MonoBehaviour
         //[IgnoredObj]レイヤー以外と判定させる
         int layermask = ~(1 << 10);
         m_WallHitInfoFront.isHit = Physics.Raycast(ray_front, out hit_front, m_WallRayLength, layermask);
-        m_WallHitInfoLeft.isHit = Physics.Raycast(ray_left, out hit_left, m_WallRayLength * 3 / 4, layermask);
-        m_WallHitInfoRight.isHit = Physics.Raycast(ray_right, out hit_right, m_WallRayLength * 3 / 4, layermask);
+        m_WallHitInfoLeft.isHit = Physics.Raycast(ray_left, out hit_left, m_WallRayLength, layermask);
+        m_WallHitInfoRight.isHit = Physics.Raycast(ray_right, out hit_right, m_WallRayLength, layermask);
 
         m_WallHitInfoFront.hit = hit_front;
         m_WallHitInfoLeft.hit = hit_left;
@@ -469,13 +452,14 @@ public class NormalMove : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 壁ずりと壁キック(一回のみ)
-    /// </summary>
-    public void WallJump()
+    RayHitInfo m_WallHitInfoFront;
+    bool isWallKick;
+    bool isWallTouch;
+    public float m_WallKickPower = 200;
+  
+    public void WallKick()
     {
-        //動作が怪しくなる場合があります
-        print("!");
+        print(m_GroundHitInfo.isHit);
         Vector3 inputAxis = new Vector3(MoveFunctions.GetMoveInputAxis().x, 0, MoveFunctions.GetMoveInputAxis().y);
 
         float wallAngle = Vector3.Angle(tr.forward, m_WallHitInfoFront.hit.normal);
@@ -487,10 +471,10 @@ public class NormalMove : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 //isWallKick = true;
-                rb.AddForce((tr.up * 1.5f - tr.forward) * m_WallJumpPower);
+                rb.AddForce((tr.up*1.5f - tr.forward) * m_WallKickPower);
                 SetUpFront(tr.up, -tr.forward);
             }
-            if (frontAngle != 0 && !isWallJump)
+            if (frontAngle !=0 && !isWallKick)
             {
                 rb.velocity = Vector3.zero;
                 rb.AddForce(GetDown() * 50);
@@ -499,10 +483,10 @@ public class NormalMove : MonoBehaviour
         }
         else
         {
-            isWallTouch = false;
+            isWallTouch = false;          
         }
 
-        if (m_GroundHitInfo.isHit)
-            isWallJump = false;
+        if(m_GroundHitInfo.isHit)
+            isWallKick = false;
     }
 }
