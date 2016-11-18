@@ -1,0 +1,141 @@
+fileFormatVersion: 2
+guid: be7109c63734dff4b90b49cd29c787c8
+timeCreated: 1479428878
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: 0.!joint_Center
+    100002: 1.!joint_upper body dummy
+    100004: 10.!joint_HipMasterTip
+    100006: 11.joint_LeftHip
+    100008: 12.joint_LeftKnee
+    100010: 13.!joint_knee_L_end
+    100012: 14.joint_shoulder_L_Mirror
+    100014: 15.joint_leg_L_Mirror
+    100016: 16.joint_arm_L_Mirror
+    100018: 17.joint_elbow_L_Mirror
+    100020: 18.!joint_elbow_L_end_Mirror
+    100022: 19.joint_knee_L_Mirror
+    100024: 2.joint_Torso
+    100026: 20.!joint_knee_L_end_Mirror
+    100028: 21.!Root
+    100030: 3.joint_Neck
+    100032: 4.!joint_neck_end
+    100034: 5.joint_LeftShoulder
+    100036: 6.joint_LeftArm
+    100038: 7.joint_LeftElbow
+    100040: 8.!joint_elbow_L_end
+    100042: 9.joint_HipMaster
+    100044: //RootNode
+    100046: U_Char
+    400000: 0.!joint_Center
+    400002: 1.!joint_upper body dummy
+    400004: 10.!joint_HipMasterTip
+    400006: 11.joint_LeftHip
+    400008: 12.joint_LeftKnee
+    400010: 13.!joint_knee_L_end
+    400012: 14.joint_shoulder_L_Mirror
+    400014: 15.joint_leg_L_Mirror
+    400016: 16.joint_arm_L_Mirror
+    400018: 17.joint_elbow_L_Mirror
+    400020: 18.!joint_elbow_L_end_Mirror
+    400022: 19.joint_knee_L_Mirror
+    400024: 2.joint_Torso
+    400026: 20.!joint_knee_L_end_Mirror
+    400028: 21.!Root
+    400030: 3.joint_Neck
+    400032: 4.!joint_neck_end
+    400034: 5.joint_LeftShoulder
+    400036: 6.joint_LeftArm
+    400038: 7.joint_LeftElbow
+    400040: 8.!joint_elbow_L_end
+    400042: 9.joint_HipMaster
+    400044: //RootNode
+    400046: U_Char
+    4300000: U_Char
+    7400000: player_wait_vmd
+    7400002: player_walk_vmd
+    7400004: player_clambbig_vmd
+    7400006: player_clamblittle_vmd
+    7400008: player_hover_vmd
+    7400010: player_jump_vmd
+    7400012: player_landing_vmd
+    7400014: player_polehorizontale_vmd
+    7400016: player_polehorizontalewait_vmd
+    7400018: player_poleverticale_vmd
+    7400020: player_poleverticalewait_vmd
+    7400022: player_pull_vmd
+    7400024: player_push_vmd
+    9500000: //RootNode
+    13700000: U_Char
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: '
+
+      Imported file ''player'' conversion failed: Required human bone ''RightUpperLeg''
+      not found
+
+
+'
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
