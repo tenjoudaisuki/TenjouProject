@@ -22,7 +22,7 @@ public class PlayerIronBar : MonoBehaviour
     public Vector3 collisionIronBarPosition;
     //public Vector3 touchIronBarPlayerPosition;
 
-    public Transform headPoint;
+    //public Transform headPoint;
     public GameObject ironBarTouchPoint;
 
     public BarType barType;
@@ -46,7 +46,7 @@ public class PlayerIronBar : MonoBehaviour
 
     void Update()
     {
-        Debug.DrawRay(tr.position, tr.up,Color.red,1.0f,false);
+        Debug.DrawRay(tr.position, tr.up, Color.red, 1.0f, false);
         Debug.DrawRay(tr.position, tr.right);
         //Debug.DrawRay(ironBarTouchPoint.transform.position, ironBarTouchPoint.transform.right);
 
@@ -62,7 +62,7 @@ public class PlayerIronBar : MonoBehaviour
                     Debug.DrawRay(point, Vector3.up);
                     ironBarTouchPoint.transform.RotateAround(point, tr.right, Input.GetAxis("Vertical") * 60.0f * Time.deltaTime);
 
-                    float moveArea = ironBar.transform.localScale.y;
+                    float moveArea = ironBar.GetComponent<IronBar>().GetMoveArea();
                     Vector3 barPos = ironBar.transform.position;
                     Vector3 movement = barVectorNor * Input.GetAxis("Horizontal") * 0.1f;
                     ironBarTouchPoint.transform.position += movement;
@@ -84,7 +84,7 @@ public class PlayerIronBar : MonoBehaviour
                     Debug.DrawRay(point, Vector3.up);
                     ironBarTouchPoint.transform.RotateAround(point, tr.up, -Input.GetAxis("Horizontal") * 90.0f * Time.deltaTime);
 
-                    moveArea = ironBar.transform.localScale.y;
+                    moveArea = ironBar.GetComponent<IronBar>().GetMoveArea();
                     barPos = ironBar.transform.position;
                     movement = barVectorNor * -Input.GetAxis("Vertical") * -0.1f;
                     ironBarTouchPoint.transform.position += movement;
