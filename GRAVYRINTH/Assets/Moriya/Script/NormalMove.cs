@@ -38,6 +38,8 @@ public class NormalMove : MonoBehaviour
     private float m_JumpedTime = 1.0f;
     [SerializeField, TooltipAttribute("アニメーション再生速度")]
     private float m_AnimSpeed = 1.5f;
+    [SerializeField, TooltipAttribute("ポールからジャンプするときの強さ")]
+    private float m_PoleJumpPower = 140.0f;
 
 
     /*==内部設定変数==*/
@@ -209,8 +211,26 @@ public class NormalMove : MonoBehaviour
         //前ベクトル×スティックの傾き
         m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
 
-        //移動
-        tr.position += m_MoveVelocity * Time.deltaTime;
+        //ブロック移動ボタンを押していて、かつブロックが近くにある時
+        if (Input.GetKey(KeyCode.B) && m_CollisionBlock != null)
+        {
+            m_CollisionBlock.IsPushDistance();
+            if (m_CollisionBlock.isPush == false) return;
+
+            tr.GetComponent<NormalMove>().enabled = false;
+
+            Vector3 moveDirection = m_CollisionBlock.GetBlockMoveDirection();
+            m_MoveVelocity = (moveDirection * -m_MoveVelocity.y + moveDirection * 0.0f) * m_MoveSpeed;
+            m_CollisionBlock.SetMoveVector(m_MoveVelocity);
+            //移動
+            tr.position += m_MoveVelocity * Time.deltaTime;
+        }
+        //通常時
+        else
+        {
+            //移動
+            tr.position += m_MoveVelocity * Time.deltaTime;
+        }
 
         //ジャンプ処理
         Jump();
@@ -419,6 +439,22 @@ public class NormalMove : MonoBehaviour
     /// </summary>
     public void StartPoleKick(Vector3 v)
     {
-        rb.AddForce(v * 40);
+        rb.AddForce(v * m_PoleJumpPower);
+    }
+
+    /// <summary>
+    /// 当たったブロックをセットする
+    /// </summary>
+    /// <param name="obj"></param>
+    public void SetCollisionBlock(GameObject obj)
+    {
+        try
+        {
+            m_CollisionBlock = obj.GetComponent<Block>();
+        }
+        catch
+        {
+            m_CollisionBlock = null;
+        }
     }
 }

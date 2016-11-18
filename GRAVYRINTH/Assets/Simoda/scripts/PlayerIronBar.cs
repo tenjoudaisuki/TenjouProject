@@ -116,13 +116,15 @@ public class PlayerIronBar : MonoBehaviour
 
                     m_GravityDir.SetDirection(-tr.up);
                     m_MoveManager.SetState(PlayerState.NORMAL);
+                    //プレイヤーの向きを更新する
                     m_MoveManager.SetPlayerUpFront(tr.up, Vector3.Cross(tr.up, Camera.main.transform.right));
                     //rb.AddForce(-tr.up * 200.0f);
 
                     break;
                 case BarType.POLE:
                     m_MoveManager.SetState(PlayerState.NORMAL);
-                    m_MoveManager.PlayerPoleKick(new Vector3(1,0,1));
+                    //背面斜め上方向に方向にジャンプする
+                    m_MoveManager.PlayerPoleKick(Vector3.Normalize(-tr.forward + tr.up));
 
                     break;
             }
