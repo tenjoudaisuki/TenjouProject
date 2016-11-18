@@ -118,7 +118,9 @@ public class NormalMove : MonoBehaviour
 
     void LateUpdate()
     {
-        print(rb.velocity);
+        if (Input.GetKeyDown(KeyCode.R))
+            Respawn(new Vector3(2, 1, -9), Vector3.up, Vector3.forward);
+
     }
 
     /// <summary>
@@ -359,8 +361,7 @@ public class NormalMove : MonoBehaviour
         else
         {
             rb.velocity = Vector3.zero;
-        }
-            
+        }       
     }
 
     /// <summary>
@@ -456,5 +457,17 @@ public class NormalMove : MonoBehaviour
         {
             m_CollisionBlock = null;
         }
+    }
+
+    /// <summary>
+    /// 座標と向きを指定してリスポーンする
+    /// </summary>
+    public void Respawn(Vector3 position,Vector3 up,Vector3 front)
+    {
+        tr.position = position;
+        m_Up = up;
+        m_Front = front;
+        //重力などをリセット
+        rb.velocity = Vector3.zero;
     }
 }
