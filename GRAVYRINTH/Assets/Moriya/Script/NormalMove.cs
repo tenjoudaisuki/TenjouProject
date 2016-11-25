@@ -105,6 +105,9 @@ public class NormalMove : MonoBehaviour
 
         //重力をセット
         m_GravityDir.SetDirection(GetDown());
+
+        //壁キック処理
+        WallKick();
     }
 
     public void OnCollisionEnter(Collision collision)
@@ -118,7 +121,9 @@ public class NormalMove : MonoBehaviour
 
     void LateUpdate()
     {
-        print(rb.velocity);
+        if (Input.GetKeyDown(KeyCode.R))
+            Respawn(new Vector3(2, 1, -9), Vector3.up, Vector3.forward);
+
     }
 
     /// <summary>
@@ -359,8 +364,7 @@ public class NormalMove : MonoBehaviour
         else
         {
             rb.velocity = Vector3.zero;
-        }
-            
+        }       
     }
 
     /// <summary>
@@ -390,7 +394,7 @@ public class NormalMove : MonoBehaviour
         Ray ray_right = new Ray(rayPos, tr.forward + tr.right);
 
         RaycastHit hit_front, hit_left, hit_right;
-        RayHitInfo m_WallHitInfoFront, m_WallHitInfoLeft, m_WallHitInfoRight;
+        RayHitInfo m_WallHitInfoLeft, m_WallHitInfoRight;
 
         //[IgnoredObj]レイヤー以外と判定させる
         int layermask = ~(1 << 10);
@@ -456,5 +460,55 @@ public class NormalMove : MonoBehaviour
         {
             m_CollisionBlock = null;
         }
+    }
+
+    /// <summary>
+    /// 座標と向きを指定してリスポーンする
+    /// </summary>
+    public void Respawn(Vector3 position,Vector3 up,Vector3 front)
+    {
+        tr.position = position;
+        m_Up = up;
+        m_Front = front;
+        //重力などをリセット
+        rb.velocity = Vector3.zero;
+    }
+
+    RayHitInfo m_WallHitInfoFront;
+    bool isWallKick;
+    bool isWallTouch;
+    public float m_WallKickPower = 200;
+
+    public void WallKick()
+    {
+        print(m_GroundHitInfo.isHit);
+        Vector3 inputAxis = new Vector3(MoveFunctions.GetMoveInputAxis().x, 0, MoveFunctions.GetMoveInputAxis().y);
+
+        float wallAngle = Vector3.Angle(tr.forward, m_WallHitInfoFront.hit.normal);
+        float frontAngle = Vector3.Angle(tr.forward, tr.forward * inputAxis.magnitude);
+
+        if ((160 < wallAngle && wallAngle < 200) && !m_GroundHitInfo.isHit)
+        {
+            rb.velocity = Vector3.zero;
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                //isWallKick = true;
+                rb.AddForce((tr.up * 1.5f - tr.forward) * m_WallKickPower);
+                SetUpFront(tr.up, -tr.forward);
+            }
+            if (frontAngle != 0 && !isWallKick)
+            {
+                rb.velocity = Vector3.zero;
+                rb.AddForce(GetDown() * 50);
+                isWallTouch = true;
+            }
+        }
+        else
+        {
+            isWallTouch = false;
+        }
+
+        if (m_GroundHitInfo.isHit)
+            isWallKick = false;
     }
 }

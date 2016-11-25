@@ -164,7 +164,7 @@ public class PlayerIronBar : MonoBehaviour
             rb.isKinematic = true;
 
             GetComponent<NormalMove>().enabled = false;
-            GetComponent<PlayerBlockPush>().enabled = false;
+            //GetComponent<PlayerBlockPush>().enabled = false;
 
             tr = touchTr;
             touchIronBar = true;
@@ -213,7 +213,7 @@ public class PlayerIronBar : MonoBehaviour
         else
         {
             GetComponent<NormalMove>().enabled = true;
-            GetComponent<PlayerBlockPush>().enabled = true;
+            //GetComponent<PlayerBlockPush>().enabled = true;
         }
     }
 
