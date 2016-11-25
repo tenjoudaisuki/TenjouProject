@@ -3,10 +3,12 @@ using System.Collections;
 
 public class Block : MonoBehaviour
 {
+    
     private Transform player;
     private Transform tr;
     private Vector3 offset;
     private Vector3 moveDirection;
+
     public Vector3 moveVec;
     public bool isPush;
     public float offsetY;
@@ -151,15 +153,5 @@ public class Block : MonoBehaviour
     private Vector3 PlayerDirectionOffsetY(float offset)
     {
         return new Vector3(0.0f, offset, 0.0f);
-    }
-
-    private void PlayerDistance()
-    {
-        float distance = Vector3.Distance(tr.position, player.position + offset);
-
-        if (distance <= 3.0f)
-        {
-
-        }
     }
 }
