@@ -152,4 +152,14 @@ public class Block : MonoBehaviour
     {
         return new Vector3(0.0f, offset, 0.0f);
     }
+
+    private void PlayerDistance()
+    {
+        float distance = Vector3.Distance(tr.position, player.position + offset);
+
+        if (distance <= 3.0f)
+        {
+
+        }
+    }
 }
