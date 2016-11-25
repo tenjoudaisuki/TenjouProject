@@ -7,7 +7,8 @@ public class Door : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        transform.RotateAroundLocal(transform.forward,mSpeed * Time.deltaTime);
+        Vector3 axis = transform.parent.right;
+        transform.Rotate(axis,mSpeed * Time.deltaTime);
 	
 	}
 }

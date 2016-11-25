@@ -82,17 +82,35 @@ public class PlayerIronBar : MonoBehaviour
 
                     point = ironBar.transform.position;
                     Debug.DrawRay(point, Vector3.up);
+                    //Vector3 a = ironBarTouchPoint.transform.position;
+                    //Vector3 p = Vector3Abs(tr.position);
                     ironBarTouchPoint.transform.RotateAround(point, tr.up, -Input.GetAxis("Horizontal") * 90.0f * Time.deltaTime);
+                    //if(p-Vector3Abs(tr.position)>new Vector3(2.0f,2.0f,2.0f))
+                    //{
+
+                    //}
+                    //POLEの回転時のバグ用
 
                     moveArea = ironBar.GetComponent<IronBar>().GetMoveArea();
                     barPos = ironBar.transform.position;
                     movement = barVectorNor * -Input.GetAxis("Vertical") * -0.1f;
+
+                    float distant = Mathf.Abs(tr.position.y - (ironBarTouchPoint.transform.position.y + movement.y));
+                    if (distant > 0.35f)
+                    {
+                        tr.parent = null;
+                        ironBarTouchPoint.transform.position = new Vector3(ironBarTouchPoint.transform.position.x, tr.position.y, ironBarTouchPoint.transform.position.z);
+                        tr.parent = ironBarTouchPoint.transform;
+                        break;
+                    }
+
                     ironBarTouchPoint.transform.position += movement;
                     ironBarTouchPoint.transform.position =
                         new Vector3(
                             Mathf.Clamp(ironBarTouchPoint.transform.position.x, barPos.x - moveArea, barPos.x + moveArea),
                             Mathf.Clamp(ironBarTouchPoint.transform.position.y, barPos.y - moveArea, barPos.y + moveArea),
                             Mathf.Clamp(ironBarTouchPoint.transform.position.z, barPos.z - moveArea, barPos.z + moveArea));
+
 
                     //moveArea = ironBar.transform.localScale.y;
                     //movement = barVectorNor * -Input.GetAxis("Vertical") * -0.1f;
@@ -156,26 +174,28 @@ public class PlayerIronBar : MonoBehaviour
             barCollision = collision;
             collisionIronBarPosition = barCollision.contacts[0].point;
 
-
             ironBar = collision.gameObject;
             barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetBarVector());
             //print(Vector3.Dot(transform.up, barVectorNor));
 
-
-            if (Vector3.Dot(transform.up, barVectorNor) < 0.7071068)
+            //0.7071068
+            if (Vector3.Dot(tr.up, barVectorNor) < 0.7071068)
             {
                 barType = BarType.IRON_BAR;
                 ironBarTouchPoint.GetComponent<IronBarTouchPoint>().
                     SetPlayerDirection(-tr.up, tr.position - collisionIronBarPosition);
 
+                barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetIronBarVector());
                 tr.right = barVectorNor;
             }
             else
             {
                 barType = BarType.POLE;
+
                 ironBarTouchPoint.GetComponent<IronBarTouchPoint>().
                     SetPlayerDirection(-tr.forward, tr.position - collisionIronBarPosition);
 
+                barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
                 tr.up = barVectorNor;
 
                 //Vector3 a = ironBar.transform.position;
@@ -183,7 +203,7 @@ public class PlayerIronBar : MonoBehaviour
                 //tr.forward = a;
             }
 
-            //print(barType);
+            print(barType);
 
             ironBarTouchPoint.transform.position = collisionIronBarPosition;
 
@@ -218,6 +238,11 @@ public class PlayerIronBar : MonoBehaviour
         Debug.DrawRay(reyPos, tr.up * 0.5f, Color.green);
 
         return result;
+    }
+
+    private Vector3 Vector3Abs(Vector3 origin)
+    {
+        return new Vector3(Mathf.Abs(origin.x), Mathf.Abs(origin.y), Mathf.Abs(origin.z));
     }
 
 

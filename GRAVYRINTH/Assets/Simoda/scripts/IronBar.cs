@@ -25,12 +25,31 @@ public class IronBar : MonoBehaviour
 
     public Vector3 GetBarVector()
     {
-        //float angle = Vector3.Angle(player.right, player.position + barVector);
-        //print(angle);
-        //if (angle > 90.0f)
-        //    barVector = -barVector;
+        //print(Vector3.Angle(player.up, player.position + barVector));
+        if (Vector3.Angle(player.up, player.position + barVector) > 120.0f)
+            return -barVector;
+        else
+            return barVector;
+    }
 
-        return barVector;
+    public Vector3 GetIronBarVector()
+    {
+        float angle = Vector3.Angle(player.right, player.position + barVector);
+        //print(angle);
+        if (angle > 90.0f)
+            return -barVector;
+        else
+            return barVector;
+    }
+
+    public Vector3 GetPoleVector()
+    {
+        float angle = Vector3.Angle(player.up, player.position + barVector);
+        print(angle);
+        if (angle > 90.0f)
+            return -barVector;
+        else
+            return barVector;
     }
 
     public float GetMoveArea()

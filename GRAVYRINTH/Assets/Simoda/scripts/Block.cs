@@ -3,10 +3,12 @@ using System.Collections;
 
 public class Block : MonoBehaviour
 {
+    
     private Transform player;
     private Transform tr;
     private Vector3 offset;
     private Vector3 moveDirection;
+
     public Vector3 moveVec;
     public bool isPush;
     public float offsetY;
