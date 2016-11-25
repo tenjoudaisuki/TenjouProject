@@ -34,6 +34,8 @@ public class PlayerIronBar : MonoBehaviour
     //プレイヤーの状態管理クラス
     private PlayerMoveManager m_MoveManager;
 
+    // アニメーション
+    private Animator anm;
 
     void Start()
     {
@@ -42,6 +44,7 @@ public class PlayerIronBar : MonoBehaviour
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
         m_MoveManager = GetComponent<PlayerMoveManager>();
 
+        anm = GetComponent<Animator>();
     }
 
     void Update()
@@ -72,6 +75,13 @@ public class PlayerIronBar : MonoBehaviour
                             Mathf.Clamp(ironBarTouchPoint.transform.position.y, barPos.y - moveArea, barPos.y + moveArea),
                             Mathf.Clamp(ironBarTouchPoint.transform.position.z, barPos.z - moveArea, barPos.z + moveArea));
 
+                    //アニメーション変更
+                    anm.SetBool("PoleH", true);
+                    if (movement != Vector3.zero)
+                        anm.SetBool("PoleHMove", true);
+                    else
+                        anm.SetBool("PoleHMove", false);
+
                     //Vector3 newPos = ironBarTouchPoint.transform.position + movement;
                     //Vector3 offset = newPos - ironBar.transform.position;
                     //ironBarTouchPoint.transform.position = ironBar.transform.position + Vector3.ClampMagnitude(offset, moveArea);
@@ -94,6 +104,16 @@ public class PlayerIronBar : MonoBehaviour
                             Mathf.Clamp(ironBarTouchPoint.transform.position.y, barPos.y - moveArea, barPos.y + moveArea),
                             Mathf.Clamp(ironBarTouchPoint.transform.position.z, barPos.z - moveArea, barPos.z + moveArea));
 
+                    //アニメーション変更
+                    anm.SetBool("PoleV", true);
+                    
+                    if (movement != Vector3.zero)
+                        anm.SetBool("PoleVMove", true);
+                    else
+                    {
+                        anm.SetBool("PoleVMove", false);
+                    }
+
                     //moveArea = ironBar.transform.localScale.y;
                     //movement = barVectorNor * -Input.GetAxis("Vertical") * -0.1f;
                     //newPos = ironBarTouchPoint.transform.position + movement;
@@ -114,6 +134,10 @@ public class PlayerIronBar : MonoBehaviour
             {
                 case BarType.IRON_BAR:
 
+                    //アニメーション変更
+                    anm.SetBool("PoleH", false);
+                    anm.SetBool("PoleHJump", true);
+
                     m_GravityDir.SetDirection(-tr.up);
                     m_MoveManager.SetState(PlayerState.NORMAL);
                     //プレイヤーの向きを更新する
@@ -122,6 +146,11 @@ public class PlayerIronBar : MonoBehaviour
 
                     break;
                 case BarType.POLE:
+
+                    //アニメーション変更
+                    anm.SetBool("PoleV", false);
+                    anm.SetBool("PoleVJump", true);
+
                     m_MoveManager.SetState(PlayerState.NORMAL);
                     //背面斜め上方向に方向にジャンプする
                     m_MoveManager.PlayerPoleKick(Vector3.Normalize(-tr.forward + tr.up));
