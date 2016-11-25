@@ -5,6 +5,7 @@ public class CameraControl : MonoBehaviour
 {
     private enum State
     {
+        StartMove,
         Normal,
         BraDown
     }
@@ -39,29 +40,26 @@ public class CameraControl : MonoBehaviour
     /// <summary>
     /// 最初のカメラ位置
     /// </summary>
-    private Transform FastTransform;
+    private Vector3 mFastPosition;
 
-    private State mCurrentState = State.Normal;
-
-    //重力の方向
-    private GravityDirection m_GravityDir;
+    private State mCurrentState = State.StartMove;
 
     private Vector3 mParallel;
 
+    public float mTimer = 0.0f;
+
+
     void Start()
     {
-        m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
 
-        offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
+        //offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
 
-        transform.localRotation = Quaternion.Slerp(transform.localRotation,
-            Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up), 0.5f);
+        //transform.localRotation = Quaternion.Slerp(transform.localRotation,
+        //    Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up), 0.5f);
 
-        TargetAroundMove(Target.up, transform.right);
+        //TargetAroundMove(Target.up, transform.right);
 
-        Ray ray = new Ray(Target.position + offset, CameraPosDirection.normalized);
-
-        Debug.DrawRay(Target.position + offset, CameraPosDirection, Color.yellow);
+        //Ray ray = new Ray(Target.position + offset, CameraPosDirection.normalized);
 
         //RaycastHit hit;
         //if (Physics.Raycast(ray, out hit, Distance))
@@ -73,7 +71,11 @@ public class CameraControl : MonoBehaviour
         //    CameraMove((Target.position + offset) + (CameraPosDirection * Distance));
         //}
 
-        FastTransform = transform;
+        //FastTransform = transform;
+
+        //CameraReset();
+        mFastPosition = transform.position;
+        mCurrentState = State.StartMove;
     }
 
     public void LateUpdate()
@@ -173,6 +175,24 @@ public class CameraControl : MonoBehaviour
         //transform.localRotation = Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up);
     }
 
+    private void StartMove()
+    {
+        if (mTimer > 1) mCurrentState = State.Normal;
+
+        CameraPosDirection = -Target.forward;
+        offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
+        Vector3 next = (Target.position + offset) + (CameraPosDirection * Distance);
+
+        transform.position = Vector3.Lerp(mFastPosition, next, mTimer);
+        transform.localRotation = Quaternion.Slerp(
+            transform.localRotation,
+            Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up),
+            mTimer);
+
+        XAxisTotal = 0;
+        mTimer += Time.deltaTime;
+    }
+
     private void BraDown()
     {
 
@@ -192,9 +212,9 @@ public class CameraControl : MonoBehaviour
 
     private void StateUpdate()
     {
-        mCurrentState = State.Normal;
         switch (mCurrentState)
         {
+            case State.StartMove: StartMove(); break;
             case State.Normal: Normal(); break;
             case State.BraDown: BraDown(); break;
         }
