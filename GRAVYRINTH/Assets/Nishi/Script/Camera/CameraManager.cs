@@ -6,7 +6,8 @@ public enum State
     None,
     Title,
     Select,
-    GamePlay
+    GamePlay,
+    Clear
 }
 
 public class CameraManager : MonoBehaviour {
@@ -30,6 +31,7 @@ public class CameraManager : MonoBehaviour {
             case State.Title: ScriptChange(GetComponent<TitleCamera>()); break;
             case State.Select: ScriptChange(GetComponent<SelectCamera>()); break;
             case State.GamePlay:ScriptChange(GetComponent<CameraControl>()); break;
+            case State.Clear: ScriptChange(GetComponent<ClearCamera>()); break;
         }
         mCurrentState = state;
     }
