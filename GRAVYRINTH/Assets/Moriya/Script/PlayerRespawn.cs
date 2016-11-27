@@ -13,11 +13,14 @@ public class PlayerRespawn : MonoBehaviour
     private Transform tr;
 
     /*==外部設定変数==*/
-    [SerializeField, TooltipAttribute("チェックポイント接触時の座標、初期値をここに設定")]
+    [SerializeField, TooltipAttribute("リスポーン時の高さ")]
+    private float m_RespawnHeight = 3.0f;
+
+    [SerializeField, TooltipAttribute("チェックポイント接触時の座標、初期値は自動的に設定される")]
     private Vector3 m_CheckPosition = Vector3.zero;
-    [SerializeField, TooltipAttribute("チェックポイント接触時の上、初期値をここに設定")]
+    [SerializeField, TooltipAttribute("チェックポイント接触時の上、初期値は自動的に設定される")]
     private Vector3 m_CheckUp = Vector3.up;
-    [SerializeField, TooltipAttribute("チェックポイント接触時の前、初期値をここに設定")]
+    [SerializeField, TooltipAttribute("チェックポイント接触時の前、初期値は自動的に設定される")]
     private Vector3 m_CheckFront = Vector3.forward;
 
     /*==内部設定変数==*/
@@ -35,36 +38,35 @@ public class PlayerRespawn : MonoBehaviour
 
 	void Start ()
     {
-        
+        m_CheckPosition = tr.position;
+        m_CheckUp = tr.up;
+        m_CheckFront = tr.forward;
 	}
 
 	void Update ()
     {
-	    
+        //リスポーンする
+        if (Input.GetKeyDown(KeyCode.R))
+            Respawn();
 	}
 
-    public void OnCollisionEnter(Collision collision)
+    /// <summary>
+    /// 現在の状態を保存
+    /// </summary>
+    public void SaveCurrentStatus()
     {
-        //チェックポイントにあたった瞬間
-        if (collision.gameObject.tag == "CheckPoint")
-        {
-            print("check point hit");
-            //状態を保存
-            m_CheckPosition = tr.position;
-            m_CheckUp = tr.up;
-            m_CheckFront = tr.forward;
-        }
+        m_CheckUp = tr.up;
+        m_CheckFront = tr.forward;
+        //ちょっと上に設定
+        m_CheckPosition = tr.position + (m_CheckUp * m_RespawnHeight);
     }
 
-    public void OnCollisionExit(Collision collision)
+    /// <summary>
+    /// リスポーンする
+    /// </summary>
+    public void Respawn()
     {
-        //チェックポイントにあたった瞬間
-        if (collision.gameObject.tag == "Inside")
-        {
-            print("respawn");
-            m_NormalMove.Respawn(m_CheckPosition, m_CheckUp, m_CheckFront);
-        }
+        m_NormalMove.Respawn(m_CheckPosition, m_CheckUp, m_CheckFront);
     }
-
 }
 

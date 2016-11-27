@@ -1,7 +1,7 @@
 ﻿/**==========================================================================*/
 /**
  * プレイヤーの移動（通常時）
- * 歩く、斜面を歩く、段差を登る。
+ * 歩く、斜面を歩く、段差を登る。ジャンプ関連もここで。
  * アニメーションも行う。
  * 重力の方向のセットもここで行う。
  * 作成者：守屋   作成日：16/10/14
@@ -121,8 +121,6 @@ public class NormalMove : MonoBehaviour
 
     void LateUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-            Respawn(new Vector3(2, 1, -9), Vector3.up, Vector3.forward);
 
     }
 
@@ -481,7 +479,7 @@ public class NormalMove : MonoBehaviour
 
     public void WallKick()
     {
-        print(m_GroundHitInfo.isHit);
+        //print(m_GroundHitInfo.isHit);
         Vector3 inputAxis = new Vector3(MoveFunctions.GetMoveInputAxis().x, 0, MoveFunctions.GetMoveInputAxis().y);
 
         float wallAngle = Vector3.Angle(tr.forward, m_WallHitInfoFront.hit.normal);
