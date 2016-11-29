@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TitleCamera : MonoBehaviour {
+public class TitleCamera : ICamera {
 
     public GameObject mStageCenter;
     public float mSpeed;
@@ -13,15 +13,15 @@ public class TitleCamera : MonoBehaviour {
     float mTimer = 0.0f;
 
 	// Use this for initialization
-	void Start ()
+	public override void Start ()
     {
         isStart = false;
         transform.position = (mStageCenter.transform.forward * -mDistance) + mOffset;
         transform.LookAt(mStageCenter.transform);
 	}
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update ()
     {
             transform.RotateAround(mStageCenter.transform.position, Vector3.up, mSpeed);
             if (Input.GetKeyDown(KeyCode.C))

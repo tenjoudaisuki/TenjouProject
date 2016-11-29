@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CameraControl : MonoBehaviour
+public class CameraControl : ICamera
 {
     private enum State
     {
@@ -49,7 +49,7 @@ public class CameraControl : MonoBehaviour
     public float mTimer = 0.0f;
 
 
-    void Start()
+    public override void Start()
     {
 
         //offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;

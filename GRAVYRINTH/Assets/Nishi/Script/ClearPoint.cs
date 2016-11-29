@@ -3,6 +3,7 @@ using System.Collections;
 
 public class ClearPoint : MonoBehaviour
 {
+    public string mNextStageName;
 
     public void OnTriggerEnter(Collider other)
     {
@@ -16,5 +17,6 @@ public class ClearPoint : MonoBehaviour
     {
         GameObject camera = GameObject.Find("Camera");
         camera.GetComponent<CameraManager>().StateChange(State.Clear);
+        GameManager.Instance.SetNextSceneName(mNextStageName);
     }
 }

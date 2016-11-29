@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class ClearCamera : MonoBehaviour {
+public class ClearCamera : ICamera {
 
     enum Mode
     {
@@ -24,12 +24,17 @@ public class ClearCamera : MonoBehaviour {
 
     Mode mState;
     float mTimer = 0.0f;
+    public Color mFadeColor;
 
     public string mNextScene;
 
+    Vector3 mBackVec;
+
     // Use this for initialization
-    void Start ()
+    public override void Start ()
     {
+        mTimer = 0.0f;
+        mClearObject = GameObject.FindGameObjectWithTag("ClearDoor");
         mFromPosition = transform.position;
         mNextPosition = mClearObject.transform.position + (mClearObject.transform.forward * mLookDistance);
         mFromRotate = transform.localRotation;
@@ -52,6 +57,9 @@ public class ClearCamera : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// ゴールの真正面に行く処理
+    /// </summary>
     void Look()
     {
         mTimer += Time.deltaTime;
@@ -59,33 +67,19 @@ public class ClearCamera : MonoBehaviour {
         transform.localRotation = Quaternion.Slerp(mFromRotate, mNextRotate, mTimer);
         if (mTimer > 1)
         {
-            SceneManager.LoadScene("Fade", LoadSceneMode.Additive);
-            StartCoroutine(DelayMethod(1, () => { SceneManager.SetActiveScene(SceneManager.GetSceneByName("Fade")); }));
+            mBackVec = -mClearObject.transform.forward * mApproachSpeed;
+            GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance();
+            mTimer = 0.0f;
             mState = Mode.Approach;
         }
     }
 
+    /// <summary>
+    /// ゴールに近づく処理
+    /// </summary>
     void Approach()
     {
-        transform.position += (-mClearObject.transform.forward * mApproachSpeed);
-        GameObject.Find("Fade").GetComponent<NextStageFade>().mNextScene = mNextScene;
-        StartCoroutine(DelayMethod(1, () => { SceneManager.SetActiveScene(SceneManager.GetSceneByName(mNextScene)); }));
-
-        //StartCoroutine(DelayMethod(3, () => { SceneManager.UnloadScene("TutorialNishiTest(Parts)"); }));
-    }
-
-    /// <summary>
-    /// 渡された処理を指定時間後に実行する
-    /// </summary>
-    /// <param name="delayFrameCount"></param>
-    /// <param name="action">実行したい処理</param>
-    /// <returns></returns>
-    private IEnumerator DelayMethod(int delayFrameCount, System.Action action)
-    {
-        for (var i = 0; i < delayFrameCount; i++)
-        {
-            yield return null;
-        }
-        action();
+        mTimer += Time.deltaTime;
+        if (mTimer <= 1) transform.position += mBackVec;
     }
 }

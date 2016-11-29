@@ -17,14 +17,13 @@ public class NextStageFade : MonoBehaviour {
 
     public string mNextScene;
 
-    FadeMode mState = FadeMode.FadeOut;
-
-    Scene mFromScene;
+    FadeMode mState;
+    bool isLoad;
 
 	// Use this for initialization
 	void Start ()
     {
-        mFromScene = SceneManager.GetActiveScene();
+        isLoad = false;
         mState = FadeMode.FadeIn;
         mImage = GetComponent<Image>();
     }
@@ -50,38 +49,27 @@ public class NextStageFade : MonoBehaviour {
         mImage.color = mColor;
         if (mColor.a >= 1)
         {
-            mState = FadeMode.FadeOut;
-
-            SceneManager.LoadScene(mNextScene, LoadSceneMode.Additive);
-            SceneManager.UnloadScene(mFromScene);
+            if (isLoad && GameManager.Instance.isSceneload())
+            {
+                GameManager.Instance.Reset();
+                mState = FadeMode.FadeOut;
+            }
+            if (!isLoad)
+            {
+                GameManager.Instance.SceneChange();
+                isLoad = true;
+            }
         }
 
     }
 
     void FadeOut()
     {
-        SceneManager.SetActiveScene(SceneManager.GetSceneByName(mNextScene));
-        GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.GamePlay);
         mColor.a -= mSpeed * Time.deltaTime;
         mImage.color = mColor;
         if (mColor.a <= 0)
         {
-            SceneManager.UnloadScene("Fade");
+            Destroy(gameObject);
         }
-    }
-
-    /// <summary>
-    /// 渡された処理を指定時間後に実行する
-    /// </summary>
-    /// <param name="delayFrameCount"></param>
-    /// <param name="action">実行したい処理</param>
-    /// <returns></returns>
-    private IEnumerator DelayMethod(int delayFrameCount, System.Action action)
-    {
-        for (var i = 0; i < delayFrameCount; i++)
-        {
-            yield return null;
-        }
-        action();
     }
 }

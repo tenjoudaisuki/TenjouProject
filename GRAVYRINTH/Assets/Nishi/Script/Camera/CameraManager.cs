@@ -14,7 +14,7 @@ public class CameraManager : MonoBehaviour {
 
     public State mStateState = State.None;
     private State mCurrentState;
-    private MonoBehaviour mCurrentCameraScript;
+    private ICamera mCurrentCameraScript;
 
 	// Use this for initialization
 	void Start ()
@@ -36,9 +36,10 @@ public class CameraManager : MonoBehaviour {
         mCurrentState = state;
     }
 
-    void ScriptChange(MonoBehaviour camerascript)
+    void ScriptChange(ICamera camerascript)
     {
         mCurrentCameraScript = camerascript;
         mCurrentCameraScript.enabled = true;
+        mCurrentCameraScript.Start();
     }
 }

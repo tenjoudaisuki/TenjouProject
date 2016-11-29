@@ -1,19 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SelectCamera : MonoBehaviour {
+public class SelectCamera : ICamera {
 
-    GameObject mCameraPosition;
+    Vector3 mNextPosition;
+    Quaternion mNextRotate;
     Vector3 mFromPos;
     Quaternion mFromRotate;
 
     float mTimer = 0.0f;
 
 	// Use this for initialization
-	void Start ()
+	public override void Start ()
     {
         mTimer = 0.0f;
-        mCameraPosition = GameObject.Find("SelectCameraPosition");
+        mNextPosition = GameObject.Find("SelectCameraPosition").transform.position;
+        mNextRotate = GameObject.Find("SelectCameraPosition").transform.localRotation;
         mFromPos = transform.position;
         mFromRotate = transform.localRotation;
     }
@@ -22,8 +24,8 @@ public class SelectCamera : MonoBehaviour {
 	void Update ()
     {
         mTimer += Time.deltaTime;
-        transform.position = Vector3.Lerp(mFromPos, mCameraPosition.transform.position, mTimer);
-        transform.localRotation = Quaternion.Slerp(mFromRotate, mCameraPosition.transform.localRotation, mTimer);
+        transform.position = Vector3.Lerp(mFromPos, mNextPosition, mTimer);
+        transform.localRotation = Quaternion.Slerp(mFromRotate, mNextRotate, mTimer);
         if (Input.GetKeyDown(KeyCode.C))
         {
             GetComponent<CameraManager>().StateChange(State.GamePlay);
