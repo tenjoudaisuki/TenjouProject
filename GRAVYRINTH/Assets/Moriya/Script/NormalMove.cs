@@ -121,7 +121,7 @@ public class NormalMove : MonoBehaviour
         //鉄棒にあたった瞬間
         if (collision.gameObject.tag == "IronBar")
         {
-            m_MoveManager.SetState(PlayerState.IRON_BAR);
+            m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
         }
     }
 
@@ -449,7 +449,7 @@ public class NormalMove : MonoBehaviour
     }
 
     /// <summary>
-    /// ぶら下がりを解除時の処理
+    /// 鉄棒状態から通常状態へ遷移時したときの処理
     /// </summary>
     public void IronbarToNormal()
     {
@@ -457,7 +457,13 @@ public class NormalMove : MonoBehaviour
         m_IsCheckGround = true;
         m_JumpedTimer = 0.0f;
     }
-
+    /// <summary>
+    /// 通常状態からステージクリア状態へ遷移させる処理
+    /// </summary>
+    public void NormalToStageClear()
+    {
+        m_MoveManager.SetState(PlayerState.STAGE_CLEAR);
+    }
     /// <summary>
     /// 上と前を更新
     /// </summary>
