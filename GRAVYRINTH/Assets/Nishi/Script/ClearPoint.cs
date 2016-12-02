@@ -10,6 +10,7 @@ public class ClearPoint : MonoBehaviour
         if(other.name == "Player")
         {
             Clear();
+            other.GetComponent<NormalMove>().NormalToStageClear();
         }
     }
 

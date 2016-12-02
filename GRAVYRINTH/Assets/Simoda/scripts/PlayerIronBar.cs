@@ -201,6 +201,9 @@ public class PlayerIronBar : MonoBehaviour
                 //Vector3 a = ironBar.transform.position;
                 //a.y = tr.position.y;
                 //tr.forward = a;
+
+                //ステートを変更
+                m_MoveManager.SetState(PlayerState.IRON_BAR_CLIMB);
             }
 
             print(barType);
