@@ -39,14 +39,21 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private GameMode mCureentMode;
 
-    // Use this for initialization
-    void Start()
+    public void Awake()
     {
         mCureentMode = GameMode.Title;
         SceneManager.LoadScene("Stage0", LoadSceneMode.Additive);
         StartCoroutine("CameraWait", SceneManager.GetSceneByName("Stage0"));
         //SceneManager.LoadScene("Title", LoadSceneMode.Additive);
         mCurrentScene = SceneManager.GetSceneByName("Stage0");
+    }
+
+
+
+    // Use this for initialization
+    void Start()
+    {
+
     }
 
     public void GameModeChange(GameMode mode)
@@ -118,6 +125,7 @@ public class GameManager : MonoBehaviour
         GameObject startPoint = GameObject.Find("StartPoint");
         GameObject player = GameObject.Find("Player");
 
+        player.GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
         player.transform.position = startPoint.transform.position;
         player.transform.localRotation = startPoint.transform.localRotation;
 
@@ -126,7 +134,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator CameraWait(Scene scene)
     {
-        while(!scene.isLoaded)
+        while (!scene.isLoaded)
         {
             yield return null;
         }

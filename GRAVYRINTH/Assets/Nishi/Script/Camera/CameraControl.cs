@@ -128,19 +128,21 @@ public class CameraControl : ICamera
         //ターゲットを原点にrayを飛ばす
         Ray ray = new Ray(Target.position + offset, CameraPosDirection.normalized);
 
-        //RaycastHit hit;
+        RaycastHit hit;
         //rayの方向の指定距離以内に障害物が無いか？
-        //if (Physics.Raycast(ray, out hit, Distance))
-        //{
-        //    //壁に当たった位置をカメラ位置に
-        //    next = hit.point;
-        //}
-        //else
-        //{
-        //    //当たらなかったらray* Disをカメラ位置に
-        //    next = Target.position + offset) + (CameraPosDirection * Distance;
-        //｝
-        next = (Target.position + offset) + (CameraPosDirection * Distance);
+        //[IgnoredObj]レイヤー以外と判定させる
+        int layermask = ~(1 << 10);
+        if (Physics.Raycast(ray, out hit, Distance,layermask, QueryTriggerInteraction.Ignore))
+        {
+            //壁に当たった位置をカメラ位置に
+            next = hit.point + (hit.normal.normalized * 0.2f);
+        }
+        else
+        {
+            //当たらなかったらray* Disをカメラ位置に
+            next = (Target.position + offset) +(CameraPosDirection.normalized * Distance);
+        }
+        //next = (Target.position + offset) + (CameraPosDirection * Distance);
         //デバック表示
         Debug.DrawRay(Target.position + offset, CameraPosDirection, Color.yellow);
 

@@ -4,6 +4,7 @@ using System.Collections;
 public class ClearPoint : MonoBehaviour
 {
     public string mNextStageName;
+    public Color mFadeColor;
 
     public void OnTriggerEnter(Collider other)
     {
@@ -17,6 +18,7 @@ public class ClearPoint : MonoBehaviour
     void Clear()
     {
         GameObject camera = GameObject.Find("Camera");
+        GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeColorChange(mFadeColor);
         camera.GetComponent<CameraManager>().StateChange(State.Clear);
         GameManager.Instance.SetNextSceneName(mNextStageName);
     }
