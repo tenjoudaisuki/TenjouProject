@@ -29,6 +29,7 @@ public class GravityDirection : MonoBehaviour
     public void SetDirection(Vector3 v)
     {
         m_GravityDirection = v;
+        Physics.gravity = v * 9.8f;
     }
 
 }
