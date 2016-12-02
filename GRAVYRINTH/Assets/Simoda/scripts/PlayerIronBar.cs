@@ -138,6 +138,9 @@ public class PlayerIronBar : MonoBehaviour
                     m_MoveManager.SetPlayerUpFront(tr.up, Vector3.Cross(tr.up, Camera.main.transform.right));
                     //rb.AddForce(-tr.up * 200.0f);
 
+                    //カメラの視点をプレイヤーにする
+                    GameObject.Find("Camera").GetComponent<CameraControl>().SetTarget(gameObject);
+
                     break;
                 case BarType.POLE:
                     m_MoveManager.SetState(PlayerState.NORMAL);
@@ -187,6 +190,9 @@ public class PlayerIronBar : MonoBehaviour
 
                 barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetIronBarVector());
                 tr.right = barVectorNor;
+
+                //カメラの視点をアイアンバーにする
+                GameObject.Find("Camera").GetComponent<CameraControl>().SetTarget(ironBarTouchPoint);
             }
             else
             {
