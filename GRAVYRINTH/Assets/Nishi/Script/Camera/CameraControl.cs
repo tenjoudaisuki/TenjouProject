@@ -80,7 +80,6 @@ public class CameraControl : ICamera
 
     public void LateUpdate()
     {
-
         StateUpdate();
 
         //Tキーが押されたら
@@ -173,6 +172,8 @@ public class CameraControl : ICamera
           Quaternion.LookRotation((Target.position + offset) - transform.position,Target.up), 0.5f);
         //補間なし版
         //transform.localRotation = Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up);
+
+        if (Target.name == "IronBarTouchPoint") mCurrentState = State.BraDown;
     }
 
     private void StartMove()
@@ -195,6 +196,57 @@ public class CameraControl : ICamera
 
     private void BraDown()
     {
+        float horizontal = -Input.GetAxisRaw("Horizontal2") * 2;
+        float vertical = -Input.GetAxisRaw("Vertical2") * 2;
+
+        XAxisTotal += vertical;
+        //X軸の回転の限界を設定
+        XAxisTotal = Mathf.Clamp(XAxisTotal, -89, 89);
+
+        YAxisTotal += horizontal;
+        //X軸の回転の限界を設定
+        YAxisTotal = Mathf.Clamp(YAxisTotal, -89, 89);
+
+        //ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
+        GameObject player = GameObject.Find("Player");
+        Vector3 parallel = -player.transform.forward;
+        mParallel = parallel;
+
+        //平行ベクトルをターゲットの上ベクトルを軸に回転さらに自身の横ベクトルを軸に回転しカメラの位置を計算
+        Vector3 temp = Quaternion.AngleAxis(XAxisTotal, player.transform.right) /** Quaternion.AngleAxis(YAxisTotal, transform.up)*/ * mParallel;
+        CameraPosDirection = temp;
+
+        //カメラを移動させる
+        Vector3 next;
+        //ターゲットを原点にrayを飛ばす
+        Ray ray = new Ray(Target.position, CameraPosDirection.normalized);
+
+        //RaycastHit hit;
+        //rayの方向の指定距離以内に障害物が無いか？
+        //if (Physics.Raycast(ray, out hit, Distance))
+        //{
+        //    //壁に当たった位置をカメラ位置に
+        //    next = hit.point;
+        //}
+        //else
+        //{
+        //    //当たらなかったらray* Disをカメラ位置に
+        //    next = Target.position + offset) + (CameraPosDirection * Distance;
+        //｝
+        next = (Target.position) + (CameraPosDirection * Distance);
+        //デバック表示
+        Debug.DrawRay(Target.position, CameraPosDirection, Color.yellow);
+
+        //補間あり移動
+        //transform.position = Vector3.Lerp(transform.position, next, 0.1f);
+        //補間なし移動
+        transform.position = next;
+
+        if (Target.name == "Player") mCurrentState = State.Normal;
+
+        //カメラを回転させる
+        transform.localRotation = Quaternion.Slerp(transform.localRotation,
+          Quaternion.LookRotation((Target.position) - transform.position,player.transform.up), 0.5f);
 
     }
 
@@ -218,5 +270,11 @@ public class CameraControl : ICamera
             case State.Normal: Normal(); break;
             case State.BraDown: BraDown(); break;
         }
+    }
+
+    public void SetTarget(GameObject target)
+    {
+        Target = target.transform;
+        CameraReset();
     }
 }
