@@ -37,7 +37,7 @@ public class Block : MonoBehaviour
     /// </summary>
     public void BlockMove()
     {
-        if (isPush == false) return;
+        if (!Input.GetKey(KeyCode.B) || isPush == false) return;
 
         //print(player.up);
         //print(GetPlayerDirection().normal);
@@ -49,7 +49,7 @@ public class Block : MonoBehaviour
         //内積の数値を補正
         float dotAbs = Mathf.Abs(dot);
         float dotInt = Mathf.FloorToInt(dotAbs);
-        print(dotInt);
+        //print(dotInt);
         //dot = Mathf.Clamp(dot, 0.0f, 1.0f);
         //print(player.up);
         //print(GetPlayerDirection().normal);
@@ -106,12 +106,12 @@ public class Block : MonoBehaviour
             //移動方向にプレイヤー方向の面の法線ベクトルを設定
             moveDirection = Vector3.Normalize(GetPlayerDirection().normal);
             isPush = true;
-            player.GetComponent<PlayerBlockPush>().SetCollisionBlock(gameObject);
+            player.GetComponent<NormalMove>().SetCollisionBlock(gameObject);
         }
         else
         {
             isPush = false;
-            player.GetComponent<PlayerBlockPush>().SetCollisionBlock(null);
+            player.GetComponent<NormalMove>().SetCollisionBlock(null);
         }
 
         Debug.DrawRay(tr.position, Vector3.Normalize

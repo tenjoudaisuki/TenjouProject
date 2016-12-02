@@ -121,7 +121,7 @@ public class NormalMove : MonoBehaviour
 
     void LateUpdate()
     {
-
+       
     }
 
     /// <summary>
@@ -219,14 +219,15 @@ public class NormalMove : MonoBehaviour
         {
             m_CollisionBlock.IsPushDistance();
             if (m_CollisionBlock.isPush == false) return;
-
-            tr.GetComponent<NormalMove>().enabled = false;
+            
+            //tr.GetComponent<NormalMove>().enabled = false;
 
             Vector3 moveDirection = m_CollisionBlock.GetBlockMoveDirection();
-            m_MoveVelocity = (moveDirection * -m_MoveVelocity.y + moveDirection * 0.0f) * m_MoveSpeed;
+            m_MoveVelocity = (moveDirection * -inputVec.y) * m_MoveSpeed;
             m_CollisionBlock.SetMoveVector(m_MoveVelocity);
             //移動
             tr.position += m_MoveVelocity * Time.deltaTime;
+
         }
         //通常時
         else
@@ -238,11 +239,11 @@ public class NormalMove : MonoBehaviour
         //ジャンプ処理
         Jump();
 
-        //進行方向に壁がある場合は移動量を0にする
-        if (CollisionWall())
-            m_MoveSpeed = 0;
-        else
-            m_MoveSpeed = m_Save;
+        ////進行方向に壁がある場合は移動量を0にする
+        //if (CollisionWall())
+        //    m_MoveSpeed = 0;
+        //else
+        //    m_MoveSpeed = m_Save;
     }
 
     /// <summary>
