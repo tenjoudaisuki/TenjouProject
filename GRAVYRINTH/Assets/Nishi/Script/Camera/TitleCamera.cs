@@ -16,18 +16,25 @@ public class TitleCamera : ICamera {
 	public override void Start ()
     {
         isStart = false;
-        transform.position = (mStageCenter.transform.forward * -mDistance) + mOffset;
-        transform.LookAt(mStageCenter.transform);
+        mStageCenter = GameObject.Find("StageCenter");
 	}
 
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
-            transform.RotateAround(mStageCenter.transform.position, Vector3.up, mSpeed);
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                GetComponent<CameraManager>().StateChange(State.Select);
-            }
+        if (!isStart)
+        {
+            isStart = true;
+            transform.position = (mStageCenter.transform.forward * -mDistance) + mOffset;
+        }
+        transform.LookAt(mStageCenter.transform);
+        transform.RotateAround(mStageCenter.transform.position, Vector3.up, mSpeed);
+
+        //デバック用　あとで消す
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            GetComponent<CameraManager>().StateChange(State.Select);
+        }
 
         //if(isStart)
         //{
@@ -43,5 +50,5 @@ public class TitleCamera : ICamera {
         //    Debug.Log(nextPos);
         //    transform.position = Vector3.Lerp(mFromPos,nextPos,mTimer);
         //}
-	}
+    }
 }
