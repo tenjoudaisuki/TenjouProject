@@ -13,7 +13,7 @@ public class NextStageFade : MonoBehaviour {
 
     Image mImage;
     public float mSpeed;
-    public Color mColor;
+    Color mColor;
 
     public string mNextScene;
 
@@ -26,6 +26,7 @@ public class NextStageFade : MonoBehaviour {
         isLoad = false;
         mState = FadeMode.FadeIn;
         mImage = GetComponent<Image>();
+        mColor = mImage.color;
     }
 	
 	// Update is called once per frame

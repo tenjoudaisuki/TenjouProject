@@ -1,7 +1,7 @@
 ﻿/**==========================================================================*/
 /**
  * プレイヤーの移動（通常時）
- * 歩く、斜面を歩く、段差を登る。ジャンプ関連もここで。
+ * 歩く、斜面を歩く、段差を登る。
  * アニメーションも行う。
  * 重力の方向のセットもここで行う。
  * 作成者：守屋   作成日：16/10/14
@@ -69,6 +69,10 @@ public class NormalMove : MonoBehaviour
     private float m_Save;
     //ヒットしているブロック（動かすブロック）
     private Block m_CollisionBlock;
+    //  アニメーション用変数
+    private float m_HoverTimer;
+    private float m_JumpTimer;
+    private float m_WallJumpTimer;
 
     /*==外部参照変数==*/
 
@@ -97,6 +101,7 @@ public class NormalMove : MonoBehaviour
 
     void Update()
     {
+        print(m_GroundHitInfo.isHit);
         //地面との判定処理
         Ground();
 
@@ -107,7 +112,8 @@ public class NormalMove : MonoBehaviour
         m_GravityDir.SetDirection(GetDown());
 
         //壁キック処理
-        WallKick();
+        if (!m_GroundHitInfo.isHit)
+            WallKick();
     }
 
     public void OnCollisionEnter(Collision collision)
@@ -121,7 +127,9 @@ public class NormalMove : MonoBehaviour
 
     void LateUpdate()
     {
-       
+        if (Input.GetKeyDown(KeyCode.R))
+            Respawn(new Vector3(2, 1, -9), Vector3.up, Vector3.forward);
+
     }
 
     /// <summary>
@@ -173,12 +181,22 @@ public class NormalMove : MonoBehaviour
             tr.position = m_GroundHitInfo.hit.point;
             //上方向を当たった平面の法線方向に変更
             m_Up = m_GroundHitInfo.hit.normal;
+            //アニメーション変更
+            m_JumpTimer = 0;
+            m_HoverTimer = 0;
+            anm.SetFloat("HoverTimer", m_HoverTimer);
+        }
+        else
+        {
+            m_HoverTimer += 1 * Time.deltaTime;
+            //アニメーション変更
+            anm.SetFloat("HoverTimer", m_HoverTimer);
         }
 
         //移動方向入力
         Vector2 inputVec = MoveFunctions.GetMoveInputAxis();
         //アニメーション変更
-        anm.SetBool("InputMove", inputVec.magnitude > 0.0f);
+        anm.SetBool("Move", inputVec.magnitude > 0.0f);
         //スティックが入力されたら向きを変える
         if (inputVec.magnitude > 0.1f)
         {
@@ -196,7 +214,14 @@ public class NormalMove : MonoBehaviour
         if (m_IsGroundHitTrigger)
         {
             //アニメーション変更
-            anm.SetBool("InputJump", false);
+            anm.SetBool("Jump", false);
+            anm.SetBool("Wall", false);
+            anm.SetBool("WallJump", false);
+            anm.SetBool("PoleHJump", false);
+            anm.SetBool("PoleVJump", false);
+            // アニメーション用の変数初期化
+            isWallTouch = false;
+            m_WallJumpTimer = 0;
 
             //地面の上方向とカメラの右方向で外積を取得
             Vector3 camerafoward = -Vector3.Cross(m_Up, m_Camera.right);
@@ -219,15 +244,14 @@ public class NormalMove : MonoBehaviour
         {
             m_CollisionBlock.IsPushDistance();
             if (m_CollisionBlock.isPush == false) return;
-            
-            //tr.GetComponent<NormalMove>().enabled = false;
+
+            tr.GetComponent<NormalMove>().enabled = false;
 
             Vector3 moveDirection = m_CollisionBlock.GetBlockMoveDirection();
-            m_MoveVelocity = (moveDirection * -inputVec.y) * m_MoveSpeed;
+            m_MoveVelocity = (moveDirection * -m_MoveVelocity.y + moveDirection * 0.0f) * m_MoveSpeed;
             m_CollisionBlock.SetMoveVector(m_MoveVelocity);
             //移動
             tr.position += m_MoveVelocity * Time.deltaTime;
-
         }
         //通常時
         else
@@ -239,11 +263,11 @@ public class NormalMove : MonoBehaviour
         //ジャンプ処理
         Jump();
 
-        ////進行方向に壁がある場合は移動量を0にする
-        //if (CollisionWall())
-        //    m_MoveSpeed = 0;
-        //else
-        //    m_MoveSpeed = m_Save;
+        //進行方向に壁がある場合は移動量を0にする
+        if (CollisionWall())
+            m_MoveSpeed = 0;
+        else
+            m_MoveSpeed = m_Save;
     }
 
     /// <summary>
@@ -340,7 +364,7 @@ public class NormalMove : MonoBehaviour
         if (m_GroundHitInfo.isHit && Input.GetKeyDown(KeyCode.Space))
         {
             //アニメーションの設定
-            anm.SetBool("InputJump", true);
+            anm.SetBool("Jump", true);
             //力を加えてジャンプ
             rb.AddForce(tr.up * m_JumpPower);
             //一定時間経過まで地面との判定を行わない
@@ -349,6 +373,12 @@ public class NormalMove : MonoBehaviour
             m_GroundHitInfo.isHit = false;
             //タイマーも初期化
             m_JumpedTimer = 0.0f;
+        }
+        if(anm.GetBool("Jump"))
+        {     
+            m_JumpTimer += 1 * Time.deltaTime;
+            //アニメーションの設定
+            anm.SetFloat("JumpTimer", m_JumpTimer);
         }
     }
 
@@ -427,7 +457,6 @@ public class NormalMove : MonoBehaviour
         m_IsCheckGround = true;
         m_JumpedTimer = 0.0f;
     }
-
     /// <summary>
     /// 通常状態からステージクリア状態へ遷移させる処理
     /// </summary>
@@ -435,7 +464,6 @@ public class NormalMove : MonoBehaviour
     {
         m_MoveManager.SetState(PlayerState.STAGE_CLEAR);
     }
-
     /// <summary>
     /// 上と前を更新
     /// </summary>
@@ -488,34 +516,47 @@ public class NormalMove : MonoBehaviour
 
     public void WallKick()
     {
-        //print(m_GroundHitInfo.isHit);
         Vector3 inputAxis = new Vector3(MoveFunctions.GetMoveInputAxis().x, 0, MoveFunctions.GetMoveInputAxis().y);
-
+        
         float wallAngle = Vector3.Angle(tr.forward, m_WallHitInfoFront.hit.normal);
         float frontAngle = Vector3.Angle(tr.forward, tr.forward * inputAxis.magnitude);
 
         if ((160 < wallAngle && wallAngle < 200) && !m_GroundHitInfo.isHit)
         {
+            //アニメーション変更
+            anm.SetBool("Wall", true);
+
             rb.velocity = Vector3.zero;
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                //isWallKick = true;
                 rb.AddForce((tr.up * 1.5f - tr.forward) * m_WallKickPower);
                 SetUpFront(tr.up, -tr.forward);
+
+                //アニメーション変更
+                anm.SetBool("Wall", false);
+                anm.SetTrigger("WallJump");
             }
-            if (frontAngle != 0 && !isWallKick)
+
+            if (frontAngle > 1)
             {
                 rb.velocity = Vector3.zero;
                 rb.AddForce(GetDown() * 50);
                 isWallTouch = true;
-            }
+            }    
         }
         else
         {
-            isWallTouch = false;
+            anm.SetBool("Wall", false);
+            if (!anm.GetBool("Wall"))
+            {
+                m_WallJumpTimer += 1 * Time.deltaTime;
+                //アニメーションの設定
+                anm.SetFloat("WallJumpTimer", m_WallJumpTimer);
+            }
+            else
+                m_WallJumpTimer = 0;
         }
-
-        if (m_GroundHitInfo.isHit)
-            isWallKick = false;
+        //if (m_GroundHitInfo.isHit)
+        //    isWallKick = false;
     }
 }

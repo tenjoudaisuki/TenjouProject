@@ -42,4 +42,9 @@ public class CameraManager : MonoBehaviour {
         mCurrentCameraScript.enabled = true;
         mCurrentCameraScript.Start();
     }
+
+    public void CameraReset()
+    {
+        mCurrentCameraScript.Start();
+    }
 }

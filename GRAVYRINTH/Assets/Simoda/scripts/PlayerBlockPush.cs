@@ -24,12 +24,17 @@ public class PlayerBlockPush : MonoBehaviour
     private Block collisionBlock;
     private Transform m_Camera;
 
+    // アニメーション
+    private Animator anm;
+
     void Start()
     {
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
 
         tr = GetComponent<Transform>();
         m_Camera = Camera.main.transform;
+
+        anm = GetComponent<Animator>();
     }
 
     void Update()
@@ -117,6 +122,22 @@ public class PlayerBlockPush : MonoBehaviour
 
         //移動
         tr.position += m_MoveVec * Time.deltaTime;
+        if (inputVec.y > 0)
+        {
+            anm.SetBool("PushBlock", true);
+            anm.SetBool("PullBlock", false);
+        }
+        else if (inputVec.y < 0)
+        {
+            anm.SetBool("PushBlock", false);
+            anm.SetBool("PullBlock", true);
+        }
+        else if (inputVec.y == 0)
+        {
+            anm.SetBool("PushBlock", false);
+            anm.SetBool("PullBlock", false);
+        }
+        print(inputVec);
 
         //仮重力
         tr.position += GetDown() * 1.0f * Time.deltaTime;
