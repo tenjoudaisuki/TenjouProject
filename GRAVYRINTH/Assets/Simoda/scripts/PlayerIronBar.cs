@@ -46,6 +46,7 @@ public class PlayerIronBar : MonoBehaviour
 
     void Update()
     {
+        print("call0");
         Debug.DrawRay(tr.position, tr.up, Color.red, 1.0f, false);
         Debug.DrawRay(tr.position, tr.right);
         //Debug.DrawRay(ironBarTouchPoint.transform.position, ironBarTouchPoint.transform.right);
@@ -57,7 +58,7 @@ public class PlayerIronBar : MonoBehaviour
             switch (barType)
             {
                 case BarType.IRON_BAR:
-
+                    print("call1");
                     Vector3 point = ironBar.transform.position;
                     Debug.DrawRay(point, Vector3.up);
                     ironBarTouchPoint.transform.RotateAround(point, tr.right, Input.GetAxis("Vertical") * 60.0f * Time.deltaTime);
@@ -79,7 +80,7 @@ public class PlayerIronBar : MonoBehaviour
 
                     break;
                 case BarType.POLE:
-
+                    print("call2");
                     point = ironBar.transform.position;
                     Debug.DrawRay(point, Vector3.up);
                     //Vector3 a = ironBarTouchPoint.transform.position;
