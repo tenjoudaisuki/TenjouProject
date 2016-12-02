@@ -101,11 +101,11 @@ public class test : MonoBehaviour {
 
     public void OnCollisionEnter(Collision collision)
     {
-        //鉄棒にあたった瞬間
-        if (collision.gameObject.tag == "IronBar")
-        {
-            m_MoveManager.SetState(PlayerState.IRON_BAR);
-        }
+        ////鉄棒にあたった瞬間
+        //if (collision.gameObject.tag == "IronBar")
+        //{
+        //    m_MoveManager.SetState(PlayerState.IRON_BAR);
+        //}
     }
 
     void LateUpdate()

@@ -37,7 +37,9 @@ public class PlayerMoveManager : MonoBehaviour
         m_Moves = new Dictionary<PlayerState, MonoBehaviour>()
         {
             {PlayerState.NORMAL, GetComponent<NormalMove>() },
-            {PlayerState.IRON_BAR, GetComponent<PlayerIronBar>() }
+            {PlayerState.IRON_BAR_DANGLE, GetComponent<PlayerIronBar>() },
+            {PlayerState.IRON_BAR_CLIMB, GetComponent<PlayerIronBar>() },
+            {PlayerState.STAGE_CLEAR, GetComponent<StageClearMove>() }
         };
     }
 
@@ -75,9 +77,20 @@ public class PlayerMoveManager : MonoBehaviour
         m_PlayerState = state;
 
         //特定の変更時に行う処理
-        if(m_PrevPlayerState==PlayerState.IRON_BAR && m_PlayerState == PlayerState.NORMAL)
+        //鉄棒→通常への変更時
+        if ((m_PrevPlayerState == PlayerState.IRON_BAR_DANGLE || m_PrevPlayerState == PlayerState.IRON_BAR_DANGLE)
+            && m_PlayerState == PlayerState.NORMAL)
+        {
             //地面との当たり判定を有効にする
             m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().IronbarToNormal();
+        }           
+        //通常→ステージクリアへの変更時
+        else if(m_PrevPlayerState == PlayerState.NORMAL && m_PlayerState == PlayerState.STAGE_CLEAR)
+        {
+            print("called");
+            //ステージクリア移動開始
+            m_Moves[PlayerState.STAGE_CLEAR].GetComponent<StageClearMove>().StartClearMove();
+        }
     }
 
     /// <summary>

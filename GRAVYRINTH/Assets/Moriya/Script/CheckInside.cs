@@ -40,7 +40,7 @@ public class CheckInside : MonoBehaviour
     }
 
     /// <summary>
-    /// フェードアウトしてから、リスポーンするまでの処理
+    /// 黒画面にフェードアウト→フェードインしながらリスポーンする処理
     /// </summary>
     /// <returns></returns>
     IEnumerator FadeAndRespawn()
@@ -50,11 +50,13 @@ public class CheckInside : MonoBehaviour
         while(true)
         {
             timer += Time.deltaTime;
-            print(timer);
+            //黒画面へフェードアウト
             if (timer < m_FadeOutTime)
             {
+      
                 m_FadeImage.Range = timer / m_FadeOutTime;
             }
+            //待機
             else if (timer > m_FadeOutTime + m_FadeWaitTime)
             {
                 if(!respawned)
@@ -66,7 +68,7 @@ public class CheckInside : MonoBehaviour
 
                 m_FadeImage.Range -= Time.deltaTime / m_FadeInTime;
             }
-
+            //元の画面にフェードイン
             if (timer > m_FadeOutTime + m_FadeWaitTime + m_FadeInTime)
             {
                 m_FadeImage.Range = 0.0f;
