@@ -140,7 +140,7 @@ public class PlayerIronBar : MonoBehaviour
                     //rb.AddForce(-tr.up * 200.0f);
 
                     //カメラの視点をプレイヤーにする
-                    GameObject.Find("Camera").GetComponent<CameraControl>().SetTarget(gameObject);
+                    //GameObject.Find("Camera").GetComponent<CameraControl>().SetTarget(gameObject);
 
                     break;
                 case BarType.POLE:
@@ -193,7 +193,7 @@ public class PlayerIronBar : MonoBehaviour
                 tr.right = barVectorNor;
 
                 //カメラの視点をアイアンバーにする
-                GameObject.Find("Camera").GetComponent<CameraControl>().SetTarget(ironBarTouchPoint);
+                //GameObject.Find("Camera").GetComponent<CameraControl>().SetTarget(ironBarTouchPoint);
             }
             else
             {

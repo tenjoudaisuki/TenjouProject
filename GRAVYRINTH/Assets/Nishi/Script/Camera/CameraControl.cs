@@ -48,6 +48,8 @@ public class CameraControl : ICamera
 
     public float mTimer = 0.0f;
 
+    private Vector3 mUp;
+
 
     public override void Start()
     {
@@ -175,7 +177,7 @@ public class CameraControl : ICamera
         //補間なし版
         //transform.localRotation = Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up);
 
-        if (Target.name == "IronBarTouchPoint") mCurrentState = State.BraDown;
+        if (Target.parent.name == "IronBarTouchPoint") mCurrentState = State.BraDown;
     }
 
     private void StartMove()
@@ -198,24 +200,41 @@ public class CameraControl : ICamera
 
     private void BraDown()
     {
+        GameObject player = GameObject.Find("Player");
+
         float horizontal = -Input.GetAxisRaw("Horizontal2") * 2;
         float vertical = -Input.GetAxisRaw("Vertical2") * 2;
 
         XAxisTotal += vertical;
         //X軸の回転の限界を設定
-        XAxisTotal = Mathf.Clamp(XAxisTotal, -89, 89);
+        XAxisTotal = Mathf.Clamp(XAxisTotal, -90, 90);
 
         YAxisTotal += horizontal;
         //X軸の回転の限界を設定
-        YAxisTotal = Mathf.Clamp(YAxisTotal, -89, 89);
+        //YAxisTotal = Mathf.Clamp(YAxisTotal, -89, 89);
+
+        Vector3 up = Quaternion.AngleAxis(XAxisTotal, transform.right) * player.transform.up;
+        if (Input.GetAxisRaw("Vertical") != 0)
+        {
+            XAxisTotal = 90;
+            CameraPosDirection = player.transform.up;
+            up = player.transform.forward;
+        }
 
         //ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
-        GameObject player = GameObject.Find("Player");
-        Vector3 parallel = -player.transform.forward;
+        Vector3 parallel = Vector3.Cross(player.transform.up, transform.right);
+        //Vector3 parallel = transform.forward;
         mParallel = parallel;
 
-        //平行ベクトルをターゲットの上ベクトルを軸に回転さらに自身の横ベクトルを軸に回転しカメラの位置を計算
-        Vector3 temp = Quaternion.AngleAxis(XAxisTotal, player.transform.right) /** Quaternion.AngleAxis(YAxisTotal, transform.up)*/ * mParallel;
+        Vector3 temp;
+        if (XAxisTotal == 90 || XAxisTotal == -90)
+        {
+            temp = CameraPosDirection;
+        }
+        else
+        {
+            temp = Quaternion.AngleAxis(horizontal, player.transform.up) * Quaternion.AngleAxis(XAxisTotal, transform.right) * mParallel;
+        }
         CameraPosDirection = temp;
 
         //カメラを移動させる
@@ -244,11 +263,10 @@ public class CameraControl : ICamera
         //補間なし移動
         transform.position = next;
 
-        if (Target.name == "Player") mCurrentState = State.Normal;
-
-        //カメラを回転させる
-        transform.localRotation = Quaternion.Slerp(transform.localRotation,
-          Quaternion.LookRotation((Target.position) - transform.position,player.transform.up), 0.5f);
+        if (Target.parent.name != "IronBarTouchPoint") mCurrentState = State.Normal;
+        //transform.localRotation = Quaternion.Slerp(transform.localRotation,
+        //        Quaternion.LookRotation((player.transform.position) - transform.position,up), 0.5f);
+        transform.localRotation = Quaternion.LookRotation((player.transform.position) - transform.position, up);
 
     }
 
