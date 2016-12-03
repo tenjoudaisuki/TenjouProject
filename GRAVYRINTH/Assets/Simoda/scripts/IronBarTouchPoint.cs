@@ -45,6 +45,8 @@ public class IronBarTouchPoint : MonoBehaviour
     {
         //player.position = tr.position + direction * offsetY;
         //headPoint.GetComponent<PlayerHeadPoint>().SetHeadPoint(tr.position);
+        if (other.gameObject.tag != "IronBar") return;
+
         TriggerExit(other);
     }
 

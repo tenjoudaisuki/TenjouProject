@@ -9,7 +9,7 @@ public class StageSelectManager : MonoBehaviour
 
     public void Awake()
     {
-        TutorialTest = SceneManager.GetSceneByName("StageSelect");
+        StageSelect = SceneManager.GetSceneByName("StageSelect");
         TutorialTest = SceneManager.GetSceneByName("TutorialTestSimoda");
     }
 
