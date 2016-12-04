@@ -45,7 +45,7 @@ public class IronBar : MonoBehaviour
     public Vector3 GetPoleVector()
     {
         float angle = Vector3.Angle(player.up, player.position + barVector);
-        print(angle);
+        //print(angle);
         if (angle > 90.0f)
             return -barVector;
         else

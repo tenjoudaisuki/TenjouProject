@@ -15,10 +15,10 @@ public class PlayerMoveManager : MonoBehaviour
     ///*==外部設定変数==*/
     [SerializeField, TooltipAttribute("最初の状態")]
     private PlayerState m_StartState = PlayerState.NORMAL;
+    [SerializeField, TooltipAttribute("現在の状態")]
+    private PlayerState m_PlayerState;
 
     ///*==内部設定変数==*/
-    //現在のプレイヤーの状態
-    private PlayerState m_PlayerState;
     //１つ前のプレイヤーの状態
     private PlayerState m_PrevPlayerState;
     //各状態中の処理はこの配列へ格納
@@ -37,8 +37,8 @@ public class PlayerMoveManager : MonoBehaviour
         m_Moves = new Dictionary<PlayerState, MonoBehaviour>()
         {
             {PlayerState.NORMAL, GetComponent<NormalMove>() },
-            {PlayerState.IRON_BAR_DANGLE, GetComponent<PlayerIronBar>() },
-            {PlayerState.IRON_BAR_CLIMB, GetComponent<PlayerIronBar>() },
+            {PlayerState.IRON_BAR_DANGLE, GetComponent<DangleMove>() },
+            {PlayerState.IRON_BAR_CLIMB, GetComponent<CrimbMove>() },
             {PlayerState.STAGE_CLEAR, GetComponent<StageClearMove>() }
         };
     }
@@ -107,5 +107,14 @@ public class PlayerMoveManager : MonoBehaviour
     public void PlayerPoleKick(Vector3 v)
     {
         m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().StartPoleKick(v);
+    }
+
+    /// <summary>
+    /// 現在の状態を取得する
+    /// </summary>
+    /// <returns></returns>
+    public PlayerState GetState()
+    {
+        return m_PlayerState;
     }
 }
