@@ -50,7 +50,7 @@ public class IronBarTouchPoint : MonoBehaviour
 
     public void TriggerExit(Collider other)
     {
-        if (player.GetComponent<PlayerIronBar>().barType == PlayerIronBar.BarType.IRON_BAR)
+        if (player.GetComponent<PlayerMoveManager>().GetState() == PlayerState.IRON_BAR_DANGLE)
         {
             //鉄棒が持っているベクトルを右に設定
             tr.right = other.GetComponent<IronBar>().GetIronBarVector();
@@ -72,7 +72,7 @@ public class IronBarTouchPoint : MonoBehaviour
 
         }
 
-        if (player.GetComponent<PlayerIronBar>().barType == PlayerIronBar.BarType.POLE)
+        if (player.GetComponent<PlayerMoveManager>().GetState() == PlayerState.IRON_BAR_CLIMB)
         {
             //鉄棒が持っているベクトルを上に設定
             tr.up = other.GetComponent<IronBar>().GetPoleVector();

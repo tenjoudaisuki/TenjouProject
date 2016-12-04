@@ -31,7 +31,6 @@ public class DangleMove : MonoBehaviour
         if (touchIronBar == true)
         {
             rb.velocity = Vector3.zero;
-            print("call1");
             Vector3 point = ironBar.transform.position;
             Debug.DrawRay(point, Vector3.up);
             ironBarTouchPoint.transform.RotateAround(point, tr.right, Input.GetAxis("Vertical") * 60.0f * Time.deltaTime);
@@ -60,6 +59,39 @@ public class DangleMove : MonoBehaviour
 
             //カメラの視点をプレイヤーにする
             GameObject.Find("Camera").GetComponent<CameraControl>().SetTarget(gameObject);
+        }
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        Transform touchTr = tr;
+        if (touchIronBar == true) return;
+
+        if (collision.gameObject.tag == "IronBar")
+        {
+            rb.isKinematic = true;
+
+            tr = touchTr;
+            touchIronBar = true;
+            ironBarTouchPoint.GetComponent<IronBarTouchPoint>().SetIsHit(touchIronBar);
+            rb.velocity = Vector3.zero;
+            rb.isKinematic = false;
+            barCollision = collision;
+            collisionIronBarPosition = barCollision.contacts[0].point;
+
+            ironBar = collision.gameObject;
+            barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetBarVector());
+
+            ironBarTouchPoint.transform.position = collisionIronBarPosition;
+
+            ironBarTouchPoint.GetComponent<IronBarTouchPoint>().
+                SetPlayerDirection(-tr.up, tr.position - collisionIronBarPosition);
+
+            barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetIronBarVector());
+            tr.right = barVectorNor;
+
+            ////カメラの視点をアイアンバーにする
+            //GameObject.Find("Camera").GetComponent<CameraControl>().SetTarget(ironBarTouchPoint);
         }
     }
 
