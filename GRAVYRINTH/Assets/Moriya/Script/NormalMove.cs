@@ -187,16 +187,22 @@ public class NormalMove : MonoBehaviour
         {
             //上方向と平面の法線方向のなす角
             float angle = Vector3.Angle(tr.up, m_GroundHitInfo.hit.normal);
-            //斜面として認識する角度以上なら何もしない
-            if (angle > m_SlopeDeg) return;
-            //当たった地点に移動
-            tr.position = m_GroundHitInfo.hit.point;
-            //上方向を当たった平面の法線方向に変更
-            m_Up = m_GroundHitInfo.hit.normal;
-            //アニメーション変更
-            m_JumpTimer = 0;
-            m_HoverTimer = 0;
-            anm.SetFloat("HoverTimer", m_HoverTimer);
+            //斜面として認識する角度以下なら地面に当たったとする
+            if (angle < m_SlopeDeg)
+            {
+                //当たった地点に移動
+                tr.position = m_GroundHitInfo.hit.point;
+                //上方向を当たった平面の法線方向に変更
+                m_Up = m_GroundHitInfo.hit.normal;
+                //アニメーション変更
+                m_JumpTimer = 0;
+                m_HoverTimer = 0;
+                anm.SetFloat("HoverTimer", m_HoverTimer);
+            }
+            else
+            {
+                rb.AddForce(GetDown() * m_GravityPower);
+            }
         }
         else
         {
