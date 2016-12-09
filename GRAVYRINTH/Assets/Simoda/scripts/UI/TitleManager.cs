@@ -2,17 +2,16 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public class TitleManager : MonoBehaviour
 {
-    private Scene Title;
+    private Scene title;
 
     private RectTransform titleTextBack;
     private RectTransform titleLogoBack;
     private RectTransform titleLogo;
-    private RectTransform pressStartButton;
     private RectTransform pressStartButtonBack;
+    private RectTransform pressStartButton;
 
     private bool isSkip = true;
 
@@ -21,13 +20,13 @@ public class TitleManager : MonoBehaviour
         //StartCoroutine(DelayMethod(0, () => { SceneManager.LoadScene("TutorialTestSimoda", LoadSceneMode.Additive); }));
         //StartCoroutine(DelayMethod(1, () => { SceneManager.SetActiveScene(TutorialTest); }));
         //StartCoroutine(DelayMethod(0, () => { GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Title); }));
-        Title = SceneManager.GetSceneByName("Title");
+        title = SceneManager.GetSceneByName("Title");
 
-        titleTextBack = GameObject.Find("title text back").GetComponent<RectTransform>();
-        titleLogo = GameObject.Find("title logo").GetComponent<RectTransform>();
-        titleLogoBack = GameObject.Find("title logo back").GetComponent<RectTransform>();
-        pressStartButton = GameObject.Find("press start button").GetComponent<RectTransform>();
-        pressStartButtonBack = GameObject.Find("press start button back").GetComponent<RectTransform>();
+        titleTextBack = GameObject.Find("TitleTextBack").GetComponent<RectTransform>();
+        titleLogoBack = GameObject.Find("TitleLogoBack").GetComponent<RectTransform>();
+        titleLogo = GameObject.Find("TitleLogo").GetComponent<RectTransform>();
+        pressStartButtonBack = GameObject.Find("PressStartButtonBack").GetComponent<RectTransform>();
+        pressStartButton = GameObject.Find("PressStartButton").GetComponent<RectTransform>();
 
         //titleLogoBackの位置は（0,-240）
         //LeanTween.move(titleLogoBack, new Vector2(0.0f, -50.0f), 2.0f)
@@ -89,7 +88,7 @@ public class TitleManager : MonoBehaviour
                             }
                             catch
                             {
-                                SceneManager.UnloadScene(Title);
+                                SceneManager.UnloadScene(title);
                             }
                         });
                 }
