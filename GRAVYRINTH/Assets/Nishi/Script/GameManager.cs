@@ -39,13 +39,15 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private GameMode mCureentMode;
 
+    public string mFastStageName;
+
     public void Awake()
     {
         mCureentMode = GameMode.Title;
-        SceneManager.LoadScene("Stage0", LoadSceneMode.Additive);
-        StartCoroutine("CameraWait", SceneManager.GetSceneByName("Stage0"));
+        SceneManager.LoadScene(mFastStageName, LoadSceneMode.Additive);
+        StartCoroutine("CameraWait", SceneManager.GetSceneByName(mFastStageName));
         //SceneManager.LoadScene("Title", LoadSceneMode.Additive);
-        mCurrentScene = SceneManager.GetSceneByName("Stage0");
+        mCurrentScene = SceneManager.GetSceneByName(mFastStageName);
     }
 
 
