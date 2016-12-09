@@ -177,7 +177,7 @@ public class CameraControl : ICamera
         //補間なし版
         //transform.localRotation = Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up);
 
-        if (Target.parent.name == "IronBarTouchPoint") mCurrentState = State.BraDown;
+        if (Target.GetComponent<PlayerMoveManager>().GetState() == PlayerState.IRON_BAR_DANGLE) mCurrentState = State.BraDown;
     }
 
     private void StartMove()
@@ -263,7 +263,7 @@ public class CameraControl : ICamera
         //補間なし移動
         transform.position = next;
 
-        if (Target.parent.name != "IronBarTouchPoint") mCurrentState = State.Normal;
+        if (Target.GetComponent<PlayerMoveManager>().GetState() != PlayerState.IRON_BAR_DANGLE) mCurrentState = State.Normal;
         //transform.localRotation = Quaternion.Slerp(transform.localRotation,
         //        Quaternion.LookRotation((player.transform.position) - transform.position,up), 0.5f);
         transform.localRotation = Quaternion.LookRotation((player.transform.position) - transform.position, up);
