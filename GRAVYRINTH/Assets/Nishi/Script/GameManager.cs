@@ -55,7 +55,6 @@ public class GameManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
     }
 
     public void GameModeChange(GameMode mode)
@@ -90,7 +89,6 @@ public class GameManager : MonoBehaviour
         SceneManager.UnloadScene("Menu");
     }
 
-
     /// <summary>
     /// 次のシーンを設定する
     /// </summary>
@@ -105,8 +103,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void SceneChange()
     {
-        SceneManager.LoadScene(mNextStageName, LoadSceneMode.Additive);
         SceneManager.UnloadScene(mCurrentScene);
+        SceneManager.LoadScene(mNextStageName, LoadSceneMode.Additive);
         mCurrentScene = SceneManager.GetSceneByName(mNextStageName);
     }
 

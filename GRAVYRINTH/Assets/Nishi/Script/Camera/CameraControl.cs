@@ -97,8 +97,8 @@ public class CameraControl : ICamera
     /// </summary>
     private void TargetAroundMove(Vector3 up,Vector3 right)
     {
-        float horizontal = -Input.GetAxisRaw("Horizontal2") * m_RotateSpeed.x;
-        float vertical = -Input.GetAxisRaw("Vertical2") * m_RotateSpeed.y;
+        float horizontal = -Input.GetAxisRaw("Horizontal2") * m_RotateSpeed.x * Time.deltaTime;
+        float vertical = -Input.GetAxisRaw("Vertical2") * m_RotateSpeed.y * Time.deltaTime;
 
         XAxisTotal += vertical;
         //X軸の回転の限界を設定
@@ -202,8 +202,8 @@ public class CameraControl : ICamera
     {
         GameObject player = GameObject.Find("Player");
 
-        float horizontal = -Input.GetAxisRaw("Horizontal2") * 2;
-        float vertical = -Input.GetAxisRaw("Vertical2") * 2;
+        float horizontal = -Input.GetAxisRaw("Horizontal2") * 2 * Time.deltaTime;
+        float vertical = -Input.GetAxisRaw("Vertical2") * 2 * Time.deltaTime;
 
         XAxisTotal += vertical;
         //X軸の回転の限界を設定
