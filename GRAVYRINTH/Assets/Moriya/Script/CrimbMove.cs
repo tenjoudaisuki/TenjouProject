@@ -3,29 +3,12 @@ using System.Collections;
 
 public class CrimbMove : MonoBehaviour
 {
-    public enum BarType
-    {
-        IRON_BAR,
-        POLE,
-    }
-
-    //当たったかどうか付のRaycastHit
-    struct RayHitInfo
-    {
-        public RaycastHit hit;
-        //当たったか？
-        public bool isHit;
-    };
-
     public bool touchIronBar = false;
     public GameObject ironBar;
     public Vector3 collisionIronBarPosition;
-    //public Vector3 touchIronBarPlayerPosition;
 
-    //public Transform headPoint;
     public GameObject ironBarTouchPoint;
 
-    public BarType barType;
     private Transform tr;
     private Rigidbody rb;
     private Collision barCollision;
@@ -46,7 +29,6 @@ public class CrimbMove : MonoBehaviour
 
     void Update()
     {
-        print("call0");
         Debug.DrawRay(tr.position, tr.up, Color.red, 1.0f, false);
         Debug.DrawRay(tr.position, tr.right);
         //Debug.DrawRay(ironBarTouchPoint.transform.position, ironBarTouchPoint.transform.right);
@@ -55,7 +37,6 @@ public class CrimbMove : MonoBehaviour
         {
             rb.velocity = Vector3.zero;
 
-            print("call2");
             Vector3 point = ironBar.transform.position;
             Debug.DrawRay(point, Vector3.up);
             ironBarTouchPoint.transform.RotateAround(point, tr.up, -Input.GetAxis("Horizontal") * 90.0f * Time.deltaTime);
@@ -106,9 +87,6 @@ public class CrimbMove : MonoBehaviour
         {
             rb.isKinematic = true;
 
-            GetComponent<NormalMove>().enabled = false;
-            //GetComponent<PlayerBlockPush>().enabled = false;
-
             tr = touchTr;
             touchIronBar = true;
             ironBarTouchPoint.GetComponent<IronBarTouchPoint>().SetIsHit(touchIronBar);
@@ -126,12 +104,13 @@ public class CrimbMove : MonoBehaviour
             barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
             tr.up = barVectorNor;
 
-
-            //ステートを変更
-            m_MoveManager.SetState(PlayerState.IRON_BAR_CLIMB);
-
-
             ironBarTouchPoint.transform.position = collisionIronBarPosition;
+
+            ironBarTouchPoint.GetComponent<IronBarTouchPoint>().
+                   SetPlayerDirection(-tr.forward, tr.position - collisionIronBarPosition);
+
+            barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
+            tr.up = barVectorNor;
         }
     }
 

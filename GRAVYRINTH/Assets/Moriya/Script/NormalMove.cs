@@ -101,7 +101,6 @@ public class NormalMove : MonoBehaviour
 
     void Update()
     {
-        print(m_GroundHitInfo.isHit);
         //地面との判定処理
         Ground();
 
@@ -121,7 +120,20 @@ public class NormalMove : MonoBehaviour
         //鉄棒にあたった瞬間
         if (collision.gameObject.tag == "IronBar")
         {
-            m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
+            //鉄棒の方向
+            Vector3 barV = Vector3.Normalize(collision.gameObject.GetComponent<IronBar>().GetBarVector());
+            //自身と鉄棒のなす角に応じて状態変更
+            float dot = Vector3.Dot(tr.up, barV);
+            print(dot);
+            if (dot < 0.7071068)
+            {
+                m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
+            }
+            else
+            {
+
+                m_MoveManager.SetState(PlayerState.IRON_BAR_CLIMB);
+            }
         }
     }
 
@@ -238,19 +250,19 @@ public class NormalMove : MonoBehaviour
 
         //前ベクトル×スティックの傾き
         m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
-
+          
         //ブロック移動ボタンを押していて、かつブロックが近くにある時
         if (Input.GetKey(KeyCode.B) && m_CollisionBlock != null)
         {
             m_CollisionBlock.IsPushDistance();
             if (m_CollisionBlock.isPush == false) return;
-
-            tr.GetComponent<NormalMove>().enabled = false;
-
+            
+            print(m_MoveVelocity);
             Vector3 moveDirection = m_CollisionBlock.GetBlockMoveDirection();
-            m_MoveVelocity = (moveDirection * -m_MoveVelocity.y + moveDirection * 0.0f) * m_MoveSpeed;
+            m_MoveVelocity = (moveDirection * -inputVec.y) * m_Save;
             m_CollisionBlock.SetMoveVector(m_MoveVelocity);
             //移動
+          
             tr.position += m_MoveVelocity * Time.deltaTime;
         }
         //通常時
