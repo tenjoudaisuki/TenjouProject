@@ -84,8 +84,9 @@ public class DangleMove : MonoBehaviour
 
             ironBarTouchPoint.transform.position = collisionIronBarPosition;
 
-            ironBarTouchPoint.GetComponent<IronBarTouchPoint>().
-                SetPlayerDirection(-tr.up, tr.position - collisionIronBarPosition);
+            //とりあえずコメントアウト
+            //ironBarTouchPoint.GetComponent<IronBarTouchPoint>().
+            //    SetPlayerDirection(-tr.up, tr.position - collisionIronBarPosition);
 
             barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetIronBarVector());
             tr.right = barVectorNor;
