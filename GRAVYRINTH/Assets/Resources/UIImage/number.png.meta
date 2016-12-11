@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 45130533212cf2741b6341e1b0f92480
-timeCreated: 1480052105
+guid: b1b29fec70522dc4091c64cd5c9bb6d0
+timeCreated: 1481264080
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -14,6 +14,8 @@ TextureImporter:
     21300014: number_7
     21300016: number_8
     21300018: number_9
+    21300020: number_10
+    21300022: number_11
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -184,6 +186,32 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 450
+        y: 0
+        width: 50
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: number_10
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 0
+        width: 50
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: number_11
+      rect:
+        serializedVersion: 2
+        x: 550
         y: 0
         width: 50
         height: 100
