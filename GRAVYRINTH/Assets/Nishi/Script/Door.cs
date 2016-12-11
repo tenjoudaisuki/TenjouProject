@@ -5,8 +5,6 @@ public class Door : MonoBehaviour {
 
     public float mSpeed;
     float Rotatez = 0.0f;
-
-    public Vector3 mAxis;
 	// Update is called once per frame
 	void Update () {
         //Vector3 axis = transform.parent.forward;

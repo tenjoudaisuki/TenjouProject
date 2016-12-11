@@ -41,6 +41,7 @@ public class StageClearMove : MonoBehaviour
     /// </summary>
     public void StartClearMove()
     {
+        m_ClearDoorTr = GameObject.FindGameObjectWithTag("ClearDoor").transform;
         m_ClearPosition = tr.position;
         StartCoroutine(ClearMove());
     }
