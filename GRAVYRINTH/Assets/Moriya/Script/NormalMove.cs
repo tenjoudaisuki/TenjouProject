@@ -40,7 +40,14 @@ public class NormalMove : MonoBehaviour
     private float m_AnimSpeed = 1.5f;
     [SerializeField, TooltipAttribute("ポールからジャンプするときの強さ")]
     private float m_PoleJumpPower = 140.0f;
-
+    //[SerializeField, TooltipAttribute("壁キック時の操作不能時間")]　実装するかも？
+    //private float m_WallJumpDisableInputTime = 1.0f;
+    [SerializeField, TooltipAttribute("壁キックの強さ")]
+    public float m_WallKickPower = 200.0f;
+    [SerializeField, TooltipAttribute("壁キックの高さ（上方向へ向かう量、0だと真横、1だと斜め45度）")]
+    public float m_WallKickHeight = 1.5f;
+    [SerializeField, TooltipAttribute("壁衝突時　壁キック可能な壁とみなす角度")]
+    public float m_WallKickAbleAngle = 80.0f;
 
     /*==内部設定変数==*/
     //重力の方向を所持するクラス。プレイヤー以外で重力を扱う場合こちらのクラスを使用してください。
@@ -73,6 +80,27 @@ public class NormalMove : MonoBehaviour
     private float m_HoverTimer;
     private float m_JumpTimer;
     private float m_WallJumpTimer;
+    //操作不能か？
+    private bool m_DisableInput = false;
+    //地面ではなく斜面との衝突中か？
+    private bool m_IsHitSlope = false;
+
+    //壁との判定で使用 レイのヒット情報
+    RayHitInfo m_WallHitInfoFront, m_WallHitInfoLeft, m_WallHitInfoRight;
+    //壁の法線方向
+    Vector3 wallNormal;
+    //壁キックできるか？
+    bool isWallKick;
+    //壁に触っているか？
+    bool isWallTouch;
+
+    
+
+
+
+
+
+
 
     /*==外部参照変数==*/
 
@@ -104,15 +132,15 @@ public class NormalMove : MonoBehaviour
         //地面との判定処理
         Ground();
 
+        //空中にいるときは壁キック処理
+        if (!m_GroundHitInfo.isHit)
+            WallKick();
+
         //移動処理
         Move();
 
         //重力をセット
         m_GravityDir.SetDirection(GetDown());
-
-        //壁キック処理
-        if (!m_GroundHitInfo.isHit)
-            WallKick();
     }
 
     public void OnCollisionEnter(Collision collision)
@@ -139,8 +167,6 @@ public class NormalMove : MonoBehaviour
 
     void LateUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-            Respawn(new Vector3(2, 1, -9), Vector3.up, Vector3.forward);
 
     }
 
@@ -188,20 +214,37 @@ public class NormalMove : MonoBehaviour
             //上方向と平面の法線方向のなす角
             float angle = Vector3.Angle(tr.up, m_GroundHitInfo.hit.normal);
             //斜面として認識する角度以下なら地面に当たったとする
-            if (angle < m_SlopeDeg)
+            if (angle <= m_SlopeDeg)
             {
+                //斜面と衝突していない
+                m_IsHitSlope = false;
                 //当たった地点に移動
                 tr.position = m_GroundHitInfo.hit.point;
                 //上方向を当たった平面の法線方向に変更
                 m_Up = m_GroundHitInfo.hit.normal;
+                m_Up.Normalize();
                 //アニメーション変更
                 m_JumpTimer = 0;
                 m_HoverTimer = 0;
                 anm.SetFloat("HoverTimer", m_HoverTimer);
             }
+            //斜面として認識する角度より大きいなら壁に当たったとする（その後はずり落ちる）
             else
             {
-                rb.AddForce(GetDown() * m_GravityPower);
+                //斜面と衝突している
+                m_IsHitSlope = true;
+                //壁に対して水平方向がupになるようにする
+                //まずは前方向を確定
+                Vector3 n = m_GroundHitInfo.hit.normal;
+                Vector3 front = -n.normalized;
+                //上方向を計算
+                Quaternion toUp = Quaternion.AngleAxis(-90.0f, tr.right);
+                m_Up = toUp * front;
+                m_Up.Normalize();
+                m_Front = front;
+
+                ////セット
+                //SetUpFront(m_Up, front);
             }
         }
         else
@@ -209,23 +252,6 @@ public class NormalMove : MonoBehaviour
             m_HoverTimer += 1 * Time.deltaTime;
             //アニメーション変更
             anm.SetFloat("HoverTimer", m_HoverTimer);
-        }
-
-        //移動方向入力
-        Vector2 inputVec = MoveFunctions.GetMoveInputAxis();
-        //アニメーション変更
-        anm.SetBool("Move", inputVec.magnitude > 0.0f);
-        //スティックが入力されたら向きを変える
-        if (inputVec.magnitude > 0.1f)
-        {
-            //スティックの傾きを↑を0°として計算
-            m_InputAngleY = Vector2.Angle(Vector2.up, inputVec);
-            //ステイックが左に傾いていればyをマイナスに
-            if (inputVec.x < 0) m_InputAngleY = -m_InputAngleY;
-            //地面の上方向とカメラの右方向で外積を取得
-            Vector3 camerafoward = -Vector3.Cross(m_Up, m_Camera.right);
-            //外積をスティックの角度で回転させて前ベクトルを計算
-            m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * camerafoward;
         }
 
         //着地した瞬間の処理
@@ -241,11 +267,36 @@ public class NormalMove : MonoBehaviour
             isWallTouch = false;
             m_WallJumpTimer = 0;
 
+            
+            //地面の上方向とカメラの右方向で外積を取得
+            Vector3 camerafoward = -Vector3.Cross(m_Up, m_Camera.right);
+            //外積をスティックの角度で回転させて前ベクトルを計算
+            m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * camerafoward;
+
+            //操作可能にする
+            m_DisableInput = false;
+        }
+
+        //移動方向入力
+        Vector2 inputVec = Vector2.zero;
+        //入力不可状態なら入力を取得しない
+        if (!m_DisableInput)
+            inputVec = MoveFunctions.GetMoveInputAxis();
+        //アニメーション変更
+        anm.SetBool("Move", inputVec.magnitude > 0.0f);
+        //スティックが入力されたら向きを変える
+        if (inputVec.magnitude > 0.1f)
+        {
+            //スティックの傾きを↑を0°として計算
+            m_InputAngleY = Vector2.Angle(Vector2.up, inputVec);
+            //ステイックが左に傾いていればyをマイナスに
+            if (inputVec.x < 0) m_InputAngleY = -m_InputAngleY;
             //地面の上方向とカメラの右方向で外積を取得
             Vector3 camerafoward = -Vector3.Cross(m_Up, m_Camera.right);
             //外積をスティックの角度で回転させて前ベクトルを計算
             m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * camerafoward;
         }
+
 
         //前、右方向への移動処理
         //プレイヤーの前ベクトルと上ベクトルを決定
@@ -280,6 +331,7 @@ public class NormalMove : MonoBehaviour
 
         //ジャンプ処理
         Jump();
+
 
         //進行方向に壁がある場合は移動量を0にする
         if (CollisionWall())
@@ -391,6 +443,8 @@ public class NormalMove : MonoBehaviour
             m_GroundHitInfo.isHit = false;
             //タイマーも初期化
             m_JumpedTimer = 0.0f;
+
+            m_IsHitSlope = false;
         }
         if(anm.GetBool("Jump"))
         {     
@@ -435,13 +489,14 @@ public class NormalMove : MonoBehaviour
     /// </summary>
     private bool CollisionWall()
     {
-        Vector3 rayPos = tr.position + tr.up / 3;
+        wallNormal = Vector3.zero;
+        Vector3 rayPos = tr.position + tr.forward * 0.1f + tr.up / 3;
         Ray ray_front = new Ray(rayPos, tr.forward);
         Ray ray_left = new Ray(rayPos, tr.forward - tr.right);
         Ray ray_right = new Ray(rayPos, tr.forward + tr.right);
 
         RaycastHit hit_front, hit_left, hit_right;
-        RayHitInfo m_WallHitInfoLeft, m_WallHitInfoRight;
+
 
         //[IgnoredObj]レイヤー以外と判定させる
         int layermask = ~(1 << 10);
@@ -461,7 +516,18 @@ public class NormalMove : MonoBehaviour
         if (m_WallHitInfoFront.isHit ||
             m_WallHitInfoLeft.isHit ||
             m_WallHitInfoRight.isHit)
+        {           
+            //壁の法線が確定
+            if (m_WallHitInfoFront.isHit)
+                wallNormal = m_WallHitInfoFront.hit.normal.normalized;
+            else if (m_WallHitInfoLeft.isHit)
+                wallNormal = m_WallHitInfoLeft.hit.normal.normalized;
+            else
+                wallNormal = m_WallHitInfoRight.hit.normal.normalized;
+
             return true;
+        }
+            
         else
             return false;
     }
@@ -527,19 +593,16 @@ public class NormalMove : MonoBehaviour
         rb.velocity = Vector3.zero;
     }
 
-    RayHitInfo m_WallHitInfoFront;
-    bool isWallKick;
-    bool isWallTouch;
-    public float m_WallKickPower = 200;
+
 
     public void WallKick()
     {
         Vector3 inputAxis = new Vector3(MoveFunctions.GetMoveInputAxis().x, 0, MoveFunctions.GetMoveInputAxis().y);
-        
-        float wallAngle = Vector3.Angle(tr.forward, m_WallHitInfoFront.hit.normal);
+
+        float wallAngle = Vector3.Angle(tr.forward, wallNormal);
         float frontAngle = Vector3.Angle(tr.forward, tr.forward * inputAxis.magnitude);
 
-        if ((160 < wallAngle && wallAngle < 200) && !m_GroundHitInfo.isHit)
+        if ((180 - m_WallKickAbleAngle / 2 < wallAngle && wallAngle < 180 + m_WallKickAbleAngle / 2))
         {
             //アニメーション変更
             anm.SetBool("Wall", true);
@@ -547,8 +610,15 @@ public class NormalMove : MonoBehaviour
             rb.velocity = Vector3.zero;
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                rb.AddForce((tr.up * 1.5f - tr.forward) * m_WallKickPower);
-                SetUpFront(tr.up, -tr.forward);
+                //操作不能にする
+                m_DisableInput = true;
+                m_IsHitSlope = false;
+                Vector3 dir = tr.up * m_WallKickHeight + wallNormal;
+                dir.Normalize();
+
+                rb.AddForce(dir * m_WallKickPower);
+
+                m_Front = wallNormal;
 
                 //アニメーション変更
                 anm.SetBool("Wall", false);
