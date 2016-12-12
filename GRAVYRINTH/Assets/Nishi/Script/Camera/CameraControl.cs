@@ -113,8 +113,8 @@ public class CameraControl : ICamera
 
         //ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
         Vector3 parallel = Vector3.Cross(up, right);
-        //mParallel =  Vector3.Lerp(mParallel,parallel, 0.3f);
-        mParallel = parallel;
+        mParallel =  Vector3.Lerp(mParallel,parallel, 0.8f);
+        //mParallel = parallel;
         //平行ベクトルをターゲットの上ベクトルを軸に回転さらに自身の横ベクトルを軸に回転しカメラの位置を計算
         Vector3 temp = Quaternion.AngleAxis(XAxisTotal, transform.right) * Quaternion.AngleAxis(horizontal, up) * mParallel;
 
@@ -137,16 +137,17 @@ public class CameraControl : ICamera
         RaycastHit hit;
         //rayの方向の指定距離以内に障害物が無いか？
         //[IgnoredObj]レイヤー以外と判定させる
-        int layermask = ~(1 << 10);
-        if (Physics.Raycast(ray, out hit, Distance,layermask, QueryTriggerInteraction.Ignore))
+        int layermask = ~((1 << 10) | (1 << 8));
+        if (Physics.Raycast(ray, out hit, Distance + 0.5f,layermask, QueryTriggerInteraction.Ignore))
         {
             //壁に当たった位置をカメラ位置に
-            next = hit.point + (hit.normal.normalized * 0.2f);
+            transform.position = hit.point + (hit.normal.normalized * 0.2f);
         }
         else
         {
             //当たらなかったらray* Disをカメラ位置に
             next = (Target.position + offset) +(CameraPosDirection.normalized * Distance);
+            transform.position = next;
         }
         //next = (Target.position + offset) + (CameraPosDirection * Distance);
         //デバック表示
@@ -155,7 +156,7 @@ public class CameraControl : ICamera
         //補間あり移動
         //transform.position = Vector3.Lerp(transform.position, next, 0.1f);
         //補間なし移動
-        transform.position = next;
+        //transform.position = next;
 
     }
 
@@ -179,7 +180,8 @@ public class CameraControl : ICamera
         //transform.localRotation = Quaternion.Slerp(transform.localRotation,
         //  Quaternion.LookRotation((Target.position + offset) - transform.position,Target.up), 0.5f);
         //補間なし版
-        transform.localRotation = Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up);
+        //transform.localRotation = Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up);
+        transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Target.up);
 
         if (Target.GetComponent<PlayerMoveManager>().GetState() == PlayerState.IRON_BAR_DANGLE) mCurrentState = State.BraDown;
     }
