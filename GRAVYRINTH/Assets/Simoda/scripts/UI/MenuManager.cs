@@ -261,7 +261,7 @@ public class MenuManager : MonoBehaviour
     {
         //UIの検索　代入
         stageSelectTextBack = GameObject.Find("StageSelectTextBack").GetComponent<RectTransform>();
-        stage = GameObject.Find("Stage").GetComponent<RectTransform>();
+        stage = GameObject.Find("StageText").GetComponent<RectTransform>();
         stageSubmitButton = GameObject.Find("StageSubmitButton").GetComponent<RectTransform>();
         numbar = GameObject.Find("StageNumbar").GetComponent<RectTransform>();
         tutorial = GameObject.Find("Tutorial").GetComponent<RectTransform>();
@@ -615,8 +615,8 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     public void StageSubmitButtonPressed()
     {
-        //LeanTween.scale(stage, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
-        //LeanTween.scale(numbar, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+        LeanTween.scale(stage, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+        LeanTween.scale(numbar, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
 
         //rectTransformsにBackgroundを追加
         rectTransforms.Add(background);
