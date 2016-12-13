@@ -51,6 +51,11 @@ public class Pausable : MonoBehaviour
     MonoBehaviour[] pausingMonoBehaviours;
 
     /// <summary>
+    /// ポーズ中のパーティクルの配列
+    /// </summary>
+    ParticleSystem[] pausingParticleSystem;
+
+    /// <summary>
     /// 更新処理
     /// </summary>
     void Update()
@@ -95,6 +100,16 @@ public class Pausable : MonoBehaviour
             monoBehaviour.enabled = false;
         }
 
+        Predicate<ParticleSystem> particlePredicate =
+            obj => obj.isPlaying;
+        pausingParticleSystem = Array.FindAll(transform.GetComponentsInChildren<ParticleSystem>(), particlePredicate);
+        foreach (var particleSystem in pausingParticleSystem)
+        {
+            particleSystem.Pause();
+        }
+
+
+
     }
 
     /// <summary>
@@ -114,6 +129,11 @@ public class Pausable : MonoBehaviour
         foreach (var monoBehaviour in pausingMonoBehaviours)
         {
             monoBehaviour.enabled = true;
+        }
+
+        foreach (var particleSystem in pausingParticleSystem)
+        {
+            particleSystem.Play();
         }
     }
 }

@@ -27,6 +27,8 @@ public class NextStageFade : MonoBehaviour {
         mState = FadeMode.FadeIn;
         mImage = GetComponent<Image>();
         mColor = mImage.color;
+        mColor.a = 0;
+        mImage.color = mColor;
     }
 	
 	// Update is called once per frame

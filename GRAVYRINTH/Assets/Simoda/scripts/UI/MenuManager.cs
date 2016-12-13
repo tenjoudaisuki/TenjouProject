@@ -15,6 +15,9 @@ public class MenuManager : MonoBehaviour
 
     public MenuType menuType;
 
+    //16/12/12 西 add　ステージの名前リスト
+    public string[] mStageNameList;
+
     private Scene menu;
 
     //UIの入力管理
@@ -94,7 +97,7 @@ public class MenuManager : MonoBehaviour
                 break;
 
             case MenuType.StageSelect:
-                StageSelectInput();
+                if(GameObject.FindGameObjectWithTag("Fade").transform.childCount == 0) StageSelectInput();
                 break;
         }
     }
@@ -386,9 +389,16 @@ public class MenuManager : MonoBehaviour
             changingSelection = true;
 
             stageNumber++;
-
             //ステージ番号を更新
             StageNumbarUpdate(stageNumber);
+
+            ////16/12/12 add　西--------------------------------------------
+            if (GameManager.Instance.GetCurrentSceneName() != mStageNameList[stageNumber])
+            {
+                GameManager.Instance.SetNextSceneName(mStageNameList[stageNumber]);
+                GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance(Color.white,1.0f);
+            }
+            ////------------------------------------------------------------
 
             LeanTween.scale(rightArrow, new Vector3(1.5f, 1.5f, 0.0f), 0.15f)
                 .setOnComplete(() =>
@@ -411,9 +421,16 @@ public class MenuManager : MonoBehaviour
             changingSelection = true;
 
             stageNumber--;
-
             //ステージ番号を更新
             StageNumbarUpdate(stageNumber);
+
+            ////16/12/12 add　西--------------------------------------------
+            if (GameManager.Instance.GetCurrentSceneName() != mStageNameList[stageNumber])
+            {
+                GameManager.Instance.SetNextSceneName(mStageNameList[stageNumber]);
+                GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance();
+            }
+            ////------------------------------------------------------------
 
             LeanTween.scale(leftArrow, new Vector3(1.5f, 1.5f, 0.0f), 0.15f)
                 .setOnComplete(() =>
@@ -524,6 +541,9 @@ public class MenuManager : MonoBehaviour
         //1.1秒後にMenuシーンをアンロード
         StartCoroutine(DelayMethod(1.1f, () =>
         {
+            // 16/12/12 add 西--------------------------------------------------
+            GameManager.Instance.GameModeChange(GameManager.GameMode.GamePlay);
+            //------------------------------------------------------------------
             SceneManager.UnloadScene(menu);
         }));
 
@@ -595,8 +615,8 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     public void StageSubmitButtonPressed()
     {
-        LeanTween.scale(stage, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
-        LeanTween.scale(numbar, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+        //LeanTween.scale(stage, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+        //LeanTween.scale(numbar, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
 
         //rectTransformsにBackgroundを追加
         rectTransforms.Add(background);
@@ -605,6 +625,9 @@ public class MenuManager : MonoBehaviour
         {
             LeanTween.alpha(rectTr, 0.0f, 1.0f);
         }
+
+        //16/12/13 add　西　ゲームを開始する
+        GameManager.Instance.GameModeChange(GameManager.GameMode.GamePlay);
 
         //1.1秒後にMenuシーンをアンロード
         StartCoroutine(DelayMethod(1.1f, () =>

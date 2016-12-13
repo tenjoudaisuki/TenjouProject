@@ -263,9 +263,9 @@ public class CameraControl : ICamera
         Debug.DrawRay(Target.position, CameraPosDirection, Color.yellow);
 
         //補間あり移動
-        //transform.position = Vector3.Lerp(transform.position, next, 0.1f);
+        transform.position = Vector3.Lerp(transform.position, next, 0.3f);
         //補間なし移動
-        transform.position = next;
+        //transform.position = next;
 
         if (Target.GetComponent<PlayerMoveManager>().GetState() != PlayerState.IRON_BAR_DANGLE) mCurrentState = State.Normal;
         //transform.localRotation = Quaternion.Slerp(transform.localRotation,

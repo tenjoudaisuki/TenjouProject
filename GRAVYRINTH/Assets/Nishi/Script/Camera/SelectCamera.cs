@@ -26,10 +26,18 @@ public class SelectCamera : ICamera {
         mTimer += Time.deltaTime;
         transform.position = Vector3.Lerp(mFromPos, mNextPosition, mTimer);
         transform.localRotation = Quaternion.Slerp(mFromRotate, mNextRotate, mTimer);
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            GetComponent<CameraManager>().StateChange(State.GamePlay);
-        }
+        //if (Input.GetKeyDown(KeyCode.C))
+        //{
+        //    GetComponent<CameraManager>().StateChange(State.GamePlay);
+        //}
+    }
 
+    public override void Warp()
+    {
+        mTimer = 1.0f;
+        mNextPosition = GameObject.Find("SelectCameraPosition").transform.position;
+        mNextRotate = GameObject.Find("SelectCameraPosition").transform.localRotation;
+        mFromPos = transform.position;
+        mFromRotate = transform.localRotation;
     }
 }
