@@ -73,6 +73,7 @@ public class TitleManager : MonoBehaviour
                 titleLogo.GetComponent<ImageFlashing>().FlashingStop(1.0f);
                 pressStartButtonBack.GetComponent<ImageFlashing>().FlashingStop(1.0f);
                 LeanTween.scale(pressStartButtonBack, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+                LeanTween.scale(pressStartButton, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
 
                 RectTransform[] rectTransforms = GameObject.Find("Frame").GetComponentsInChildren<RectTransform>();
                 //rectTransforms.GetValue()
