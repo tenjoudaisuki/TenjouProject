@@ -88,6 +88,9 @@ public class TitleManager : MonoBehaviour
                             }
                             catch
                             {
+                                // 16/12/12 add 西--------------------------------------------------
+                                GameManager.Instance.GameModeChange(GameManager.GameMode.Select);
+                                //------------------------------------------------------------------
                                 SceneManager.UnloadScene(title);
                             }
                         });

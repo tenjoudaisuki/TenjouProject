@@ -16,6 +16,19 @@ public class FadeFactory : MonoBehaviour {
         GameObject fadeobj = (GameObject)Instantiate(mFadePrefab, transform,false);
     }
 
+    public void FadeInstance(float speed)
+    {
+        mFadePrefab.GetComponent<NextStageFade>().mSpeed = speed;
+        GameObject fadeobj = (GameObject)Instantiate(mFadePrefab, transform, false);
+    }
+
+    public void FadeInstance(Color color, float speed)
+    {
+        mFadePrefab.GetComponent<Image>().color = color;
+        mFadePrefab.GetComponent<NextStageFade>().mSpeed = speed;
+        GameObject fadeobj = (GameObject)Instantiate(mFadePrefab, transform, false);
+    }
+
     public void FadeColorChange(Color color)
     {
         mFadePrefab.GetComponent<Image>().color = color;

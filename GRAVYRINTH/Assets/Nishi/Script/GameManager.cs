@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
     public void Awake()
     {
         mCureentMode = GameMode.Title;
+        SceneManager.LoadScene("Title", LoadSceneMode.Additive);
         SceneManager.LoadScene(mFastStageName, LoadSceneMode.Additive);
         StartCoroutine("CameraWait", SceneManager.GetSceneByName(mFastStageName));
         //SceneManager.LoadScene("Title", LoadSceneMode.Additive);
@@ -55,6 +56,15 @@ public class GameManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            Pause();
+            //ReStart();
+        }
     }
 
     public void GameModeChange(GameMode mode)
@@ -72,21 +82,22 @@ public class GameManager : MonoBehaviour
     void TitleMode()
     {
         SceneManager.LoadScene("Title", LoadSceneMode.Additive);
-        SceneManager.UnloadScene("Menu");
-        GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Title);
+        if (!SceneManager.GetSceneByName(mFastStageName).isLoaded)
+        {
+            GameManager.Instance.SetNextSceneName(mFastStageName);
+            GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance();
+        }
     }
 
     void SelectMode()
     {
         SceneManager.LoadScene("Menu", LoadSceneMode.Additive);
-        SceneManager.UnloadScene("Title");
         GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Select);
     }
 
     void GamePlayMode()
     {
-        SceneManager.UnloadScene("Title");
-        SceneManager.UnloadScene("Menu");
+        GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.GamePlay);
     }
 
     /// <summary>
@@ -118,18 +129,32 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// プレイヤーやカメラをリセットする
+    /// ゲームモードの最初の画面にリセットする
     /// </summary>
     public void Reset()
     {
-        GameObject startPoint = GameObject.Find("StartPoint");
-        GameObject player = GameObject.Find("Player");
+        switch(mCureentMode)
+        {
+            case GameMode.Title: GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Title); ; break;
 
-        player.GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
-        player.transform.position = startPoint.transform.position;
-        player.transform.localRotation = startPoint.transform.localRotation;
+            case GameMode.Select: GameObject.Find("Camera").GetComponent<CameraManager>().CameraWarp();; break;
 
-        GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.GamePlay);
+            case GameMode.GamePlay:
+                GameObject player = GameObject.Find("Player");
+                player.GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
+                GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.GamePlay);
+                ; break;
+        }
+    }
+
+    public GameMode GetMode()
+    {
+        return mCureentMode;
+    }
+
+    public string GetCurrentSceneName()
+    {
+        return mCurrentScene.name;
     }
 
     IEnumerator CameraWait(Scene scene)
@@ -140,5 +165,31 @@ public class GameManager : MonoBehaviour
         }
         GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Title);
         yield break; ;
+    }
+
+    public void Pause()
+    {
+        var pausebles = GameObject.FindGameObjectsWithTag("Pausable");
+        foreach (GameObject pauseble in pausebles)
+        {
+            var script = pauseble.GetComponent<Pausable>();
+            script.pausing = !script.pausing;
+        }
+    }
+
+    public void Pause(bool pause)
+    {
+        var pausebles = GameObject.FindGameObjectsWithTag("Pausable");
+        foreach (GameObject pauseble in pausebles)
+        {
+            var script = pauseble.GetComponent<Pausable>();
+            script.pausing = pause;
+        }
+    }
+
+    public void ReStart()
+    {
+        GameManager.Instance.SetNextSceneName(mCurrentScene.name);
+        GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance();
     }
 }

@@ -30,11 +30,11 @@ public class TitleCamera : ICamera {
         transform.LookAt(mStageCenter.transform);
         transform.RotateAround(mStageCenter.transform.position, Vector3.up, mSpeed);
 
-        //デバック用　あとで消す
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            GetComponent<CameraManager>().StateChange(State.Select);
-        }
+        ////デバック用　あとで消す
+        //if (Input.GetKeyDown(KeyCode.C))
+        //{
+        //    GetComponent<CameraManager>().StateChange(State.Select);
+        //}
 
         //if(isStart)
         //{

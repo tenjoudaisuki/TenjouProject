@@ -47,4 +47,9 @@ public class CameraManager : MonoBehaviour {
     {
         mCurrentCameraScript.Start();
     }
+
+    public void CameraWarp()
+    {
+        mCurrentCameraScript.Warp();
+    }
 }
