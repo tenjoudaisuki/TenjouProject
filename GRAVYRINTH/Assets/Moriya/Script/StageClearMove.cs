@@ -33,7 +33,7 @@ public class StageClearMove : MonoBehaviour
     void Start()
     {
         //オブジェクト取得
-        m_ClearDoorTr = GameObject.FindGameObjectWithTag("ClearDoor").transform;
+        //m_ClearDoorTr = GameObject.FindGameObjectWithTag("ClearDoor").transform;
     }
 
     /// <summary>
