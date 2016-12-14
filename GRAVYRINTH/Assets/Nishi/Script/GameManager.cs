@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
         GamePlay
     }
 
+    public bool isDebug = true;
+
     private static GameManager sInstance;
 
     public static GameManager Instance
@@ -46,12 +48,20 @@ public class GameManager : MonoBehaviour
 
     public void Awake()
     {
-        mCureentMode = GameMode.Title;
-        SceneManager.LoadScene("Title", LoadSceneMode.Additive);
-        SceneManager.LoadScene(mFastStageName, LoadSceneMode.Additive);
-        StartCoroutine("CameraWait", SceneManager.GetSceneByName(mFastStageName));
-        //SceneManager.LoadScene("Title", LoadSceneMode.Additive);
-        mCurrentScene = SceneManager.GetSceneByName(mFastStageName);
+        if (isDebug)
+        {
+            mCureentMode = GameMode.GamePlay;
+            GameObject.Find("Camera").GetComponent<CameraManager>().mStateState = State.GamePlay;
+        }
+        else
+        {
+            mCureentMode = GameMode.Title;
+            SceneManager.LoadScene("Title", LoadSceneMode.Additive);
+            SceneManager.LoadScene(mFastStageName, LoadSceneMode.Additive);
+            StartCoroutine("CameraWait", SceneManager.GetSceneByName(mFastStageName));
+            //SceneManager.LoadScene("Title", LoadSceneMode.Additive);
+            mCurrentScene = SceneManager.GetSceneByName(mFastStageName);
+        }
     }
 
 
