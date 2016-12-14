@@ -615,8 +615,8 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     public void StageSubmitButtonPressed()
     {
-        LeanTween.scale(stage, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
-        LeanTween.scale(numbar, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+        //LeanTween.scale(stage, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+        //LeanTween.scale(numbar, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
 
         //rectTransformsにBackgroundを追加
         rectTransforms.Add(background);

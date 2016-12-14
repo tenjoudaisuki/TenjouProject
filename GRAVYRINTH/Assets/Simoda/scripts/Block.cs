@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Block : MonoBehaviour
 {
-    
+
     private Transform player;
     private Transform tr;
     private Vector3 offset;
@@ -37,13 +37,24 @@ public class Block : MonoBehaviour
     /// </summary>
     public void BlockMove()
     {
+        RaycastHit hitInto;
+        Ray ray = new Ray(tr.position, -GetPlayerDirection().normal);
+
+        Debug.DrawRay(ray.origin, ray.direction, Color.black);
+        if (Physics.Raycast(ray, out hitInto, tr.localScale.z / 2.0f))
+        {
+            if (Input.GetAxis("Vertical") > 0.1f)
+            {
+                return;
+            }
+        }
+
         if (!Input.GetKey(KeyCode.B) || isPush == false) return;
 
         //print(player.up);
         //print(GetPlayerDirection().normal);
         //print(player.up + " " + GetPlayerDirection().normal + " " + Vector3.Dot(Vector3.Normalize(player.up), Vector3.Normalize(GetPlayerDirection().normal)));
         //print("up,-forward" + tr.up + " " + -tr.forward + " " + Vector3.Dot(tr.up, -tr.forward));
-
         //プレイヤーの上方向とブロックのプレイヤー方向の面の法線ベクトルで内積を作る
         float dot = Vector3.Dot(player.up, GetPlayerDirection().normal);
         //内積の数値を補正
@@ -56,6 +67,7 @@ public class Block : MonoBehaviour
 
         //内積が0（90度）じゃなかったらreturn
         if (dotInt != 0) return;
+
         //位置を移動
         tr.position += moveVec * Time.deltaTime;
     }
