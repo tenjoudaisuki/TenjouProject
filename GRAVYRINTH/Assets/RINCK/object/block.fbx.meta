@@ -1,45 +1,40 @@
 fileFormatVersion: 2
-guid: eca82acbb2ab8354fa78081d515add28
-timeCreated: 1481409838
+guid: 89f754d15e6f5264aaa83dede86cb8ca
+timeCreated: 1481702349
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
-    100002: blockaura
-    100004: blockblue
-    100006: blockdetailbase
-    100008: blockgreen
-    100010: blockred
-    100012: blockyellow
+    100002: blockblue
+    100004: blockdetailbase
+    100006: blockgreen
+    100008: blockred
+    100010: blockyellow
     400000: //RootNode
-    400002: blockaura
-    400004: blockblue
-    400006: blockdetailbase
-    400008: blockgreen
-    400010: blockred
-    400012: blockyellow
+    400002: blockblue
+    400004: blockdetailbase
+    400006: blockgreen
+    400008: blockred
+    400010: blockyellow
     2300000: //RootNode
-    2300002: blockaura
-    2300004: blockblue
-    2300006: blockdetailbase
-    2300008: blockgreen
-    2300010: blockred
-    2300012: blockyellow
+    2300002: blockblue
+    2300004: blockdetailbase
+    2300006: blockgreen
+    2300008: blockred
+    2300010: blockyellow
     3300000: //RootNode
-    3300002: blockaura
-    3300004: blockblue
-    3300006: blockdetailbase
-    3300008: blockgreen
-    3300010: blockred
-    3300012: blockyellow
+    3300002: blockblue
+    3300004: blockdetailbase
+    3300006: blockgreen
+    3300008: blockred
+    3300010: blockyellow
     4300000: block
     4300002: blockdetailbase
     4300004: blockred
     4300006: blockyellow
     4300008: blockgreen
     4300010: blockblue
-    4300012: blockaura
   materials:
     importMaterials: 1
     materialName: 0
