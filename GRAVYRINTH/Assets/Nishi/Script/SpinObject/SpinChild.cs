@@ -17,7 +17,7 @@ public class SpinChild : MonoBehaviour {
 	void Update ()
     {
         float speed = transform.parent.GetComponent<SpinParent>().mSpinSpeed;
-        transform.Rotate(Vector3.forward,speed * 2);
+        transform.Rotate(Vector3.right,speed * 2);
 
         m_Movement = transform.position - m_PrevPosition;
         m_PrevPosition = transform.position;
