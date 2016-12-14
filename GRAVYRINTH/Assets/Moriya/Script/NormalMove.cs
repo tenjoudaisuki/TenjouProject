@@ -145,7 +145,7 @@ public class NormalMove : MonoBehaviour
 
     void LateUpdate()
     {
-        //print("up:" + tr.up);
+
     }
 
     public void OnCollisionEnter(Collision collision)
@@ -221,6 +221,7 @@ public class NormalMove : MonoBehaviour
                 tr.position = m_GroundHitInfo.hit.point;
                 //上方向を当たった平面の法線方向に変更
                 m_Up = m_GroundHitInfo.hit.normal.normalized;
+
                 //アニメーション変更
                 m_JumpTimer = 0;
                 m_HoverTimer = 0;
@@ -258,6 +259,9 @@ public class NormalMove : MonoBehaviour
             anm.SetFloat("HoverTimer", m_HoverTimer);
         }
 
+        //地面の上方向とカメラの右方向で外積を取得
+        Vector3 camerafoward = -Vector3.Cross(m_Up, m_Camera.right);
+
         //着地した瞬間の処理
         if (m_IsGroundHitTrigger)
         {
@@ -270,13 +274,8 @@ public class NormalMove : MonoBehaviour
             // アニメーション用の変数初期化
             isWallTouch = false;
             m_WallJumpTimer = 0;
-
-            
-            //地面の上方向とカメラの右方向で外積を取得
-            Vector3 camerafoward = -Vector3.Cross(m_Up, m_Camera.right);
             //外積をスティックの角度で回転させて前ベクトルを計算
             m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * camerafoward;
-
             //操作可能にする
             m_DisableInput = false;
         }
@@ -295,8 +294,11 @@ public class NormalMove : MonoBehaviour
             m_InputAngleY = Vector2.Angle(Vector2.up, inputVec);
             //ステイックが左に傾いていればyをマイナスに
             if (inputVec.x < 0) m_InputAngleY = -m_InputAngleY;
-            //地面の上方向とカメラの右方向で外積を取得
-            Vector3 camerafoward = -Vector3.Cross(m_Up, m_Camera.right);
+        }
+
+        //壁キック後の操作不能状態でなければ前ベクトルを計算
+        if(!m_DisableInput)
+        {
             //外積をスティックの角度で回転させて前ベクトルを計算
             m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * camerafoward;
         }
@@ -366,6 +368,7 @@ public class NormalMove : MonoBehaviour
         //レイをデバッグ表示
         Debug.DrawRay(rayPos, GetDown() * m_RayLength, Color.grey, 1.0f, false);
         Debug.DrawRay(m_GroundHitInfo.hit.point, m_GroundHitInfo.hit.normal, Color.red, 1.0f, false);
+        Debug.DrawRay(m_GroundHitInfo.hit.point, tr.up, Color.blue, 1.0f, false);
     }
 
     
