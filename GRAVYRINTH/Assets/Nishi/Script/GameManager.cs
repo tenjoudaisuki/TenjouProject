@@ -41,6 +41,9 @@ public class GameManager : MonoBehaviour
 
     public string mFastStageName;
 
+    public GameObject mPauseMenuprefab;
+    private GameObject mPauseMenu;
+
     public void Awake()
     {
         mCureentMode = GameMode.Title;
@@ -60,10 +63,12 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.H))
+        if (mCureentMode == GameMode.GamePlay)
         {
-            Pause();
-            //ReStart();
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                Pause();
+            }
         }
     }
 
@@ -169,12 +174,9 @@ public class GameManager : MonoBehaviour
 
     public void Pause()
     {
-        var pausebles = GameObject.FindGameObjectsWithTag("Pausable");
-        foreach (GameObject pauseble in pausebles)
-        {
-            var script = pauseble.GetComponent<Pausable>();
-            script.pausing = !script.pausing;
-        }
+        if (mPauseMenu) return;
+        Pause(true);
+        mPauseMenu = GameObject.Instantiate(mPauseMenuprefab);
     }
 
     public void Pause(bool pause)
