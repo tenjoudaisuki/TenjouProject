@@ -94,11 +94,11 @@ public class NormalMove : MonoBehaviour
     //壁に触っているか？
     bool isWallTouch;
 
-    
 
 
 
 
+    int count = 0;
 
 
 
@@ -143,6 +143,11 @@ public class NormalMove : MonoBehaviour
         m_GravityDir.SetDirection(GetDown());
     }
 
+    void LateUpdate()
+    {
+        //print("up:" + tr.up);
+    }
+
     public void OnCollisionEnter(Collision collision)
     {
         //鉄棒にあたった瞬間
@@ -159,15 +164,9 @@ public class NormalMove : MonoBehaviour
             }
             else
             {
-
                 m_MoveManager.SetState(PlayerState.IRON_BAR_CLIMB);
             }
         }
-    }
-
-    void LateUpdate()
-    {
-
     }
 
     /// <summary>
@@ -221,12 +220,20 @@ public class NormalMove : MonoBehaviour
                 //当たった地点に移動
                 tr.position = m_GroundHitInfo.hit.point;
                 //上方向を当たった平面の法線方向に変更
-                m_Up = m_GroundHitInfo.hit.normal;
-                m_Up.Normalize();
+                m_Up = m_GroundHitInfo.hit.normal.normalized;
                 //アニメーション変更
                 m_JumpTimer = 0;
                 m_HoverTimer = 0;
                 anm.SetFloat("HoverTimer", m_HoverTimer);
+
+                //回転床と当たっているなら
+                if (m_GroundHitInfo.hit.transform.gameObject.tag == "SpinChild")
+                {
+                    //床の移動方向に移動
+                    Vector3 movement = m_GroundHitInfo.hit.transform.parent.gameObject.GetComponent<SpinChild>().GetMovement();
+                    tr.position += movement;
+                }
+
             }
             //斜面として認識する角度より大きいなら壁に当たったとする（その後はずり落ちる）
             else
@@ -242,9 +249,6 @@ public class NormalMove : MonoBehaviour
                 m_Up = toUp * front;
                 m_Up.Normalize();
                 m_Front = front;
-
-                ////セット
-                //SetUpFront(m_Up, front);
             }
         }
         else
@@ -297,13 +301,12 @@ public class NormalMove : MonoBehaviour
             m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * camerafoward;
         }
 
-
         //前、右方向への移動処理
         //プレイヤーの前ベクトルと上ベクトルを決定
         Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
-        transform.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
+        tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
         //補完なし
-        //transform.localRotation = rotate;
+        //tr.localRotation = rotate;
 
         //前ベクトル×スティックの傾き
         m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
@@ -362,6 +365,7 @@ public class NormalMove : MonoBehaviour
         m_GroundHitInfo.hit = hit;
         //レイをデバッグ表示
         Debug.DrawRay(rayPos, GetDown() * m_RayLength, Color.grey, 1.0f, false);
+        Debug.DrawRay(m_GroundHitInfo.hit.point, m_GroundHitInfo.hit.normal, Color.red, 1.0f, false);
     }
 
     
