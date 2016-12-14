@@ -39,7 +39,7 @@ public class BlockCursorDraw : MonoBehaviour
     {
         float distance = Vector3.Distance(tr.position, player.position + offset);
 
-        if (distance <= GetComponent<Block>().pushDistance)
+        if (distance <= GetComponent<Block>().GetPushDistance())
         {
             cursorRenderer.enabled = true;
             blockCursor.transform.position = player.position + player.up * 0.8f;

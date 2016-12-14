@@ -153,6 +153,11 @@ public class Block : MonoBehaviour
         return isPush;
     }
 
+    public float GetPushDistance()
+    {
+        return pushDistance;
+    }
+
     /// <summary>
     /// 移動量ベクトルの設定
     /// </summary>

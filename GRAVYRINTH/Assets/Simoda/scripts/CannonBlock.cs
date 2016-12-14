@@ -105,5 +105,3 @@ public class CannonBlock : MonoBehaviour
         return new Vector3(0.0f, offset, 0.0f);
     }
 }
-
-}
