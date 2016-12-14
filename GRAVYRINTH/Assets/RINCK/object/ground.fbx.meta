@@ -1,0 +1,178 @@
+fileFormatVersion: 2
+guid: fb4e61f6d1229f849a871d3a33278913
+timeCreated: 1481402747
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: groundaura
+    100004: grounddetail
+    100006: herbdetail
+    100008: herbdetail_MeshPart0
+    100010: herbdetail_MeshPart1
+    100012: herbdetail_MeshPart10
+    100014: herbdetail_MeshPart11
+    100016: herbdetail_MeshPart12
+    100018: herbdetail_MeshPart13
+    100020: herbdetail_MeshPart14
+    100022: herbdetail_MeshPart15
+    100024: herbdetail_MeshPart16
+    100026: herbdetail_MeshPart17
+    100028: herbdetail_MeshPart2
+    100030: herbdetail_MeshPart3
+    100032: herbdetail_MeshPart4
+    100034: herbdetail_MeshPart5
+    100036: herbdetail_MeshPart6
+    100038: herbdetail_MeshPart7
+    100040: herbdetail_MeshPart8
+    100042: herbdetail_MeshPart9
+    400000: //RootNode
+    400002: groundaura
+    400004: grounddetail
+    400006: herbdetail
+    400008: herbdetail_MeshPart0
+    400010: herbdetail_MeshPart1
+    400012: herbdetail_MeshPart10
+    400014: herbdetail_MeshPart11
+    400016: herbdetail_MeshPart12
+    400018: herbdetail_MeshPart13
+    400020: herbdetail_MeshPart14
+    400022: herbdetail_MeshPart15
+    400024: herbdetail_MeshPart16
+    400026: herbdetail_MeshPart17
+    400028: herbdetail_MeshPart2
+    400030: herbdetail_MeshPart3
+    400032: herbdetail_MeshPart4
+    400034: herbdetail_MeshPart5
+    400036: herbdetail_MeshPart6
+    400038: herbdetail_MeshPart7
+    400040: herbdetail_MeshPart8
+    400042: herbdetail_MeshPart9
+    2300000: //RootNode
+    2300002: groundaura
+    2300004: grounddetail
+    2300006: herbdetail_MeshPart0
+    2300008: herbdetail_MeshPart1
+    2300010: herbdetail_MeshPart10
+    2300012: herbdetail_MeshPart11
+    2300014: herbdetail_MeshPart12
+    2300016: herbdetail_MeshPart13
+    2300018: herbdetail_MeshPart14
+    2300020: herbdetail_MeshPart15
+    2300022: herbdetail_MeshPart16
+    2300024: herbdetail_MeshPart17
+    2300026: herbdetail_MeshPart2
+    2300028: herbdetail_MeshPart3
+    2300030: herbdetail_MeshPart4
+    2300032: herbdetail_MeshPart5
+    2300034: herbdetail_MeshPart6
+    2300036: herbdetail_MeshPart7
+    2300038: herbdetail_MeshPart8
+    2300040: herbdetail_MeshPart9
+    3300000: //RootNode
+    3300002: groundaura
+    3300004: grounddetail
+    3300006: herbdetail_MeshPart0
+    3300008: herbdetail_MeshPart1
+    3300010: herbdetail_MeshPart10
+    3300012: herbdetail_MeshPart11
+    3300014: herbdetail_MeshPart12
+    3300016: herbdetail_MeshPart13
+    3300018: herbdetail_MeshPart14
+    3300020: herbdetail_MeshPart15
+    3300022: herbdetail_MeshPart16
+    3300024: herbdetail_MeshPart17
+    3300026: herbdetail_MeshPart2
+    3300028: herbdetail_MeshPart3
+    3300030: herbdetail_MeshPart4
+    3300032: herbdetail_MeshPart5
+    3300034: herbdetail_MeshPart6
+    3300036: herbdetail_MeshPart7
+    3300038: herbdetail_MeshPart8
+    3300040: herbdetail_MeshPart9
+    4300000: ground
+    4300002: grounddetail
+    4300004: herbdetail_MeshPart0
+    4300006: herbdetail_MeshPart1
+    4300008: herbdetail_MeshPart2
+    4300010: herbdetail_MeshPart3
+    4300012: herbdetail_MeshPart4
+    4300014: herbdetail_MeshPart5
+    4300016: herbdetail_MeshPart6
+    4300018: herbdetail_MeshPart7
+    4300020: herbdetail_MeshPart8
+    4300022: herbdetail_MeshPart9
+    4300024: herbdetail_MeshPart10
+    4300026: herbdetail_MeshPart11
+    4300028: herbdetail_MeshPart12
+    4300030: herbdetail_MeshPart13
+    4300032: herbdetail_MeshPart14
+    4300034: herbdetail_MeshPart15
+    4300036: herbdetail_MeshPart16
+    4300038: herbdetail_MeshPart17
+    4300040: groundaura
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
