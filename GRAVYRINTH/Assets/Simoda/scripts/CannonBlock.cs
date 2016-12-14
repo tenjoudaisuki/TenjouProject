@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Block : MonoBehaviour
+public class CannonBlock : MonoBehaviour
 {
 
     private Transform player;
@@ -12,9 +12,7 @@ public class Block : MonoBehaviour
     public Vector3 moveVec;
     public bool isPush;
     public float offsetY = 0.3f;
-    public float pushDistancePlus = 0.5f;
-    private float pushDistance;
-
+    public float pushDistance = 1.5f;
 
     void Start()
     {
@@ -26,55 +24,7 @@ public class Block : MonoBehaviour
 
     void Update()
     {
-        //print(moveDirection);
 
-        //プレイヤーとの距離がpushDistanceより離れたら強制的にisPushをfalseに
-        pushDistance = Vector3.Distance(tr.position, GetPlayerDirection().point) + pushDistancePlus;
-
-        if (Vector3.Distance(tr.position, player.position + offset) > pushDistance) isPush = false;
-
-        BlockMove();
-    }
-
-    /// <summary>
-    /// ブロックの移動処理
-    /// </summary>
-    public void BlockMove()
-    {
-        RaycastHit hitInto;
-        Ray ray = new Ray(tr.position, -GetPlayerDirection().normal);
-
-        Debug.DrawRay(ray.origin, ray.direction, Color.black);
-        if (Physics.Raycast(ray, out hitInto, tr.localScale.z / 2.0f))
-        {
-            if (Input.GetAxis("Vertical") > 0.1f)
-            {
-                return;
-            }
-        }
-
-        if (!Input.GetKey(KeyCode.B) || isPush == false) return;
-
-        //print(player.up);
-        //print(GetPlayerDirection().normal);
-        //print(player.up + " " + GetPlayerDirection().normal + " " + Vector3.Dot(Vector3.Normalize(player.up), Vector3.Normalize(GetPlayerDirection().normal)));
-        //print("up,-forward" + tr.up + " " + -tr.forward + " " + Vector3.Dot(tr.up, -tr.forward));
-        //プレイヤーの上方向とブロックのプレイヤー方向の面の法線ベクトルで内積を作る
-
-        float dot = Vector3.Dot(player.up, GetPlayerDirection().normal);
-        //内積の数値を補正
-        float dotAbs = Mathf.Abs(dot);
-        float dotInt = Mathf.FloorToInt(dotAbs);
-        //print(dotInt);
-        //dot = Mathf.Clamp(dot, 0.0f, 1.0f);
-        //print(player.up);
-        //print(GetPlayerDirection().normal);
-
-        //内積が0（90度）じゃなかったらreturn
-        if (dotInt != 0) return;
-
-        //位置を移動
-        tr.position += moveVec * Time.deltaTime;
     }
 
     public RaycastHit GetPlayerDirection()
@@ -93,23 +43,6 @@ public class Block : MonoBehaviour
         if (collision.gameObject.tag == "Player")
             player.GetComponent<NormalMove>().SetCollisionBlock(gameObject);
     }
-
-    //public void OnCollisionStay(Collision collision)
-    //{
-    //    if (Input.GetKeyDown(KeyCode.B))
-    //    {
-    //        moveDirection = Vector3.Normalize(GetPlayerDirection().normal);
-    //        isPush = true;
-    //        player.GetComponent<PlayerBlockPush>().SetCollisionBlock(gameObject);
-    //    }
-
-    //    if (Input.GetKeyUp(KeyCode.B))
-    //    {
-    //        isPush = false;
-    //        player.GetComponent<PlayerBlockPush>().SetCollisionBlock(null);
-    //    }
-    //}
-
 
     /// <summary>
     /// 押せる距離にプレイヤーがいるときの入力処理
@@ -171,4 +104,6 @@ public class Block : MonoBehaviour
     {
         return new Vector3(0.0f, offset, 0.0f);
     }
+}
+
 }
