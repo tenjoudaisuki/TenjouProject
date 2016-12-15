@@ -108,6 +108,8 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("Menu", LoadSceneMode.Additive);
         GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Select);
+        GameManager.Instance.SetNextSceneName("Tutorial0_1");
+        GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance();
     }
 
     void GamePlayMode()
