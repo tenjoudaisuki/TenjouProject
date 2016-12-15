@@ -504,7 +504,6 @@ public class NormalMove : MonoBehaviour
 
         RaycastHit hit_front, hit_left, hit_right;
 
-
         //[IgnoredObj]レイヤー以外と判定させる
         int layermask = ~(1 << 10);
         m_WallHitInfoFront.isHit = Physics.Raycast(ray_front, out hit_front, m_WallRayLength, layermask);

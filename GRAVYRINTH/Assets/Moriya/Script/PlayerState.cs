@@ -8,6 +8,7 @@ public enum PlayerState
     ROLL,       //丸まり中
     IRON_BAR_DANGLE,    //鉄棒ぶら下がり
     IRON_BAR_CLIMB,     //鉄棒よじ登り
+    CANNON_BLOCK,       //最終ステージの大砲のブロック
     STAGE_CLEAR,        //ステージクリア
     MAX
 }
