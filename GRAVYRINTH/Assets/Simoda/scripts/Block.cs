@@ -67,7 +67,7 @@ public class Block : MonoBehaviour
         //法線ベクトルの逆とブロックの位置までのベクトルの内積で長さが出る
 
         //壁に埋まらないようにする処理
-        if (Physics.Raycast(ray, out hitInto, tr.localScale.z / 2.0f))
+        if (Physics.Raycast(ray, out hitInto, pushDistance / 2.0f))
         {
             if (Input.GetAxis("Vertical") > 0.1f)
             {
