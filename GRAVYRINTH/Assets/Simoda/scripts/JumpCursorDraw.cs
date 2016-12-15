@@ -10,11 +10,11 @@ public class JumpCursorDraw : MonoBehaviour
     private MeshRenderer cursorRenderer;
     private bool isTrigger = false;
 
-    public GameObject jumpCursorPrefab;
+    //public GameObject jumpCursorPrefab;
 
     void Start()
     {
-        player = GameObject.Find("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
 
         tr = gameObject.transform;
 
@@ -23,7 +23,7 @@ public class JumpCursorDraw : MonoBehaviour
         //    gameObject.GetComponent<Block>().offsetY,
         //    0.0f);
 
-        jumpCursor = Instantiate(jumpCursorPrefab);
+        jumpCursor = GameObject.Find("JumpCursor");
         cursorRenderer = jumpCursor.GetComponent<MeshRenderer>();
         cursorRenderer.enabled = false;
     }

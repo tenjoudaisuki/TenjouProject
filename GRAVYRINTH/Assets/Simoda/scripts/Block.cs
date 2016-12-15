@@ -18,7 +18,7 @@ public class Block : MonoBehaviour
     void Start()
     {
         cursorDraw = GetComponent<BlockCursorDraw>();
-        player = GameObject.Find("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         tr = gameObject.transform;
         offset = PlayerDirectionOffsetY(offsetY);
         isPush = false;
@@ -30,21 +30,27 @@ public class Block : MonoBehaviour
         offset = player.up * offsetY;
 
         //プレイヤーから自分へのRayがあたっているのが自身でなければ処理しない
-        if (GetPlayerDirection().collider.gameObject != gameObject) return;
+        if (GetPlayerDirection().collider.gameObject != gameObject)
+        {
+            cursorDraw.NotShow();
+            return;
+        }
 
         //プレイヤーとの距離がpushDistanceより離れたら強制的にisPushをfalseに
         RaycastHit hitInto;
         Ray ray = new Ray(player.position + offset, -GetPlayerDirection().normal);
         Physics.Raycast(ray, out hitInto);
 
-        if (hitInto.collider.gameObject != gameObject) return;
+        if (hitInto.collider.gameObject != gameObject)
+        {
+            cursorDraw.NotShow();
+            return;
+        }
 
-        Vector3 a = tr.position - hitInto.point;
+        Vector3 length = tr.position - hitInto.point;
 
-        print(a.magnitude);
-        pushDistance = a.magnitude + pushDistancePlus;
-
-        tr.FindChild("GameObject").transform.position = hitInto.point;
+        //print(a.magnitude);
+        pushDistance = length.magnitude + pushDistancePlus;
 
         //pushDistance = Vector3.Distance(tr.position, GetPlayerDirection().point) + pushDistancePlus;
 
@@ -75,13 +81,30 @@ public class Block : MonoBehaviour
 
         Debug.DrawRay(ray.origin, ray.direction, Color.black);
 
-        //プレイヤーから前にRayを飛ばす
-        //当たった位置から当たった位置の法線ベクトルの逆をとる
-        //当たった位置からブロックの位置までのベクトルを作る
-        //法線ベクトルの逆とブロックの位置までのベクトルの内積で長さが出る
+        float distanceToWall = 0.0f;
+
+        //print(-GetPlayerDirection().normal + ":::" + tr.right + ":::" + tr.up + ":::" + tr.forward);
+
+        //if (-GetPlayerDirection().normal == tr.right || -GetPlayerDirection().normal == -tr.right)
+        //{
+        //    print(tr.localScale.x / 2.0f);
+        //    distanceToWall = tr.localScale.x / 2.0f;
+        //}
+
+        //if (-GetPlayerDirection().normal == tr.up || -GetPlayerDirection().normal == -tr.up)
+        //{
+        //    print(tr.localScale.y / 2.0f);
+        //    distanceToWall = tr.localScale.y / 2.0f;
+        //}
+
+        //if (-GetPlayerDirection().normal == tr.forward || -GetPlayerDirection().normal == -tr.forward)
+        //{
+        //    print(tr.localScale.z / 2.0f);
+        //    distanceToWall = tr.localScale.z / 2.0f;
+        //}
 
         //壁に埋まらないようにする処理
-        if (Physics.Raycast(ray, out hitInto, pushDistance / 2.0f))
+        if (Physics.Raycast(ray, out hitInto, distanceToWall))
         {
             if (Input.GetAxis("Vertical") > 0.1f)
             {

@@ -23,7 +23,7 @@ public class CannonBlock : MonoBehaviour
     void Start()
     {
         cursorDraw = GetComponent<BlockCursorDraw>();
-        player = GameObject.Find("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         tr = gameObject.transform;
         offset = PlayerDirectionOffsetY(offsetY);
         isPush = false;
@@ -47,7 +47,11 @@ public class CannonBlock : MonoBehaviour
         offset = player.up * offsetY;
 
         //プレイヤーから自分へのRayがあたっているのが自身でなければ処理しない
-        if (GetPlayerDirection().collider.gameObject != gameObject) return;
+        if (GetPlayerDirection().collider.gameObject != gameObject)
+        {
+            cursorDraw.NotShow();
+            return;
+        }
 
         //プレイヤーとの距離がpushDistanceより離れたら強制的にisPushをfalseに
         pushDistance = Vector3.Distance(tr.position, GetPlayerDirection().point) + pushDistancePlus;

@@ -8,15 +8,15 @@ public class BlockCursorDraw : MonoBehaviour
     private Transform tr;
     private MeshRenderer cursorRenderer;
 
-    public GameObject blockCursorPrefab;
+    //public GameObject blockCursorPrefab;
 
     void Start()
     {
-        player = GameObject.Find("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
 
         tr = gameObject.transform;
 
-        blockCursor = Instantiate(blockCursorPrefab);
+        blockCursor = GameObject.Find("BlockCursor");
         cursorRenderer = blockCursor.GetComponent<MeshRenderer>();
         cursorRenderer.enabled = false;
     }
@@ -44,5 +44,11 @@ public class BlockCursorDraw : MonoBehaviour
             //表示しない
             cursorRenderer.enabled = false;
         }
+    }
+
+    public void NotShow()
+    {
+        //表示しない
+        cursorRenderer.enabled = false;
     }
 }
