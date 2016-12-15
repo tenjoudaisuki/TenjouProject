@@ -16,8 +16,8 @@ public class SpinChild : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        float speed = transform.parent.GetComponent<SpinParent>().mSpinSpeed;
-        transform.Rotate(Vector3.right,speed * 2);
+        float speed = transform.parent.GetComponent<SpinParent>().m_SpinSpeed;
+        transform.Rotate(Vector3.right,speed * 2 * Time.deltaTime);
 
         m_Movement = transform.position - m_PrevPosition;
         m_PrevPosition = transform.position;
