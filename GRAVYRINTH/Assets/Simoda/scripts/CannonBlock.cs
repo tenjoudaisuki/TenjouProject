@@ -10,11 +10,14 @@ public class CannonBlock : MonoBehaviour
     private Vector3 moveDirection;
     private float pushDistance;
     private float offsetY = 0.4f;
+    private bool isSet = false;
+    private bool isSetIgnore = false;
 
     public Vector3 moveVec;
     public bool isPush;
     public float pushDistancePlus = 0.5f;
     public float angle;
+    public Transform cannonSetPoint;
 
 
     void Start()
@@ -28,10 +31,16 @@ public class CannonBlock : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKey(KeyCode.M))
+        //if (Input.GetKey(KeyCode.M))
+        //{
+        //    Transform a = tr.FindChild("f_taihoucolone").transform;
+        //    player.RotateAround(a.position, Vector3.forward, angle * Time.deltaTime);
+        //}
+
+        if (Input.GetKeyUp(KeyCode.B))
         {
-            Transform a = tr.FindChild("f_taihoucolone").transform;
-            player.RotateAround(a.position, Vector3.forward, angle * Time.deltaTime);
+            player.GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
+            tr.FindChild("blockblue").transform.FindChild("Point light blockblue").GetComponent<Light>().intensity = 2;
         }
 
         //offsetを求める
@@ -58,7 +67,35 @@ public class CannonBlock : MonoBehaviour
         //入力処理
         IsPushDistance();
 
-        if (!Input.GetKey(KeyCode.V) || isPush == false) return;
+        if (Vector3.Distance(tr.position, cannonSetPoint.position) < 0.1f)
+        {
+            if (isSetIgnore == false)
+            {
+                tr.position = cannonSetPoint.position;
+                isSet = true;
+                tr.FindChild("blockblue").gameObject.active = false;
+                tr.FindChild("blockred").gameObject.active = true;
+            }
+        }
+
+        if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.9f && isSet == true)
+        {
+            StartCoroutine(DelayMethod(1.0f, () =>
+            {
+                isSetIgnore = true;
+                isSet = false;
+                tr.FindChild("blockblue").gameObject.active = true;
+                tr.FindChild("blockred").gameObject.active = false;
+                StartCoroutine(DelayMethod(1.0f, () =>
+                {
+                    isSetIgnore = false;
+                }));
+            }));
+        }
+
+        if (isSet == true) return;
+
+        if (!Input.GetKey(KeyCode.B) || isPush == false) return;
 
         float dot = Vector3.Dot(player.up, GetPlayerDirection().normal);
         //内積の数値を補正
@@ -68,11 +105,15 @@ public class CannonBlock : MonoBehaviour
         //内積が0（90度）じゃなかったらreturn
         if (dotInt != 0) return;
 
-        Transform a = tr.FindChild("f_taihoucolone").transform;
+        tr.FindChild("blockblue").transform.FindChild("Point light blockblue").GetComponent<Light>().intensity = 8;
+
+        player.GetComponent<PlayerMoveManager>().SetState(PlayerState.CANNON_BLOCK);
+        player.GetComponent<CannonBlockMove>().SetCannonBlockObject(gameObject);
 
         //地面との判定あり、移動はしないプレイヤーがほしい 入力がなくてもプレイヤーの上方向を設定してくれる
-        
-        tr.RotateAround(a.position, Vector3.forward, (InputAxisVerticalDirection() * angle) * Time.deltaTime);
+        Transform rotateCenter = tr.FindChild("f_taihoucolone").transform;
+        player.RotateAround(rotateCenter.position, Vector3.forward, (InputAxisVerticalDirection() * 20.0f) * Time.deltaTime);
+        tr.RotateAround(rotateCenter.position, Vector3.forward, (InputAxisVerticalDirection() * 20.0f) * Time.deltaTime);
     }
 
     public RaycastHit GetPlayerDirection()
@@ -99,7 +140,7 @@ public class CannonBlock : MonoBehaviour
     {
         if (Vector3.Distance(tr.position, player.position + offset) > pushDistance) return;
 
-        if (Input.GetKey(KeyCode.V))
+        if (Input.GetKey(KeyCode.B))
         {
             //移動方向にプレイヤー方向の面の法線ベクトルを設定
             moveDirection = Vector3.Normalize(GetPlayerDirection().normal);
@@ -169,5 +210,17 @@ public class CannonBlock : MonoBehaviour
         }
 
         return 0.0f;
+    }
+
+    /// <summary>
+    /// 渡された処理を指定時間後に実行する
+    /// </summary>
+    /// <param name="waitTime">遅延時間[ミリ秒]</param>
+    /// <param name="action">実行したい処理</param>
+    /// <returns></returns>
+    private IEnumerator DelayMethod(float waitTime, System.Action action)
+    {
+        yield return new WaitForSeconds(waitTime);
+        action();
     }
 }

@@ -39,7 +39,9 @@ public class PlayerMoveManager : MonoBehaviour
             {PlayerState.NORMAL, GetComponent<NormalMove>() },
             {PlayerState.IRON_BAR_DANGLE, GetComponent<DangleMove>() },
             {PlayerState.IRON_BAR_CLIMB, GetComponent<CrimbMove>() },
-            {PlayerState.STAGE_CLEAR, GetComponent<StageClearMove>() }
+            {PlayerState.CANNON_BLOCK, GetComponent<CannonBlockMove>() },
+            {PlayerState.STAGE_CLEAR, GetComponent<StageClearMove>() },
+            {PlayerState.STAGE_FINAL_CLEAR, GetComponent<StageFinalClearMove>() }
         };
     }
 
@@ -90,6 +92,12 @@ public class PlayerMoveManager : MonoBehaviour
             print("called");
             //ステージクリア移動開始
             m_Moves[PlayerState.STAGE_CLEAR].GetComponent<StageClearMove>().StartClearMove();
+        }
+        //最終ステージクリア時
+        else if(m_PlayerState == PlayerState.STAGE_FINAL_CLEAR)
+        {
+            //移動開始
+            m_Moves[PlayerState.STAGE_FINAL_CLEAR].GetComponent<StageFinalClearMove>().StartMove();
         }
     }
 
