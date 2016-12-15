@@ -67,6 +67,11 @@ public class TitleManager : MonoBehaviour
                 {
                     LeanTween.alpha(rectTr, 1.0f, 0.0f);
                 }
+
+                StartCoroutine(DelayMethod(0, () =>
+                {
+                    isSkip = false;
+                }));
             }
             else
             {
