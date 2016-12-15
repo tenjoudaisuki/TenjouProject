@@ -39,6 +39,7 @@ public class PlayerMoveManager : MonoBehaviour
             {PlayerState.NORMAL, GetComponent<NormalMove>() },
             {PlayerState.IRON_BAR_DANGLE, GetComponent<DangleMove>() },
             {PlayerState.IRON_BAR_CLIMB, GetComponent<CrimbMove>() },
+            {PlayerState.CANNON_BLOCK, GetComponent<CannonBlockMove>() },
             {PlayerState.STAGE_CLEAR, GetComponent<StageClearMove>() }
         };
     }
