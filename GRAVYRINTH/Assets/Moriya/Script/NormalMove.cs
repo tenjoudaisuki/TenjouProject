@@ -324,7 +324,6 @@ public class NormalMove : MonoBehaviour
             m_MoveVelocity = (moveDirection * -inputVec.y) * m_Save;
             m_CollisionBlock.SetMoveVector(m_MoveVelocity);
             //移動
-          
             tr.position += m_MoveVelocity * Time.deltaTime;
         }
         //通常時

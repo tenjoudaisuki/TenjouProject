@@ -10,5 +10,6 @@ public enum PlayerState
     IRON_BAR_CLIMB,     //鉄棒よじ登り
     CANNON_BLOCK,       //最終ステージの大砲のブロック
     STAGE_CLEAR,        //ステージクリア
+    STAGE_FINAL_CLEAR,        //最終ステージクリア
     MAX
 }
