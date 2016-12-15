@@ -3,21 +3,21 @@ using System.Collections;
 
 public class Block : MonoBehaviour
 {
-
+    private BlockCursorDraw cursorDraw;
     private Transform player;
     private Transform tr;
     private Vector3 offset;
     private Vector3 moveDirection;
+    private float pushDistance;
+    private float offsetY = 0.4f;
 
     public Vector3 moveVec;
     public bool isPush;
-    public float offsetY = 0.3f;
     public float pushDistancePlus = 0.5f;
-    private float pushDistance;
-
 
     void Start()
     {
+        cursorDraw = GetComponent<BlockCursorDraw>();
         player = GameObject.Find("Player").transform;
         tr = gameObject.transform;
         offset = PlayerDirectionOffsetY(offsetY);
@@ -26,12 +26,26 @@ public class Block : MonoBehaviour
 
     void Update()
     {
-        //print(moveDirection);
+        //offsetを求める
+        offset = player.up * offsetY;
+
+        //プレイヤーから自分へのRayがあたっているのが自身でなければ処理しない
+        if (GetPlayerDirection().collider.gameObject != gameObject) return;
 
         //プレイヤーとの距離がpushDistanceより離れたら強制的にisPushをfalseに
         pushDistance = Vector3.Distance(tr.position, GetPlayerDirection().point) + pushDistancePlus;
 
-        if (Vector3.Distance(tr.position, player.position + offset) > pushDistance) isPush = false;
+        float currentDistance = Vector3.Distance(tr.position, player.position + offset);
+
+        if (currentDistance > pushDistance)
+        {
+            isPush = false;
+            player.GetComponent<NormalMove>().SetCollisionBlock(null);
+        }
+        else player.GetComponent<NormalMove>().SetCollisionBlock(gameObject);
+
+        //BlockCursor表示・非表示
+        cursorDraw.BlockCursorControl(currentDistance, pushDistance);
 
         BlockMove();
     }
@@ -41,10 +55,18 @@ public class Block : MonoBehaviour
     /// </summary>
     public void BlockMove()
     {
+
         RaycastHit hitInto;
         Ray ray = new Ray(tr.position, -GetPlayerDirection().normal);
 
         Debug.DrawRay(ray.origin, ray.direction, Color.black);
+
+        //プレイヤーから前にRayを飛ばす
+        //当たった位置から当たった位置の法線ベクトルの逆をとる
+        //当たった位置からブロックの位置までのベクトルを作る
+        //法線ベクトルの逆とブロックの位置までのベクトルの内積で長さが出る
+
+        //壁に埋まらないようにする処理
         if (Physics.Raycast(ray, out hitInto, tr.localScale.z / 2.0f))
         {
             if (Input.GetAxis("Vertical") > 0.1f)
@@ -116,7 +138,12 @@ public class Block : MonoBehaviour
     /// </summary>
     public void IsPushDistance()
     {
-        if (Vector3.Distance(tr.position, player.position + offset) > pushDistance) return;
+        if (Vector3.Distance(tr.position, player.position + offset) > pushDistance)
+        {
+            isPush = false;
+            player.GetComponent<NormalMove>().SetCollisionBlock(null);
+            return;
+        }
 
         if (Input.GetKey(KeyCode.B))
         {
