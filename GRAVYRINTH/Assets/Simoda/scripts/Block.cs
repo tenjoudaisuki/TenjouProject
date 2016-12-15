@@ -33,7 +33,21 @@ public class Block : MonoBehaviour
         if (GetPlayerDirection().collider.gameObject != gameObject) return;
 
         //プレイヤーとの距離がpushDistanceより離れたら強制的にisPushをfalseに
-        pushDistance = Vector3.Distance(tr.position, GetPlayerDirection().point) + pushDistancePlus;
+        RaycastHit hitInto;
+        Ray ray = new Ray(player.position + offset, -GetPlayerDirection().normal);
+        Physics.Raycast(ray, out hitInto);
+
+        if (hitInto.collider.gameObject != gameObject) return;
+
+        Vector3 a = tr.position - hitInto.point;
+
+        print(a.magnitude);
+        pushDistance = a.magnitude + pushDistancePlus;
+
+        tr.FindChild("GameObject").transform.position = hitInto.point;
+
+        //pushDistance = Vector3.Distance(tr.position, GetPlayerDirection().point) + pushDistancePlus;
+
 
         float currentDistance = Vector3.Distance(tr.position, player.position + offset);
 
