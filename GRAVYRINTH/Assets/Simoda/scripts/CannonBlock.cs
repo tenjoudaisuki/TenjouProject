@@ -20,7 +20,7 @@ public class CannonBlock : MonoBehaviour
     public Vector3 moveVec;
     public bool isPush;
     public float pushDistancePlus = 0.5f;
-    public float angle;
+    public float angle = 20.0f;
     public Transform cannonSetPoint;
 
 
@@ -130,8 +130,8 @@ public class CannonBlock : MonoBehaviour
 
         //地面との判定あり、移動はしないプレイヤーがほしい 入力がなくてもプレイヤーの上方向を設定してくれる
         Transform rotateCenter = tr.FindChild("f_taihoucolone").transform;
-        player.RotateAround(rotateCenter.position, Vector3.forward, (InputAxisVerticalDirection() * 20.0f) * Time.deltaTime);
-        tr.RotateAround(rotateCenter.position, Vector3.forward, (InputAxisVerticalDirection() * 20.0f) * Time.deltaTime);
+        player.RotateAround(rotateCenter.position, Vector3.forward, (InputAxisVerticalDirection() * angle) * Time.deltaTime);
+        tr.RotateAround(rotateCenter.position, Vector3.forward, (InputAxisVerticalDirection() * angle) * Time.deltaTime);
     }
 
     public RaycastHit GetPlayerDirection()
