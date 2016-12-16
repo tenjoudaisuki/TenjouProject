@@ -62,7 +62,7 @@ public class IronBarTouchPoint : MonoBehaviour
 
             //プレイヤーの位置・回転を設定
             //player.localPosition = new Vector3(0, -6.2f, 0);
-            player.localPosition = -direction * -7.0f;
+            player.localPosition = -direction * -2.0f;
 
             //player.localRotation = Quaternion.Euler(player.localRotation.eulerAngles.x, 0.0f, player.localRotation.eulerAngles.z);
             //player.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
