@@ -18,6 +18,7 @@ public class Block : MonoBehaviour
     public Vector3 moveVec;
     public bool isPush;
     public float pushDistancePlus = 0.5f;
+    public float distanceToWallPlus = 0.0f;
 
     void Start()
     {
@@ -107,6 +108,8 @@ public class Block : MonoBehaviour
         {
             distanceToWall = Vector3.Distance(tr.position, tr.FindChild("z").position);
         }
+
+        distanceToWall += distanceToWallPlus;
 
         RaycastHit hitInto;
         Ray ray = new Ray(tr.position, -GetPlayerDirection().normal);
