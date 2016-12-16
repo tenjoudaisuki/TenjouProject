@@ -3,12 +3,26 @@ using System.Collections;
 
 public class BlockCursorDraw : MonoBehaviour
 {
-    private GameObject blockCursor;
+    public enum BlockCursorType
+    {
+        None,
+        Block,
+        CannonBlock,
+    }
+
+    public BlockCursorType blockCursorType;
+
+    //private GameObject blockCursor;
     private Transform player;
     private Transform tr;
     private MeshRenderer cursorRenderer;
+    private Vector3 offset;
+    public GameObject targetBlock;
 
-    //public GameObject blockCursorPrefab;
+    public void Awake()
+    {
+        ChangeBlockCursorType(BlockCursorType.None);
+    }
 
     void Start()
     {
@@ -16,28 +30,65 @@ public class BlockCursorDraw : MonoBehaviour
 
         tr = gameObject.transform;
 
-        blockCursor = GameObject.Find("BlockCursor");
-        cursorRenderer = blockCursor.GetComponent<MeshRenderer>();
+        cursorRenderer = GetComponent<MeshRenderer>();
         cursorRenderer.enabled = false;
     }
 
     void Update()
     {
+        if (blockCursorType == BlockCursorType.None) return;
 
+        if (targetBlock == null)
+            Destroy(gameObject);
+
+        switch (blockCursorType)
+        {
+            case BlockCursorType.Block:
+                BlockCursorControl();
+                break;
+
+            case BlockCursorType.CannonBlock:
+                CannonBlockCursorControl();
+                break;
+        }
     }
 
-    public void BlockCursorControl(float currentDistance, float pushDistance)
+    public void BlockCursorControl()
     {
-        if (currentDistance <= pushDistance)
+        float currentDistance = Vector3.Distance(targetBlock.transform.position, player.position + offset);
+
+        if (currentDistance <= targetBlock.GetComponent<Block>().GetPushDistance())
         {
             //表示をする
             cursorRenderer.enabled = true;
             //位置をプレイヤーの頭の上へ
-            blockCursor.transform.position = player.position + player.up * 0.8f;
+            transform.position = player.position + player.up * 0.8f;
 
             //常にカメラの方向を見るように回転
-            blockCursor.transform.forward = Camera.main.transform.forward;
-            blockCursor.transform.Rotate(-90.0f, 0.0f, 0.0f);
+            transform.forward = Camera.main.transform.forward;
+            transform.Rotate(-90.0f, 0.0f, 0.0f);
+        }
+        else
+        {
+            //表示しない
+            cursorRenderer.enabled = false;
+        }
+    }
+
+    public void CannonBlockCursorControl()
+    {
+        float currentDistance = Vector3.Distance(targetBlock.transform.position, player.position + offset);
+
+        if (currentDistance <= targetBlock.GetComponent<CannonBlock>().GetPushDistance())
+        {
+            //表示をする
+            cursorRenderer.enabled = true;
+            //位置をプレイヤーの頭の上へ
+            transform.position = player.position + player.up * 0.8f;
+
+            //常にカメラの方向を見るように回転
+            transform.forward = Camera.main.transform.forward;
+            transform.Rotate(-90.0f, 0.0f, 0.0f);
         }
         else
         {
@@ -50,5 +101,20 @@ public class BlockCursorDraw : MonoBehaviour
     {
         //表示しない
         cursorRenderer.enabled = false;
+    }
+
+    public void SetOffset(Vector3 offset)
+    {
+        this.offset = offset;
+    }
+
+    public void ChangeBlockCursorType(BlockCursorType type)
+    {
+        blockCursorType = type;
+    }
+
+    public void SetBlock(GameObject block)
+    {
+        targetBlock = block;
     }
 }

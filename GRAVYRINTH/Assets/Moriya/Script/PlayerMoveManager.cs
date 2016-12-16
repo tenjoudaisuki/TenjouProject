@@ -22,7 +22,7 @@ public class PlayerMoveManager : MonoBehaviour
     //１つ前のプレイヤーの状態
     private PlayerState m_PrevPlayerState;
     //各状態中の処理はこの配列へ格納
-    private Dictionary<PlayerState,MonoBehaviour> m_Moves;
+    private Dictionary<PlayerState, MonoBehaviour> m_Moves;
 
     ///*==外部参照変数==*/
     void Awake()
@@ -60,11 +60,11 @@ public class PlayerMoveManager : MonoBehaviour
     /// </summary>
     void Action(PlayerState state)
     {
-        foreach(KeyValuePair<PlayerState, MonoBehaviour> move in m_Moves)
+        foreach (KeyValuePair<PlayerState, MonoBehaviour> move in m_Moves)
         {
             if (state == move.Key)
                 //move.Valueからだと変更できないみたい
-                m_Moves[move.Key].enabled = true; 
+                m_Moves[move.Key].enabled = true;
             else
                 m_Moves[move.Key].enabled = false;
         }
@@ -85,16 +85,16 @@ public class PlayerMoveManager : MonoBehaviour
         {
             //地面との当たり判定を有効にする
             m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().IronbarToNormal();
-        }           
+        }
         //通常→ステージクリアへの変更時
-        else if(m_PrevPlayerState == PlayerState.NORMAL && m_PlayerState == PlayerState.STAGE_CLEAR)
+        else if (m_PrevPlayerState == PlayerState.NORMAL && m_PlayerState == PlayerState.STAGE_CLEAR)
         {
             print("called");
-            //ステージクリア移動開始
+            //ステージクリア移動開始s
             m_Moves[PlayerState.STAGE_CLEAR].GetComponent<StageClearMove>().StartClearMove();
         }
         //最終ステージクリア時
-        else if(m_PlayerState == PlayerState.STAGE_FINAL_CLEAR)
+        else if (m_PlayerState == PlayerState.STAGE_FINAL_CLEAR)
         {
             //移動開始
             m_Moves[PlayerState.STAGE_FINAL_CLEAR].GetComponent<StageFinalClearMove>().StartMove();
@@ -104,7 +104,7 @@ public class PlayerMoveManager : MonoBehaviour
     /// <summary>
     ///　プレイヤーの上と前を更新する
     /// </summary>
-    public void SetPlayerUpFront(Vector3 up,Vector3 front)
+    public void SetPlayerUpFront(Vector3 up, Vector3 front)
     {
         m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().SetUpFront(up, front);
     }
@@ -125,4 +125,5 @@ public class PlayerMoveManager : MonoBehaviour
     {
         return m_PlayerState;
     }
+
 }

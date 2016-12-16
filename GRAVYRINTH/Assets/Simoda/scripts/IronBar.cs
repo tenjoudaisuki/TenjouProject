@@ -13,6 +13,7 @@ public class IronBar : MonoBehaviour
     void Start()
     {
         barVector = point2.transform.position - point1.transform.position;
+        barVector.Normalize();
         moveArea = Vector3.Distance(transform.position, point1.transform.position);
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
