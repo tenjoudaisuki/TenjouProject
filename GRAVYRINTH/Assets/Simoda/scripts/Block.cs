@@ -62,6 +62,7 @@ public class Block : MonoBehaviour
         int layermask = ~(1 << 10);
         Physics.Raycast(ray, out hitInto, Mathf.Infinity, layermask, QueryTriggerInteraction.Ignore);
 
+        if (hitInto.collider == null) return;
         if (hitInto.collider.gameObject != gameObject) return;
 
         Vector3 length = tr.position - hitInto.point;
@@ -76,7 +77,7 @@ public class Block : MonoBehaviour
         if (currentDistance > pushDistance)
         {
             isPush = false;
-            player.GetComponent<NormalMove>().SetCollisionBlock(null);
+            //player.GetComponent<NormalMove>().SetCollisionBlock(null);
         }
         else player.GetComponent<NormalMove>().SetCollisionBlock(gameObject);
 
@@ -94,7 +95,6 @@ public class Block : MonoBehaviour
 
         if (-GetPlayerDirection().normal == tr.right || -GetPlayerDirection().normal == -tr.right)
         {
-            print(tr.FindChild("x").position.x);
             distanceToWall = Vector3.Distance(tr.position, tr.FindChild("x").position);
         }
 
@@ -118,7 +118,7 @@ public class Block : MonoBehaviour
         //壁に埋まらないようにする処理
         if (Physics.Raycast(ray, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
         {
-            if (Input.GetAxis("Vertical") > 0.1f && hitInto.collider.tag != "CheckPoint")
+            if (Input.GetAxis("Vertical") > 0.1f)
             {
                 return;
             }
@@ -195,7 +195,7 @@ public class Block : MonoBehaviour
         if (Vector3.Distance(tr.position, player.position + offset) > pushDistance)
         {
             isPush = false;
-            player.GetComponent<NormalMove>().SetCollisionBlock(null);
+            //player.GetComponent<NormalMove>().SetCollisionBlock(null);
             return;
         }
 
@@ -209,7 +209,7 @@ public class Block : MonoBehaviour
         else
         {
             isPush = false;
-            player.GetComponent<NormalMove>().SetCollisionBlock(null);
+            //player.GetComponent<NormalMove>().SetCollisionBlock(null);
         }
 
         Debug.DrawRay(tr.position, Vector3.Normalize
