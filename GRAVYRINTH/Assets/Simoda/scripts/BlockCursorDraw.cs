@@ -55,13 +55,10 @@ public class BlockCursorDraw : MonoBehaviour
 
     public void BlockCursorControl()
     {
-        print("aa");
         float currentDistance = Vector3.Distance(targetBlock.transform.position, player.position + offset);
 
         if (currentDistance <= targetBlock.GetComponent<Block>().GetPushDistance())
         {
-            print("bb");
-
             //表示をする
             cursorRenderer.enabled = true;
             //位置をプレイヤーの頭の上へ
