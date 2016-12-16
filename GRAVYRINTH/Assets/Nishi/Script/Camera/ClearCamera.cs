@@ -38,7 +38,7 @@ public class ClearCamera : ICamera {
         mFromPosition = transform.position;
         mNextPosition = mClearObject.transform.position + (mClearObject.transform.forward * mLookDistance);
         mFromRotate = transform.localRotation;
-        mNextRotate = Quaternion.LookRotation(-mClearObject.transform.forward);
+        mNextRotate = Quaternion.LookRotation(-mClearObject.transform.forward,mClearObject.transform.up);
         mState = Mode.Look;
     }
 	
