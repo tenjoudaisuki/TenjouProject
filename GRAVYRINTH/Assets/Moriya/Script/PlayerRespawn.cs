@@ -47,7 +47,9 @@ public class PlayerRespawn : MonoBehaviour
     {
         //リスポーンする
         if (Input.GetKeyDown(KeyCode.R))
-            Respawn();
+        {
+            Respawn(GameObject.FindGameObjectWithTag("StartPoint").transform.position);
+        }            
 	}
 
     /// <summary>
@@ -67,6 +69,15 @@ public class PlayerRespawn : MonoBehaviour
     public void Respawn()
     {
         m_NormalMove.Respawn(m_CheckPosition, m_CheckUp, m_CheckFront);
+    }
+
+
+    /// <summary>
+    /// 座標を指定して初期の向きでリスポーンする
+    /// </summary>
+    public void Respawn(Vector3 position)
+    {
+        m_NormalMove.Respawn(position, Vector3.up, Vector3.forward);
     }
 }
 
