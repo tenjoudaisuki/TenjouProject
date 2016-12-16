@@ -81,7 +81,10 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        SceneManager.SetActiveScene(mCurrentScene);
+        if (SceneManager.GetActiveScene() != mCurrentScene)
+        {
+            SceneManager.SetActiveScene(mCurrentScene);
+        }
     }
 
     public void GameModeChange(GameMode mode)
