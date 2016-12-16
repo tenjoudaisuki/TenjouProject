@@ -13,6 +13,7 @@ public class NextStageFade : MonoBehaviour {
 
     Image mImage;
     public float mSpeed;
+    public System.Action mAction = ()=>{ };
     Color mColor;
 
     public string mNextScene;

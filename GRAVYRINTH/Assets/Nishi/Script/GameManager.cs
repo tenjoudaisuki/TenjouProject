@@ -80,6 +80,8 @@ public class GameManager : MonoBehaviour
                 Pause();
             }
         }
+
+        SceneManager.SetActiveScene(mCurrentScene);
     }
 
     public void GameModeChange(GameMode mode)
@@ -106,7 +108,6 @@ public class GameManager : MonoBehaviour
 
     void SelectMode()
     {
-        SceneManager.LoadScene("Menu", LoadSceneMode.Additive);
         GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Select);
         GameManager.Instance.SetNextSceneName("Tutorial0_1");
         GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance();
@@ -154,7 +155,9 @@ public class GameManager : MonoBehaviour
         {
             case GameMode.Title: GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Title); ; break;
 
-            case GameMode.Select: GameObject.Find("Camera").GetComponent<CameraManager>().CameraWarp();; break;
+            case GameMode.Select:
+                GameObject.Find("Camera").GetComponent<CameraManager>().CameraWarp();
+                if(!SceneManager.GetSceneByName("Menu").isLoaded) SceneManager.LoadScene("Menu", LoadSceneMode.Additive); break;
 
             case GameMode.GamePlay:
                 GameObject player = GameObject.Find("Player");
