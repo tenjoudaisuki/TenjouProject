@@ -24,8 +24,6 @@ public class SpinChild : MonoBehaviour {
 	void Update ()
     {
         transform.Rotate(Vector3.right, m_SpinSpeed * Time.deltaTime);
-
-        print(transform.rotation * m_OffsetDirection);
         Vector3 pos = transform.position + (transform.rotation * m_OffsetDirection) * m_OffsetLength;
         m_Movement = pos - m_PrevPosition;
         m_PrevPosition = pos;
