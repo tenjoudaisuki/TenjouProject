@@ -79,6 +79,7 @@ public class DangleMove : MonoBehaviour
             barCollision = collision;
             collisionIronBarPosition = barCollision.contacts[0].point;
 
+
             ironBar = collision.gameObject;
             barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetBarVector());
 
