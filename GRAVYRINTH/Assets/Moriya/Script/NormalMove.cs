@@ -246,6 +246,7 @@ public class NormalMove : MonoBehaviour
                     //床の移動方向に移動
                     Vector3 movement = hitTr.parent.gameObject.GetComponent<SpinChild>().GetMovement();
                     tr.position += movement;
+                    print("move");
                 }
                 ////回転オブジェクトに当たっているなら
                 //if (hitTr.tag == "SpinParent")

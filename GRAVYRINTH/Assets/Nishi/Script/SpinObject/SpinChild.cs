@@ -3,6 +3,13 @@ using System.Collections;
 
 public class SpinChild : MonoBehaviour {
 
+    //回転速度
+    public float m_SpinSpeed = 2.0f;
+    //基準位置の方向
+    public Vector3 m_OffsetDirection = Vector3.up; 
+    //基準位置への距離
+    public float m_OffsetLength = 0.0f;
+
     //移動量
     private Vector3 m_Movement;
     //1フレーム前のトランスフォーム
@@ -16,11 +23,12 @@ public class SpinChild : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        float speed = transform.parent.GetComponent<SpinParent>().m_SpinSpeed;
-        transform.Rotate(Vector3.right,speed * 2 * Time.deltaTime);
+        transform.Rotate(Vector3.right, m_SpinSpeed * Time.deltaTime);
 
-        m_Movement = transform.position - m_PrevPosition;
-        m_PrevPosition = transform.position;
+        print(transform.rotation * m_OffsetDirection);
+        Vector3 pos = transform.position + (transform.rotation * m_OffsetDirection) * m_OffsetLength;
+        m_Movement = pos - m_PrevPosition;
+        m_PrevPosition = pos;
 	}
 
     void LateUpdate()
