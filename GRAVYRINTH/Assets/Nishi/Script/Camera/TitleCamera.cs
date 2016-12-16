@@ -22,6 +22,7 @@ public class TitleCamera : ICamera {
     // Update is called once per frame
     void Update()
     {
+        if (!mStageCenter) return;
         if (!isStart)
         {
             isStart = true;
