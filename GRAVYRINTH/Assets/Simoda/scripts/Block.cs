@@ -58,7 +58,9 @@ public class Block : MonoBehaviour
         //プレイヤーとの距離がpushDistanceより離れたら強制的にisPushをfalseに
         RaycastHit hitInto;
         Ray ray = new Ray(player.position + offset, -GetPlayerDirection().normal);
-        Physics.Raycast(ray, out hitInto);
+        //[IgnoredObj]レイヤー以外と判定させる
+        int layermask = ~(1 << 10);
+        Physics.Raycast(ray, out hitInto, Mathf.Infinity, layermask, QueryTriggerInteraction.Ignore);
 
         if (hitInto.collider.gameObject != gameObject) return;
 
@@ -86,10 +88,6 @@ public class Block : MonoBehaviour
     /// </summary>
     public void BlockMove()
     {
-
-        RaycastHit hitInto;
-        Ray ray = new Ray(tr.position, -GetPlayerDirection().normal);
-
         float distanceToWall = 0.0f;
 
         //print(-GetPlayerDirection().normal + ":::" + tr.right + ":::" + tr.up + ":::" + tr.forward);
@@ -110,12 +108,17 @@ public class Block : MonoBehaviour
             distanceToWall = Vector3.Distance(tr.position, tr.FindChild("z").position);
         }
 
+        RaycastHit hitInto;
+        Ray ray = new Ray(tr.position, -GetPlayerDirection().normal);
+
         Debug.DrawRay(ray.origin, ray.direction * distanceToWall, Color.black);
 
+        //[IgnoredObj]レイヤー以外と判定させる
+        int layermask = ~(1 << 10);
         //壁に埋まらないようにする処理
-        if (Physics.Raycast(ray, out hitInto, distanceToWall))
+        if (Physics.Raycast(ray, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
         {
-            if (Input.GetAxis("Vertical") > 0.1f)
+            if (Input.GetAxis("Vertical") > 0.1f && hitInto.collider.tag != "CheckPoint")
             {
                 return;
             }
@@ -152,7 +155,9 @@ public class Block : MonoBehaviour
     {
         RaycastHit hitInto;
         Ray ray = new Ray(player.position + offset, tr.position - (player.position + offset));
-        Physics.Raycast(ray, out hitInto);
+        //[IgnoredObj]レイヤー以外と判定させる
+        int layermask = ~(1 << 10);
+        Physics.Raycast(ray, out hitInto, Mathf.Infinity, layermask, QueryTriggerInteraction.Ignore);
 
         Debug.DrawRay(tr.position, hitInto.normal, Color.red);
         return hitInto;
