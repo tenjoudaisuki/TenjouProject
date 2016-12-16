@@ -4,12 +4,16 @@ using System.Collections;
 public class Block : MonoBehaviour
 {
     private BlockCursorDraw cursorDraw;
+    private GameObject blockCursorPrefab;
+    private GameObject blockCursor;
     private Transform player;
     private Transform tr;
     private Vector3 offset;
     private Vector3 moveDirection;
     private float pushDistance;
     private float offsetY = 0.4f;
+    private Light blueLight;
+
 
     public Vector3 moveVec;
     public bool isPush;
@@ -17,11 +21,21 @@ public class Block : MonoBehaviour
 
     void Start()
     {
-        cursorDraw = GetComponent<BlockCursorDraw>();
+        blockCursorPrefab = (GameObject)Resources.Load("Cursor/BlockCursor");
+        blockCursor = Instantiate(blockCursorPrefab);
+        cursorDraw = blockCursor.GetComponent<BlockCursorDraw>();
+        cursorDraw.SetBlock(gameObject);
+        cursorDraw.ChangeBlockCursorType(BlockCursorDraw.BlockCursorType.Block);
+
+
+
         player = GameObject.FindGameObjectWithTag("Player").transform;
         tr = gameObject.transform;
         offset = PlayerDirectionOffsetY(offsetY);
         isPush = false;
+
+        blueLight = tr.FindChild("blockblue").transform.FindChild("Point light blockblue").GetComponent<Light>();
+        blueLight.intensity = 2;
     }
 
     void Update()
@@ -29,23 +43,24 @@ public class Block : MonoBehaviour
         //offsetを求める
         offset = player.up * offsetY;
 
-        //プレイヤーから自分へのRayがあたっているのが自身でなければ処理しない
-        if (GetPlayerDirection().collider.gameObject != gameObject)
+        //Cursorにoffsetを渡す
+        cursorDraw.SetOffset(offset);
+
+        if (Input.GetKeyUp(KeyCode.B))
         {
-            cursorDraw.NotShow();
-            return;
+            //ライトの明るさを変更
+            blueLight.intensity = 2;
         }
+
+        //プレイヤーから自分へのRayがあたっているのが自身でなければ処理しない
+        if (GetPlayerDirection().collider.gameObject != gameObject) return;
 
         //プレイヤーとの距離がpushDistanceより離れたら強制的にisPushをfalseに
         RaycastHit hitInto;
         Ray ray = new Ray(player.position + offset, -GetPlayerDirection().normal);
         Physics.Raycast(ray, out hitInto);
 
-        if (hitInto.collider.gameObject != gameObject)
-        {
-            cursorDraw.NotShow();
-            return;
-        }
+        if (hitInto.collider.gameObject != gameObject) return;
 
         Vector3 length = tr.position - hitInto.point;
 
@@ -53,7 +68,6 @@ public class Block : MonoBehaviour
         pushDistance = length.magnitude + pushDistancePlus;
 
         //pushDistance = Vector3.Distance(tr.position, GetPlayerDirection().point) + pushDistancePlus;
-
 
         float currentDistance = Vector3.Distance(tr.position, player.position + offset);
 
@@ -63,9 +77,6 @@ public class Block : MonoBehaviour
             player.GetComponent<NormalMove>().SetCollisionBlock(null);
         }
         else player.GetComponent<NormalMove>().SetCollisionBlock(gameObject);
-
-        //BlockCursor表示・非表示
-        cursorDraw.BlockCursorControl(currentDistance, pushDistance);
 
         BlockMove();
     }
@@ -79,29 +90,27 @@ public class Block : MonoBehaviour
         RaycastHit hitInto;
         Ray ray = new Ray(tr.position, -GetPlayerDirection().normal);
 
-        Debug.DrawRay(ray.origin, ray.direction, Color.black);
-
         float distanceToWall = 0.0f;
 
         //print(-GetPlayerDirection().normal + ":::" + tr.right + ":::" + tr.up + ":::" + tr.forward);
 
-        //if (-GetPlayerDirection().normal == tr.right || -GetPlayerDirection().normal == -tr.right)
-        //{
-        //    print(tr.localScale.x / 2.0f);
-        //    distanceToWall = tr.localScale.x / 2.0f;
-        //}
+        if (-GetPlayerDirection().normal == tr.right || -GetPlayerDirection().normal == -tr.right)
+        {
+            print(tr.FindChild("x").position.x);
+            distanceToWall = Vector3.Distance(tr.position, tr.FindChild("x").position);
+        }
 
-        //if (-GetPlayerDirection().normal == tr.up || -GetPlayerDirection().normal == -tr.up)
-        //{
-        //    print(tr.localScale.y / 2.0f);
-        //    distanceToWall = tr.localScale.y / 2.0f;
-        //}
+        if (-GetPlayerDirection().normal == tr.up || -GetPlayerDirection().normal == -tr.up)
+        {
+            distanceToWall = Vector3.Distance(tr.position, tr.FindChild("y").position);
+        }
 
-        //if (-GetPlayerDirection().normal == tr.forward || -GetPlayerDirection().normal == -tr.forward)
-        //{
-        //    print(tr.localScale.z / 2.0f);
-        //    distanceToWall = tr.localScale.z / 2.0f;
-        //}
+        if (-GetPlayerDirection().normal == tr.forward || -GetPlayerDirection().normal == -tr.forward)
+        {
+            distanceToWall = Vector3.Distance(tr.position, tr.FindChild("z").position);
+        }
+
+        Debug.DrawRay(ray.origin, ray.direction * distanceToWall, Color.black);
 
         //壁に埋まらないようにする処理
         if (Physics.Raycast(ray, out hitInto, distanceToWall))
@@ -131,6 +140,9 @@ public class Block : MonoBehaviour
 
         //内積が0（90度）じゃなかったらreturn
         if (dotInt != 0) return;
+
+        //ライトの明るさを変更
+        blueLight.intensity = 8;
 
         //位置を移動
         tr.position += moveVec * Time.deltaTime;

@@ -4,6 +4,8 @@ using System.Collections;
 public class CannonBlock : MonoBehaviour
 {
     private BlockCursorDraw cursorDraw;
+    private GameObject blockCursorPrefab;
+    private GameObject blockCursor;
     private Transform player;
     private Transform tr;
     private Vector3 offset;
@@ -12,6 +14,7 @@ public class CannonBlock : MonoBehaviour
     private float offsetY = 0.4f;
     private bool isSet = false;
     private bool isSetIgnore = false;
+    private Light blueLight;
 
     public Vector3 moveVec;
     public bool isPush;
@@ -22,29 +25,35 @@ public class CannonBlock : MonoBehaviour
 
     void Start()
     {
-        cursorDraw = GetComponent<BlockCursorDraw>();
+        blockCursorPrefab = (GameObject)Resources.Load("Cursor/BlockCursor");
+        blockCursor = Instantiate(blockCursorPrefab);
+        cursorDraw = blockCursor.GetComponent<BlockCursorDraw>();
+        cursorDraw.SetBlock(gameObject);
+        cursorDraw.ChangeBlockCursorType(BlockCursorDraw.BlockCursorType.CannonBlock);
+
         player = GameObject.FindGameObjectWithTag("Player").transform;
         tr = gameObject.transform;
         offset = PlayerDirectionOffsetY(offsetY);
         isPush = false;
+
+        blueLight = tr.FindChild("blockblue").transform.FindChild("Point light blockblue").GetComponent<Light>();
+        blueLight.intensity = 2;
     }
 
     void Update()
     {
-        //if (Input.GetKey(KeyCode.M))
-        //{
-        //    Transform a = tr.FindChild("f_taihoucolone").transform;
-        //    player.RotateAround(a.position, Vector3.forward, angle * Time.deltaTime);
-        //}
-
         if (Input.GetKeyUp(KeyCode.B))
         {
             player.GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
-            tr.FindChild("blockblue").transform.FindChild("Point light blockblue").GetComponent<Light>().intensity = 2;
+            //ライトの明るさを変更
+            blueLight.intensity = 2;
         }
 
         //offsetを求める
         offset = player.up * offsetY;
+
+        //Cursorにoffsetを渡す
+        cursorDraw.SetOffset(offset);
 
         //プレイヤーから自分へのRayがあたっているのが自身でなければ処理しない
         if (GetPlayerDirection().collider.gameObject != gameObject)
@@ -60,9 +69,6 @@ public class CannonBlock : MonoBehaviour
 
         if (currentDistance > pushDistance) isPush = false;
 
-        //BlockCursor表示・非表示
-        cursorDraw.BlockCursorControl(currentDistance, pushDistance);
-
         CannonBlockMove();
     }
 
@@ -70,6 +76,8 @@ public class CannonBlock : MonoBehaviour
     {
         //入力処理
         IsPushDistance();
+
+        //cursorDraw.SetBlock(tr);
 
         if (Vector3.Distance(tr.position, cannonSetPoint.position) < 0.1f)
         {
@@ -109,7 +117,8 @@ public class CannonBlock : MonoBehaviour
         //内積が0（90度）じゃなかったらreturn
         if (dotInt != 0) return;
 
-        tr.FindChild("blockblue").transform.FindChild("Point light blockblue").GetComponent<Light>().intensity = 8;
+        //ライトの明るさを変更
+        blueLight.intensity = 8;
 
         player.GetComponent<PlayerMoveManager>().SetState(PlayerState.CANNON_BLOCK);
         player.GetComponent<CannonBlockMove>().SetCannonBlockObject(gameObject);
@@ -177,6 +186,11 @@ public class CannonBlock : MonoBehaviour
     public bool GetIsPush()
     {
         return isPush;
+    }
+
+    public float GetPushDistance()
+    {
+        return pushDistance;
     }
 
     /// <summary>
