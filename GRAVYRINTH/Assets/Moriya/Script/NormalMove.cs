@@ -48,6 +48,9 @@ public class NormalMove : MonoBehaviour
     public float m_WallKickHeight = 1.5f;
     [SerializeField, TooltipAttribute("壁衝突時　壁キック可能な壁とみなす角度")]
     public float m_WallKickAbleAngle = 80.0f;
+    [SerializeField, TooltipAttribute("壁キック後の操作不能時間")]
+    public float m_DisableInputTime = 0.2f;
+
 
     /*==内部設定変数==*/
     //重力の方向を所持するクラス。プレイヤー以外で重力を扱う場合こちらのクラスを使用してください。
@@ -94,6 +97,9 @@ public class NormalMove : MonoBehaviour
     //壁に触っているか？
     bool isWallTouch;
 
+    //最初の親トランスフォーム
+    private Transform m_InitParentTr;
+
 
 
 
@@ -125,6 +131,9 @@ public class NormalMove : MonoBehaviour
         // 移動速度保存
         m_Save = m_MoveSpeed;
         anm.speed = m_AnimSpeed;
+
+        //親を取得
+        m_InitParentTr = tr.parent;
     }
 
     void Update()
@@ -227,14 +236,26 @@ public class NormalMove : MonoBehaviour
                 m_HoverTimer = 0;
                 anm.SetFloat("HoverTimer", m_HoverTimer);
 
+                //ヒットした相手のトランスフォーム
+                Transform hitTr = m_GroundHitInfo.hit.transform;
                 //回転床と当たっているなら
-                if (m_GroundHitInfo.hit.transform.gameObject.tag == "SpinChild")
+                if (hitTr.tag == "SpinChild")
                 {
                     //床の移動方向に移動
-                    Vector3 movement = m_GroundHitInfo.hit.transform.parent.gameObject.GetComponent<SpinChild>().GetMovement();
+                    Vector3 movement = hitTr.parent.gameObject.GetComponent<SpinChild>().GetMovement();
                     tr.position += movement;
                 }
-
+                ////回転オブジェクトに当たっているなら
+                //if (hitTr.tag == "SpinParent")
+                //{
+                //    //相手を自身の親に設定して追従
+                //    tr.parent = hitTr;
+                //}
+                //else
+                //{
+                //    //親子関係を解除
+                //    tr.parent = m_InitParentTr;
+                //}
             }
             //斜面として認識する角度より大きいなら壁に当たったとする（その後はずり落ちる）
             else
@@ -628,6 +649,9 @@ public class NormalMove : MonoBehaviour
                 //アニメーション変更
                 anm.SetBool("Wall", false);
                 anm.SetTrigger("WallJump");
+
+                //操作不能時間計測開始
+                StartCoroutine(WallKickInputDisable());
             }
 
             if (frontAngle > 1)
@@ -651,5 +675,24 @@ public class NormalMove : MonoBehaviour
         }
         //if (m_GroundHitInfo.isHit)
         //    isWallKick = false;
+    }
+
+    /// <summary>
+    /// 操作不能時間計測コルーチン
+    /// </summary>
+    IEnumerator WallKickInputDisable()
+    {
+        float timer = 0.0f;
+        while(true)
+        {
+            //時間経過で操作可能にする
+            timer += Time.deltaTime;
+            if (timer > m_DisableInputTime)
+            {
+                m_DisableInput = false;
+                yield break;
+            }                
+            yield return null;
+        }
     }
 }
