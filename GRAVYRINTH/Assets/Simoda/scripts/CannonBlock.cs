@@ -15,6 +15,7 @@ public class CannonBlock : MonoBehaviour
     private bool isSet = false;
     private bool isSetIgnore = false;
     private Light blueLight;
+    private float ignoreTime = 0.0f;
 
     public Vector3 moveVec;
     public bool isPush;
@@ -46,7 +47,8 @@ public class CannonBlock : MonoBehaviour
         {
             player.GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
             //ライトの明るさを変更
-            blueLight.intensity = 2;
+            if (tr.FindChild("blockred").gameObject.active == false)
+                blueLight.intensity = 2;
         }
 
         //offsetを求める
@@ -90,18 +92,21 @@ public class CannonBlock : MonoBehaviour
             }
         }
 
-        if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.9f && isSet == true)
+        if (isSet == true)
         {
+            ignoreTime += Time.deltaTime;
+        }
+
+        if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.9f && isSet == true && ignoreTime >= 1.0f && Input.GetKey(KeyCode.B))
+        {
+            isSetIgnore = true;
+            isSet = false;
+            ignoreTime = 0.0f;
+            tr.FindChild("blockblue").gameObject.active = true;
+            tr.FindChild("blockred").gameObject.active = false;
             StartCoroutine(DelayMethod(1.0f, () =>
             {
-                isSetIgnore = true;
-                isSet = false;
-                tr.FindChild("blockblue").gameObject.active = true;
-                tr.FindChild("blockred").gameObject.active = false;
-                StartCoroutine(DelayMethod(1.0f, () =>
-                {
-                    isSetIgnore = false;
-                }));
+                isSetIgnore = false;
             }));
         }
 
