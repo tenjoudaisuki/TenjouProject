@@ -165,6 +165,7 @@ public class NormalMove : MonoBehaviour
             //鉄棒の方向
             Vector3 barV = Vector3.Normalize(collision.gameObject.GetComponent<IronBar>().GetBarVector());
             //自身と鉄棒のなす角に応じて状態変更
+            print(tr.up);
             float dot = Vector3.Dot(tr.up, barV);
             print(dot);
             if (dot < 0.7071068)
@@ -173,6 +174,7 @@ public class NormalMove : MonoBehaviour
             }
             else
             {
+                print("climb");
                 m_MoveManager.SetState(PlayerState.IRON_BAR_CLIMB);
             }
         }
