@@ -43,7 +43,7 @@ public class CannonBlock : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.B))
+        if (Input.GetKeyUp(KeyCode.B) || Input.GetButtonDown("Action"))
         {
             player.GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
             //ライトの明るさを変更
@@ -97,7 +97,7 @@ public class CannonBlock : MonoBehaviour
             ignoreTime += Time.deltaTime;
         }
 
-        if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.9f && isSet == true && ignoreTime >= 1.0f && Input.GetKey(KeyCode.B))
+        if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.9f && isSet == true && ignoreTime >= 1.0f && (Input.GetKey(KeyCode.B) || Input.GetButtonDown("Action")))
         {
             isSetIgnore = true;
             isSet = false;
@@ -112,7 +112,7 @@ public class CannonBlock : MonoBehaviour
 
         if (isSet == true) return;
 
-        if (!Input.GetKey(KeyCode.B) || isPush == false) return;
+        if (!(Input.GetKey(KeyCode.B) || Input.GetButtonDown("Action")) || isPush == false) return;
 
         float dot = Vector3.Dot(player.up, GetPlayerDirection().normal);
         //内積の数値を補正
@@ -158,7 +158,7 @@ public class CannonBlock : MonoBehaviour
     {
         if (Vector3.Distance(tr.position, player.position + offset) > pushDistance) return;
 
-        if (Input.GetKey(KeyCode.B))
+        if (Input.GetKey(KeyCode.B) || Input.GetButtonDown("Action"))
         {
             //移動方向にプレイヤー方向の面の法線ベクトルを設定
             moveDirection = Vector3.Normalize(GetPlayerDirection().normal);

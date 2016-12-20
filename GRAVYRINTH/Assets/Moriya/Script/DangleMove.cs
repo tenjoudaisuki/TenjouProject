@@ -46,7 +46,7 @@ public class DangleMove : MonoBehaviour
                     Mathf.Clamp(ironBarTouchPoint.transform.position.z, barPos.z - moveArea, barPos.z + moveArea));
         }
 
-        if (touchIronBar == true && Input.GetKeyDown(KeyCode.Space))
+        if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
             tr.parent = null;
             touchIronBar = false;
