@@ -86,8 +86,7 @@ public class CameraControl : ICamera
     {
         StateUpdate();
 
-        //Tキーが押されたら
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetButtonDown("CameraReset"))
         {
             //カメラを元の位置に移動
             CameraReset();
