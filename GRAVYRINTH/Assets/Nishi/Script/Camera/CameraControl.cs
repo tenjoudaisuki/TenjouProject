@@ -52,32 +52,8 @@ public class CameraControl : ICamera
 
     private Vector3 mUp;
 
-
     public override void Start()
     {
-
-        //offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
-
-        //transform.localRotation = Quaternion.Slerp(transform.localRotation,
-        //    Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up), 0.5f);
-
-        //TargetAroundMove(Target.up, transform.right);
-
-        //Ray ray = new Ray(Target.position + offset, CameraPosDirection.normalized);
-
-        //RaycastHit hit;
-        //if (Physics.Raycast(ray, out hit, Distance))
-        //{
-        //    CameraMove(hit.point);
-        //}
-        //else
-        //{
-        //    CameraMove((Target.position + offset) + (CameraPosDirection * Distance));
-        //}
-
-        //FastTransform = transform;
-
-        //CameraReset();
         mFastPosition = transform.position;
         mCurrentState = State.StartMove;
     }
@@ -105,17 +81,12 @@ public class CameraControl : ICamera
         //X軸の回転の限界を設定
         XAxisTotal = Mathf.Clamp(XAxisTotal, -XAngleLimit, XAngleLimit);
 
-        ////ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
-        //Vector3 parallel = Vector3.Cross(Target.up, transform.right);
-        ////平行ベクトルをターゲットの上ベクトルを軸に回転さらに自身の横ベクトルを軸に回転しカメラの位置を計算
-        //CameraPosDirection = Quaternion.AngleAxis(XAxisTotal, transform.right) * Quaternion.AngleAxis(horizontal, Target.up) * parallel;
-
         //ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
         Vector3 parallel = Vector3.Cross(up, right);
-        mParallel =  Vector3.Lerp(mParallel,parallel, 0.8f);
-        //mParallel = parallel;
+        mParallel = Quaternion.AngleAxis(horizontal, up) * Vector3.Lerp(mParallel,parallel, 0.08f);
+        //mParallel = Quaternion.AngleAxis(horizontal, up) * parallel;
         //平行ベクトルをターゲットの上ベクトルを軸に回転さらに自身の横ベクトルを軸に回転しカメラの位置を計算
-        Vector3 temp = Quaternion.AngleAxis(XAxisTotal, transform.right) * Quaternion.AngleAxis(horizontal, up) * mParallel;
+        Vector3 temp = Quaternion.AngleAxis(XAxisTotal, transform.right) * mParallel;
 
         //CameraPosDirection = Vector3.Lerp(CameraPosDirection,temp,0.1f);
         CameraPosDirection = temp;
@@ -177,10 +148,11 @@ public class CameraControl : ICamera
 
         //カメラを回転させる
         //transform.localRotation = Quaternion.Slerp(transform.localRotation,
-        //  Quaternion.LookRotation((Target.position + offset) - transform.position,Target.up), 0.5f);
+         //Quaternion.LookRotation(-CameraPosDirection, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up), 0.8f);
         //補間なし版
-        //transform.localRotation = Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up);
-        transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Target.up);
+        transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up);
+
+        Debug.DrawRay(Target.position, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up, Color.green);
 
         if (Target.GetComponent<PlayerMoveManager>().GetState() == PlayerState.IRON_BAR_DANGLE) mCurrentState = State.BraDown;
     }
@@ -213,63 +185,59 @@ public class CameraControl : ICamera
         XAxisTotal = Mathf.Clamp(XAxisTotal, -90, 90);
 
         YAxisTotal += horizontal;
-        //X軸の回転の限界を設定
         //YAxisTotal = Mathf.Clamp(YAxisTotal, -89, 89);
 
-        Vector3 up = Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.transform.up;
         if (Input.GetAxisRaw("Vertical") != 0)
         {
             XAxisTotal = 90;
-            CameraPosDirection = Target.transform.up;
-            up = Target.transform.forward;
-        }
-
-        //ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
-        Vector3 parallel = Vector3.Cross(Target.transform.up, transform.right);
-        //Vector3 parallel = transform.forward;
-        mParallel = parallel;
-
-        Vector3 temp;
-        if (XAxisTotal == 90 || XAxisTotal == -90)
-        {
-            temp = CameraPosDirection;
+            CameraPosDirection = Target.up;
+            transform.position = (Target.position) + (CameraPosDirection * Distance);
+            transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Target.forward);
         }
         else
         {
-            temp = Quaternion.AngleAxis(horizontal, Target.transform.up) * Quaternion.AngleAxis(XAxisTotal, transform.right) * mParallel;
+            //ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
+            Vector3 parallel = Vector3.Cross(Target.transform.up, transform.right);
+            //Vector3 parallel = -transform.forward;
+            mParallel = parallel;
+
+            Vector3 temp = Quaternion.AngleAxis(horizontal, Target.transform.up) * Quaternion.AngleAxis(XAxisTotal, transform.right) * mParallel;
+            CameraPosDirection = temp;
+
+            //カメラを移動させる
+            Vector3 next;
+            //ターゲットを原点にrayを飛ばす
+            Ray ray = new Ray(Target.position, CameraPosDirection.normalized);
+
+            //RaycastHit hit;
+            ////rayの方向の指定距離以内に障害物が無いか？
+            //if (Physics.Raycast(ray, out hit, Distance))
+            //{
+            //    //壁に当たった位置をカメラ位置に
+            //    next = hit.point;
+            //}
+            //else
+            //{
+            //    //当たらなかったらray* Disをカメラ位置に
+            //    next = (Target.position) + (CameraPosDirection * Distance);
+            //}
+            next = (Target.position) + (CameraPosDirection * Distance);
+            //デバック表示
+            Debug.DrawRay(Target.position, CameraPosDirection, Color.yellow);
+
+            //補間あり移動
+            //transform.position = Vector3.Lerp(transform.position, next, 0.3f);
+            //補間なし移動
+            transform.position = next;
+
+            Vector3 DirUp = Vector3.Cross(transform.right, CameraPosDirection);
+            //transform.localRotation = Quaternion.Slerp(transform.localRotation,
+            //        Quaternion.LookRotation((player.transform.position) - transform.position,up), 0.5f);
+            transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up);
+            Debug.DrawRay(Target.position, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up, Color.green);
         }
-        CameraPosDirection = temp;
-
-        //カメラを移動させる
-        Vector3 next;
-        //ターゲットを原点にrayを飛ばす
-        Ray ray = new Ray(Target.position, CameraPosDirection.normalized);
-
-        //RaycastHit hit;
-        ////rayの方向の指定距離以内に障害物が無いか？
-        //if (Physics.Raycast(ray, out hit, Distance))
-        //{
-        //    //壁に当たった位置をカメラ位置に
-        //    next = hit.point;
-        //}
-        //else
-        //{
-        //    //当たらなかったらray* Disをカメラ位置に
-        //    next = (Target.position) + (CameraPosDirection * Distance);
-        //}
-        next = (Target.position) + (CameraPosDirection * Distance);
-        //デバック表示
-        Debug.DrawRay(Target.position, CameraPosDirection, Color.yellow);
-
-        //補間あり移動
-        transform.position = Vector3.Lerp(transform.position, next, 0.3f);
-        //補間なし移動
-        //transform.position = next;
 
         if (Target.GetComponent<PlayerMoveManager>().GetState() != PlayerState.IRON_BAR_DANGLE) mCurrentState = State.Normal;
-        //transform.localRotation = Quaternion.Slerp(transform.localRotation,
-        //        Quaternion.LookRotation((player.transform.position) - transform.position,up), 0.5f);
-        transform.localRotation = Quaternion.LookRotation((Target.transform.position) - transform.position, up);
 
     }
 
