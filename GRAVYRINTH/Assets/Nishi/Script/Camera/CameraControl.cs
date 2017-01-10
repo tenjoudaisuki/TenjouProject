@@ -147,10 +147,10 @@ public class CameraControl : ICamera
         TargetAroundMove(Target.up, transform.right);
 
         //カメラを回転させる
-        //transform.localRotation = Quaternion.Slerp(transform.localRotation,
-         //Quaternion.LookRotation(-CameraPosDirection, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up), 0.8f);
+        transform.localRotation = Quaternion.Slerp(transform.localRotation,
+        Quaternion.LookRotation(-CameraPosDirection, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up), 0.5f);
         //補間なし版
-        transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up);
+        //transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up);
 
         Debug.DrawRay(Target.position, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up, Color.green);
 
