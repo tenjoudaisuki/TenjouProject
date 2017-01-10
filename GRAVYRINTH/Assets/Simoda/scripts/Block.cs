@@ -47,7 +47,7 @@ public class Block : MonoBehaviour
         //Cursorにoffsetを渡す
         cursorDraw.SetOffset(offset);
 
-        if (Input.GetKeyUp(KeyCode.B) || Input.GetButtonDown("Action"))
+        if (Input.GetButtonUp("Action"))
         {
             //ライトの明るさを変更
             blueLight.intensity = 2;
@@ -55,6 +55,9 @@ public class Block : MonoBehaviour
 
         //プレイヤーから自分へのRayがあたっているのが自身でなければ処理しない
         if (GetPlayerDirection().collider.gameObject != gameObject) return;
+
+        //プレイヤーの前方向とプレイヤー方向の面の法線ベクトルの逆方向の角度が30度以上なら処理しない
+        if (Mathf.Abs(Vector3.Angle(player.forward, -GetPlayerDirection().normal)) >= 30.0f) return;
 
         //プレイヤーとの距離がpushDistanceより離れたら強制的にisPushをfalseに
         RaycastHit hitInto;
@@ -90,36 +93,78 @@ public class Block : MonoBehaviour
     /// </summary>
     public void BlockMove()
     {
+        //ブロックの中心から端までの距離
         float distanceToWall = 0.0f;
+        //ブロックを持っている面に対して上方向のScale
+        Vector3 scale = Vector3.zero;
+        //Scaleの補正値
+        float scaleCorrect = -0.3f;
+
+        float xDistance = Vector3.Distance(tr.position, tr.FindChild("x").position);
+        float yDistance = Vector3.Distance(tr.position, tr.FindChild("y").position);
+        float zDistance = Vector3.Distance(tr.position, tr.FindChild("z").position);
 
         //print(-GetPlayerDirection().normal + ":::" + tr.right + ":::" + tr.up + ":::" + tr.forward);
 
         if (-GetPlayerDirection().normal == tr.right || -GetPlayerDirection().normal == -tr.right)
         {
-            distanceToWall = Vector3.Distance(tr.position, tr.FindChild("x").position);
+            distanceToWall = xDistance;
+
+            if (player.up == tr.up || player.up == -tr.up)
+                scale = new Vector3(0, yDistance + scaleCorrect, 0);
+            else
+                scale = new Vector3(0, 0, zDistance + scaleCorrect);
         }
 
         if (-GetPlayerDirection().normal == tr.up || -GetPlayerDirection().normal == -tr.up)
         {
-            distanceToWall = Vector3.Distance(tr.position, tr.FindChild("y").position);
+            distanceToWall = yDistance;
+
+            if (player.up == tr.right || player.up == -tr.right)
+                scale = new Vector3(xDistance + scaleCorrect, 0, 0);
+            else
+                scale = new Vector3(0, 0, zDistance + scaleCorrect);
         }
 
         if (-GetPlayerDirection().normal == tr.forward || -GetPlayerDirection().normal == -tr.forward)
         {
-            distanceToWall = Vector3.Distance(tr.position, tr.FindChild("z").position);
+            distanceToWall = zDistance;
+
+            if (player.up == tr.right || player.up == -tr.right)
+                scale = new Vector3(xDistance + scaleCorrect, 0, 0);
+            else
+                scale = new Vector3(0, yDistance + scaleCorrect, 0);
         }
 
         distanceToWall += distanceToWallPlus;
 
         RaycastHit hitInto;
-        Ray ray = new Ray(tr.position, -GetPlayerDirection().normal);
+        Ray center = new Ray(tr.position, -GetPlayerDirection().normal);
+        Ray up = new Ray(tr.position + scale, -GetPlayerDirection().normal);
+        Ray down = new Ray(tr.position - scale, -GetPlayerDirection().normal);
 
-        Debug.DrawRay(ray.origin, ray.direction * distanceToWall, Color.black);
+        Debug.DrawRay(center.origin, center.direction * distanceToWall, Color.black);
+        Debug.DrawRay(up.origin, up.direction * distanceToWall, Color.white);
+        Debug.DrawRay(down.origin, down.direction * distanceToWall, Color.yellow);
 
         //[IgnoredObj]レイヤー以外と判定させる
         int layermask = ~(1 << 10);
         //壁に埋まらないようにする処理
-        if (Physics.Raycast(ray, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(center, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
+        {
+            if (Input.GetAxis("Vertical") > 0.1f)
+            {
+                return;
+            }
+        }
+        if (Physics.Raycast(up, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
+        {
+            if (Input.GetAxis("Vertical") > 0.1f)
+            {
+                return;
+            }
+        }
+        if (Physics.Raycast(down, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
         {
             if (Input.GetAxis("Vertical") > 0.1f)
             {
@@ -127,7 +172,7 @@ public class Block : MonoBehaviour
             }
         }
 
-        if (!(Input.GetKey(KeyCode.B) || Input.GetButtonDown("Action")) || isPush == false) return;
+        if (!Input.GetButton("Action") || isPush == false) return;
 
         //print(player.up);
         //print(GetPlayerDirection().normal);
@@ -162,7 +207,7 @@ public class Block : MonoBehaviour
         int layermask = ~(1 << 10);
         Physics.Raycast(ray, out hitInto, Mathf.Infinity, layermask, QueryTriggerInteraction.Ignore);
 
-        Debug.DrawRay(tr.position, hitInto.normal, Color.red);
+        //Debug.DrawRay(tr.position, hitInto.normal, Color.red);
         return hitInto;
     }
 
@@ -202,7 +247,7 @@ public class Block : MonoBehaviour
             return;
         }
 
-        if (Input.GetKey(KeyCode.B) || Input.GetButtonDown("Action"))
+        if (Input.GetButton("Action"))
         {
             //移動方向にプレイヤー方向の面の法線ベクトルを設定
             moveDirection = Vector3.Normalize(GetPlayerDirection().normal);

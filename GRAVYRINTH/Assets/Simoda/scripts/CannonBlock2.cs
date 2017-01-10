@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CannonBlock : MonoBehaviour
+public class CannonBlock2 : MonoBehaviour
 {
     private CannonBlockManagar managar;
     private BlockCursorDraw cursorDraw;
@@ -59,7 +59,7 @@ public class CannonBlock : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonUp("Action"))
+        if (Input.GetKeyUp(KeyCode.B) || Input.GetButtonUp("Action"))
         {
             player.GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
             //ライトの明るさを変更
@@ -115,7 +115,7 @@ public class CannonBlock : MonoBehaviour
             ignoreTime += Time.deltaTime;
         }
 
-        if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.9f && isSet == true && ignoreTime >= 1.0f && Input.GetButton("Action") && currentDistance <= pushDistance)
+        if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.9f && isSet == true && ignoreTime >= 1.0f && (Input.GetKey(KeyCode.B) || Input.GetButton("Action")) && currentDistance <= pushDistance)
         {
             isSetIgnore = true;
             isSet = false;
@@ -149,15 +149,15 @@ public class CannonBlock : MonoBehaviour
             }
         }
 
-        if (!Input.GetButton("Action") || isPush == false) return;
+        if (!Input.GetKey(KeyCode.B) || isPush == false) return;
 
-        //float dot = Vector3.Dot(player.up, GetPlayerDirection().normal);
-        ////内積の数値を補正
-        //float dotAbs = Mathf.Abs(dot);
-        //float dotInt = Mathf.FloorToInt(dotAbs);
+        float dot = Vector3.Dot(player.up, GetPlayerDirection().normal);
+        //内積の数値を補正
+        float dotAbs = Mathf.Abs(dot);
+        float dotInt = Mathf.FloorToInt(dotAbs);
 
-        ////内積が0（90度）じゃなかったらreturn
-        //if (dotInt != 0) return;
+        //内積が0（90度）じゃなかったらreturn
+        if (dotInt != 0) return;
 
         //ライトの明るさを変更
         blueLight.intensity = 8;
@@ -195,7 +195,7 @@ public class CannonBlock : MonoBehaviour
     {
         if (Vector3.Distance(tr.position, player.position + offset) > pushDistance) return;
 
-        if (Input.GetButton("Action"))
+        if (Input.GetKey(KeyCode.B) || Input.GetButton("Action"))
         {
             //移動方向にプレイヤー方向の面の法線ベクトルを設定
             moveDirection = Vector3.Normalize(GetPlayerDirection().normal);
