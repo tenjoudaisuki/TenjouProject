@@ -47,7 +47,7 @@ public class Block : MonoBehaviour
         //Cursorにoffsetを渡す
         cursorDraw.SetOffset(offset);
 
-        if (Input.GetKeyUp(KeyCode.B) || Input.GetButtonDown("Action"))
+        if (Input.GetKeyUp(KeyCode.B) || Input.GetButtonUp("Action"))
         {
             //ライトの明るさを変更
             blueLight.intensity = 2;
@@ -55,6 +55,9 @@ public class Block : MonoBehaviour
 
         //プレイヤーから自分へのRayがあたっているのが自身でなければ処理しない
         if (GetPlayerDirection().collider.gameObject != gameObject) return;
+
+        //プレイヤーの前方向とプレイヤー方向の面の法線ベクトルの逆方向の角度が30度以上なら処理しない
+        if (Mathf.Abs(Vector3.Angle(player.forward, -GetPlayerDirection().normal)) >= 30.0f) return;
 
         //プレイヤーとの距離がpushDistanceより離れたら強制的にisPushをfalseに
         RaycastHit hitInto;
@@ -127,7 +130,7 @@ public class Block : MonoBehaviour
             }
         }
 
-        if (!(Input.GetKey(KeyCode.B) || Input.GetButtonDown("Action")) || isPush == false) return;
+        if ((!Input.GetKey(KeyCode.B) || !Input.GetButton("Action")) || isPush == false) return;
 
         //print(player.up);
         //print(GetPlayerDirection().normal);
@@ -162,7 +165,7 @@ public class Block : MonoBehaviour
         int layermask = ~(1 << 10);
         Physics.Raycast(ray, out hitInto, Mathf.Infinity, layermask, QueryTriggerInteraction.Ignore);
 
-        Debug.DrawRay(tr.position, hitInto.normal, Color.red);
+        //Debug.DrawRay(tr.position, hitInto.normal, Color.red);
         return hitInto;
     }
 
@@ -202,7 +205,7 @@ public class Block : MonoBehaviour
             return;
         }
 
-        if (Input.GetKey(KeyCode.B) || Input.GetButtonDown("Action"))
+        if (Input.GetKey(KeyCode.B) || Input.GetButton("Action"))
         {
             //移動方向にプレイヤー方向の面の法線ベクトルを設定
             moveDirection = Vector3.Normalize(GetPlayerDirection().normal);
