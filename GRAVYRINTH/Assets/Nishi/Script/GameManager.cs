@@ -101,6 +101,7 @@ public class GameManager : MonoBehaviour
 
     void TitleMode()
     {
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NONE);
         SceneManager.LoadScene("Title", LoadSceneMode.Additive);
         if (!SceneManager.GetSceneByName(mFastStageName).isLoaded)
         {
@@ -111,6 +112,7 @@ public class GameManager : MonoBehaviour
 
     void SelectMode()
     {
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NONE);
         GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Select);
         GameManager.Instance.SetNextSceneName("Tutorial0_1");
         GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance();
@@ -118,6 +120,7 @@ public class GameManager : MonoBehaviour
 
     void GamePlayMode()
     {
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
         GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.GamePlay);
     }
 
