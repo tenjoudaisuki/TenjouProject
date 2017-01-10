@@ -1,45 +1,70 @@
 fileFormatVersion: 2
-guid: 8f7ff2dbafa3d1343b7bb8ebf58e6a2d
-timeCreated: 1481514519
+guid: 1b1ae9d11214fdb4d8ddc8a09150fd29
+timeCreated: 1482110737
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
-    100002: object3baseaura
-    100004: object3blue
-    100006: object3detail
-    100008: object3green
-    100010: object3red
-    100012: object3yellow
+    100002: object3baseaura1
+    100004: object3baseaura2
+    100006: object3baseaura3
+    100008: object3baseaura4
+    100010: object3baseaura5
+    100012: object3baseaura6
+    100014: object3blue
+    100016: object3detail
+    100018: object3green
+    100020: object3red
+    100022: object3yellow
     400000: //RootNode
-    400002: object3baseaura
-    400004: object3blue
-    400006: object3detail
-    400008: object3green
-    400010: object3red
-    400012: object3yellow
+    400002: object3baseaura1
+    400004: object3baseaura2
+    400006: object3baseaura3
+    400008: object3baseaura4
+    400010: object3baseaura5
+    400012: object3baseaura6
+    400014: object3blue
+    400016: object3detail
+    400018: object3green
+    400020: object3red
+    400022: object3yellow
     2300000: //RootNode
-    2300002: object3baseaura
-    2300004: object3blue
-    2300006: object3detail
-    2300008: object3green
-    2300010: object3red
-    2300012: object3yellow
+    2300002: object3baseaura1
+    2300004: object3baseaura2
+    2300006: object3baseaura3
+    2300008: object3baseaura4
+    2300010: object3baseaura5
+    2300012: object3baseaura6
+    2300014: object3blue
+    2300016: object3detail
+    2300018: object3green
+    2300020: object3red
+    2300022: object3yellow
     3300000: //RootNode
-    3300002: object3baseaura
-    3300004: object3blue
-    3300006: object3detail
-    3300008: object3green
-    3300010: object3red
-    3300012: object3yellow
+    3300002: object3baseaura1
+    3300004: object3baseaura2
+    3300006: object3baseaura3
+    3300008: object3baseaura4
+    3300010: object3baseaura5
+    3300012: object3baseaura6
+    3300014: object3blue
+    3300016: object3detail
+    3300018: object3green
+    3300020: object3red
+    3300022: object3yellow
     4300000: object3
-    4300002: object3detail
-    4300004: object3red
-    4300006: object3yellow
-    4300008: object3green
-    4300010: object3blue
-    4300012: object3baseaura
+    4300002: object3baseaura1
+    4300004: object3baseaura2
+    4300006: object3baseaura3
+    4300008: object3baseaura4
+    4300010: object3baseaura5
+    4300012: object3baseaura6
+    4300014: object3detail
+    4300016: object3red
+    4300018: object3yellow
+    4300020: object3green
+    4300022: object3blue
   materials:
     importMaterials: 1
     materialName: 0

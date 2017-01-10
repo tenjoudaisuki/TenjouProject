@@ -67,7 +67,7 @@ public class CrimbMove : MonoBehaviour
             }
         }
 
-        if (touchIronBar == true && Input.GetKeyDown(KeyCode.Space))
+        if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
             tr.parent = null;
             touchIronBar = false;

@@ -75,13 +75,13 @@ public class GameManager : MonoBehaviour
     {
         if (mCureentMode == GameMode.GamePlay)
         {
-            if (Input.GetKeyDown(KeyCode.H))
+            if (Input.GetKeyDown(KeyCode.H) || Input.GetButtonDown("PS4_Options"))
             {
                 Pause();
             }
         }
 
-        if (SceneManager.GetActiveScene() != mCurrentScene)
+        if (SceneManager.GetActiveScene() != mCurrentScene && !isDebug)
         {
             SceneManager.SetActiveScene(mCurrentScene);
         }

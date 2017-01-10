@@ -338,7 +338,7 @@ public class NormalMove : MonoBehaviour
         m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
           
         //ブロック移動ボタンを押していて、かつブロックが近くにある時
-        if (Input.GetKey(KeyCode.B) && m_CollisionBlock != null)
+        if ((Input.GetButtonDown("Action") || Input.GetKey(KeyCode.B)) && m_CollisionBlock != null)
         {
             m_CollisionBlock.IsPushDistance();
             if (m_CollisionBlock.isPush == false) return;
@@ -461,7 +461,7 @@ public class NormalMove : MonoBehaviour
     private void Jump()
     {
         //地面にいるときのジャンプ始動処理
-        if (m_GroundHitInfo.isHit && Input.GetKeyDown(KeyCode.Space))
+        if (m_GroundHitInfo.isHit && (Input.GetKeyDown(KeyCode.Space)||Input.GetButtonDown("Jump") ))
         {
             //アニメーションの設定
             anm.SetBool("Jump", true);
@@ -637,7 +637,7 @@ public class NormalMove : MonoBehaviour
             anm.SetBool("Wall", true);
 
             rb.velocity = Vector3.zero;
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump"))
             {
                 //操作不能にする
                 m_DisableInput = true;

@@ -1,45 +1,55 @@
 fileFormatVersion: 2
-guid: 634dde03b5d7b784bb90b5553df4408b
-timeCreated: 1481514392
+guid: 9297523519a80c040aed46e22ea4ae03
+timeCreated: 1482112931
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
     100002: object5aura
-    100004: object5blue
-    100006: object5detail
-    100008: object5green
-    100010: object5red
-    100012: object5yellow
+    100004: object5aura1
+    100006: object5aura2
+    100008: object5blue
+    100010: object5detail
+    100012: object5green
+    100014: object5red
+    100016: object5yellow
     400000: //RootNode
     400002: object5aura
-    400004: object5blue
-    400006: object5detail
-    400008: object5green
-    400010: object5red
-    400012: object5yellow
+    400004: object5aura1
+    400006: object5aura2
+    400008: object5blue
+    400010: object5detail
+    400012: object5green
+    400014: object5red
+    400016: object5yellow
     2300000: //RootNode
     2300002: object5aura
-    2300004: object5blue
-    2300006: object5detail
-    2300008: object5green
-    2300010: object5red
-    2300012: object5yellow
+    2300004: object5aura1
+    2300006: object5aura2
+    2300008: object5blue
+    2300010: object5detail
+    2300012: object5green
+    2300014: object5red
+    2300016: object5yellow
     3300000: //RootNode
     3300002: object5aura
-    3300004: object5blue
-    3300006: object5detail
-    3300008: object5green
-    3300010: object5red
-    3300012: object5yellow
+    3300004: object5aura1
+    3300006: object5aura2
+    3300008: object5blue
+    3300010: object5detail
+    3300012: object5green
+    3300014: object5red
+    3300016: object5yellow
     4300000: object5
-    4300002: object5detail
-    4300004: object5red
-    4300006: object5yellow
-    4300008: object5green
-    4300010: object5blue
-    4300012: object5aura
+    4300002: object5aura1
+    4300004: object5aura2
+    4300006: object5aura
+    4300008: object5detail
+    4300010: object5red
+    4300012: object5yellow
+    4300014: object5green
+    4300016: object5blue
   materials:
     importMaterials: 1
     materialName: 0
