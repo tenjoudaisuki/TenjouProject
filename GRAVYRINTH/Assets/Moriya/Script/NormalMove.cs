@@ -154,7 +154,6 @@ public class NormalMove : MonoBehaviour
 
     void LateUpdate()
     {
-
     }
 
     public void OnCollisionEnter(Collision collision)
@@ -321,7 +320,7 @@ public class NormalMove : MonoBehaviour
         }
 
         //壁キック後の操作不能状態でなければ前ベクトルを計算
-        if(!m_DisableInput)
+        if (!m_DisableInput)
         {
             //外積をスティックの角度で回転させて前ベクトルを計算
             m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * camerafoward;
@@ -336,13 +335,13 @@ public class NormalMove : MonoBehaviour
 
         //前ベクトル×スティックの傾き
         m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
-          
+
         //ブロック移動ボタンを押していて、かつブロックが近くにある時
         if ((Input.GetButtonDown("Action") || Input.GetKey(KeyCode.B)) && m_CollisionBlock != null)
         {
             m_CollisionBlock.IsPushDistance();
             if (m_CollisionBlock.isPush == false) return;
-            
+
             print(m_MoveVelocity);
             Vector3 moveDirection = m_CollisionBlock.GetBlockMoveDirection();
             m_MoveVelocity = (moveDirection * -inputVec.y) * m_Save;
@@ -386,7 +385,7 @@ public class NormalMove : MonoBehaviour
         RaycastHit hit;
         //[IgnoredObj]レイヤー以外と判定させる
         int layermask = ~(1 << 10);
-        m_GroundHitInfo.isHit = Physics.Raycast(ray, out hit, m_RayLength,layermask,QueryTriggerInteraction.Ignore);
+        m_GroundHitInfo.isHit = Physics.Raycast(ray, out hit, m_RayLength, layermask, QueryTriggerInteraction.Ignore);
         m_GroundHitInfo.hit = hit;
         //レイをデバッグ表示
         Debug.DrawRay(rayPos, GetDown() * m_RayLength, Color.grey, 1.0f, false);
@@ -394,7 +393,7 @@ public class NormalMove : MonoBehaviour
         Debug.DrawRay(m_GroundHitInfo.hit.point, tr.up, Color.blue, 1.0f, false);
     }
 
-    
+
 
     ///// <summary>
     ///// 通常移動
@@ -461,11 +460,12 @@ public class NormalMove : MonoBehaviour
     private void Jump()
     {
         //地面にいるときのジャンプ始動処理
-        if (m_GroundHitInfo.isHit && (Input.GetKeyDown(KeyCode.Space)||Input.GetButtonDown("Jump") ))
+        if (m_GroundHitInfo.isHit && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
             //アニメーションの設定
             anm.SetBool("Jump", true);
             //力を加えてジャンプ
+            rb.velocity = Vector3.zero;//いったんリセット
             rb.AddForce(tr.up * m_JumpPower);
             //一定時間経過まで地面との判定を行わない
             m_IsCheckGround = false;
@@ -476,8 +476,8 @@ public class NormalMove : MonoBehaviour
 
             m_IsHitSlope = false;
         }
-        if(anm.GetBool("Jump"))
-        {     
+        if (anm.GetBool("Jump"))
+        {
             m_JumpTimer += 1 * Time.deltaTime;
             //アニメーションの設定
             anm.SetFloat("JumpTimer", m_JumpTimer);
@@ -495,7 +495,7 @@ public class NormalMove : MonoBehaviour
         else
         {
             rb.velocity = Vector3.zero;
-        }       
+        }
     }
 
     /// <summary>
@@ -529,7 +529,7 @@ public class NormalMove : MonoBehaviour
 
         //[IgnoredObj]レイヤー以外と判定させる
         int layermask = ~(1 << 10);
-        m_WallHitInfoFront.isHit = Physics.Raycast(ray_front, out hit_front, m_WallRayLength, layermask,QueryTriggerInteraction.Ignore);
+        m_WallHitInfoFront.isHit = Physics.Raycast(ray_front, out hit_front, m_WallRayLength, layermask, QueryTriggerInteraction.Ignore);
         m_WallHitInfoLeft.isHit = Physics.Raycast(ray_left, out hit_left, m_WallRayLength, layermask, QueryTriggerInteraction.Ignore);
         m_WallHitInfoRight.isHit = Physics.Raycast(ray_right, out hit_right, m_WallRayLength, layermask, QueryTriggerInteraction.Ignore);
 
@@ -545,7 +545,7 @@ public class NormalMove : MonoBehaviour
         if (m_WallHitInfoFront.isHit ||
             m_WallHitInfoLeft.isHit ||
             m_WallHitInfoRight.isHit)
-        {           
+        {
             //壁の法線が確定
             if (m_WallHitInfoFront.isHit)
                 wallNormal = m_WallHitInfoFront.hit.normal.normalized;
@@ -556,7 +556,7 @@ public class NormalMove : MonoBehaviour
 
             return true;
         }
-            
+
         else
             return false;
     }
@@ -591,6 +591,7 @@ public class NormalMove : MonoBehaviour
     /// </summary>
     public void StartPoleKick(Vector3 v)
     {
+        rb.velocity = Vector3.zero;//いったんリセット
         rb.AddForce(v * m_PoleJumpPower);
     }
 
@@ -613,7 +614,7 @@ public class NormalMove : MonoBehaviour
     /// <summary>
     /// 座標と向きを指定してリスポーンする
     /// </summary>
-    public void Respawn(Vector3 position,Vector3 up,Vector3 front)
+    public void Respawn(Vector3 position, Vector3 up, Vector3 front)
     {
         tr.position = position;
         m_Up = up;
@@ -636,7 +637,8 @@ public class NormalMove : MonoBehaviour
             //アニメーション変更
             anm.SetBool("Wall", true);
 
-            rb.velocity = Vector3.zero;
+            if (Vector3.Dot(tr.up, rb.velocity) < 0)
+                rb.velocity = Vector3.zero;
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump"))
             {
                 //操作不能にする
@@ -645,6 +647,7 @@ public class NormalMove : MonoBehaviour
                 Vector3 dir = tr.up * m_WallKickHeight + wallNormal;
                 dir.Normalize();
 
+                rb.velocity = Vector3.zero;//いったんリセット
                 rb.AddForce(dir * m_WallKickPower);
 
                 m_Front = wallNormal;
@@ -662,7 +665,7 @@ public class NormalMove : MonoBehaviour
                 rb.velocity = Vector3.zero;
                 rb.AddForce(GetDown() * 50);
                 isWallTouch = true;
-            }    
+            }
         }
         else
         {
@@ -686,7 +689,7 @@ public class NormalMove : MonoBehaviour
     IEnumerator WallKickInputDisable()
     {
         float timer = 0.0f;
-        while(true)
+        while (true)
         {
             //時間経過で操作可能にする
             timer += Time.deltaTime;
@@ -694,7 +697,7 @@ public class NormalMove : MonoBehaviour
             {
                 m_DisableInput = false;
                 yield break;
-            }                
+            }
             yield return null;
         }
     }
