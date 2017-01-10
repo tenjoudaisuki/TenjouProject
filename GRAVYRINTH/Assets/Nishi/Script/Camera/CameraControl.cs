@@ -154,7 +154,13 @@ public class CameraControl : ICamera
 
         Debug.DrawRay(Target.position, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up, Color.green);
 
-        if (Target.GetComponent<PlayerMoveManager>().GetState() == PlayerState.IRON_BAR_DANGLE) mCurrentState = State.BraDown;
+        if (Target.GetComponent<PlayerMoveManager>().GetState() == PlayerState.IRON_BAR_DANGLE)
+        {
+            CameraPosDirection = -Target.forward;
+            transform.position = (Target.position) + (CameraPosDirection * Distance);
+            transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Target.up);
+            mCurrentState = State.BraDown;
+        }
     }
 
     private void StartMove()
