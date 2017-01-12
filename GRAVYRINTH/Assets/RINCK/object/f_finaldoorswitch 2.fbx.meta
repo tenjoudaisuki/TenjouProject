@@ -1,32 +1,45 @@
 fileFormatVersion: 2
-guid: e3664782c0903ab41bb98218d5f801c2
-timeCreated: 1484214245
+guid: 3d64fc2c748243649ad5a87f44125e1c
+timeCreated: 1484215971
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
-    100002: f_groundaura
-    100004: f_grounddetail
-    100006: f_grounddetail_MeshPart0
-    100008: f_grounddetail_MeshPart1
+    100002: f_finaldoorswitchblue
+    100004: f_finaldoorswitchgreen
+    100006: f_finaldoorswitchred
+    100008: f_finaldoorswitchwhiteactived
+    100010: f_finaldoorswitchwhitedesactived
+    100012: f_finaldoorswitchyellow
     400000: //RootNode
-    400002: f_groundaura
-    400004: f_grounddetail
-    400006: f_grounddetail_MeshPart0
-    400008: f_grounddetail_MeshPart1
+    400002: f_finaldoorswitchblue
+    400004: f_finaldoorswitchgreen
+    400006: f_finaldoorswitchred
+    400008: f_finaldoorswitchwhiteactived
+    400010: f_finaldoorswitchwhitedesactived
+    400012: f_finaldoorswitchyellow
     2300000: //RootNode
-    2300002: f_groundaura
-    2300004: f_grounddetail_MeshPart0
-    2300006: f_grounddetail_MeshPart1
+    2300002: f_finaldoorswitchblue
+    2300004: f_finaldoorswitchgreen
+    2300006: f_finaldoorswitchred
+    2300008: f_finaldoorswitchwhiteactived
+    2300010: f_finaldoorswitchwhitedesactived
+    2300012: f_finaldoorswitchyellow
     3300000: //RootNode
-    3300002: f_groundaura
-    3300004: f_grounddetail_MeshPart0
-    3300006: f_grounddetail_MeshPart1
-    4300000: f_ground
-    4300002: f_grounddetail_MeshPart0
-    4300004: f_grounddetail_MeshPart1
-    4300006: f_groundaura
+    3300002: f_finaldoorswitchblue
+    3300004: f_finaldoorswitchgreen
+    3300006: f_finaldoorswitchred
+    3300008: f_finaldoorswitchwhiteactived
+    3300010: f_finaldoorswitchwhitedesactived
+    3300012: f_finaldoorswitchyellow
+    4300000: f_finaldoorswitch
+    4300002: f_finaldoorswitchblue
+    4300004: f_finaldoorswitchgreen
+    4300006: f_finaldoorswitchyellow
+    4300008: f_finaldoorswitchred
+    4300010: f_finaldoorswitchwhiteactived
+    4300012: f_finaldoorswitchwhitedesactived
   materials:
     importMaterials: 1
     materialName: 0
