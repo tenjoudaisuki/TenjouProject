@@ -83,7 +83,11 @@ public class IronBarTouchPoint : MonoBehaviour
             tr.position = new Vector3(tr.position.x, player.position.y, tr.position.z);
             Vector3 poleDirection = other.transform.position;
             poleDirection.y = player.position.y;
-            player.LookAt(poleDirection);
+
+            player.up = Vector3.Normalize(other.GetComponent<IronBar>().GetPoleVector());
+
+            //player.LookAt(poleDirection);
+            //player.rotation = Quaternion.LookRotation(tr.position, tr.up);
 
             //プレイヤーの親を自分に
             player.parent = tr;
