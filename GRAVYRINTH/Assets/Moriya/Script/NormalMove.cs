@@ -164,10 +164,11 @@ public class NormalMove : MonoBehaviour
             //鉄棒の方向
             Vector3 barV = Vector3.Normalize(collision.gameObject.GetComponent<IronBar>().GetBarVector());
             //自身と鉄棒のなす角に応じて状態変更
-            print(tr.up);
-            float dot = Vector3.Dot(tr.up, barV);
-            print(dot);
-            if (dot < 0.7071068)
+            float angle = Vector3.Angle(tr.up, barV);
+            //print(tr.up);
+            //float dot = Vector3.Dot(tr.up, barV);
+            print("angle" + angle);
+            if (angle > 45.0f)
             {
                 m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
             }
@@ -328,8 +329,11 @@ public class NormalMove : MonoBehaviour
 
         //前、右方向への移動処理
         //プレイヤーの前ベクトルと上ベクトルを決定
-        Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
-        tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
+
+        //変更
+        //Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
+        //tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
+
         //補完なし
         //tr.localRotation = rotate;
 
@@ -337,7 +341,7 @@ public class NormalMove : MonoBehaviour
         m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
 
         //ブロック移動ボタンを押していて、かつブロックが近くにある時
-        if ((Input.GetButton("Action") || Input.GetKey(KeyCode.B)) && m_CollisionBlock != null)
+        if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true)
         {
             m_CollisionBlock.IsPushDistance();
             if (m_CollisionBlock.isPush == false) return;
@@ -346,12 +350,23 @@ public class NormalMove : MonoBehaviour
             Vector3 moveDirection = m_CollisionBlock.GetBlockMoveDirection();
             m_MoveVelocity = (moveDirection * -inputVec.y) * m_Save;
             m_CollisionBlock.SetMoveVector(m_MoveVelocity);
+
+            m_Front = -m_CollisionBlock.GetPlayerDirection().normal;
+
+            //追加
+            Quaternion rotateBlock = Quaternion.LookRotation(m_Front, m_Up);
+            tr.localRotation = Quaternion.Slerp(transform.localRotation, rotateBlock, 0.3f);
+
             //移動
             tr.position += m_MoveVelocity * Time.deltaTime;
         }
         //通常時
         else
         {
+            //追加
+            Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
+            tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
+
             //移動
             tr.position += m_MoveVelocity * Time.deltaTime;
         }

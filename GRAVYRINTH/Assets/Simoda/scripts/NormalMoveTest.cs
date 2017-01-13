@@ -363,7 +363,7 @@ public class NormalMoveTest : MonoBehaviour
         //通常時
         else
         {
-            //追加（移動）
+            //追加
             Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
             tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
 
