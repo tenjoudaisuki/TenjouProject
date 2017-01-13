@@ -159,7 +159,7 @@ public class GameManager : MonoBehaviour
     {
         switch(mCureentMode)
         {
-            case GameMode.Title: GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Title); ; break;
+            case GameMode.Title: GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Title); break;
 
             case GameMode.Select:
                 GameObject.Find("Camera").GetComponent<CameraManager>().CameraWarp();

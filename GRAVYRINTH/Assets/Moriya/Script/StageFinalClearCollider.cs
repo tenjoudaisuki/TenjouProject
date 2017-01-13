@@ -18,6 +18,8 @@ public class StageFinalClearCollider : MonoBehaviour
     public float taihouAngleTime = 3.0f;
     public float stairPullDownTime = 3.0f;
 
+    public GameObject CameraTarget;
+
     void Start()
     {
         m_CannonManager = GameObject.Find("CannonBlockManagar").GetComponent<CannonBlockManagar>();
@@ -43,6 +45,12 @@ public class StageFinalClearCollider : MonoBehaviour
         //クリアしたら
         if (isClear == false && m_CannonManager.GetIsSetAll() == true)
         {
+            GameObject.Find("Camera").GetComponent<EventCamera>().SetMoveTime(0.0f);
+            GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(3.0f);
+            GameObject.Find("Camera").GetComponent<EventCamera>().SetTarget(CameraTarget);
+
+            GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Event);
+
             //当たり判定を有効にする
             GetComponent<SphereCollider>().enabled = true;
             //大砲を傾ける

@@ -11,15 +11,21 @@ public class EventCamera : ICamera {
 
     float timer;
 
+    System.Action mCompleteAction;
+
     // Use this for initialization
     public override void Start ()
     {
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NONE);
         LeanTween.move(gameObject, mToPosition, mMoveTime)
             .setOnComplete(()=> {
-
+                mCompleteAction();
+                mCompleteAction = () => { };
                 LeanTween.move(gameObject, gameObject.transform.position, 0.0f)
                 .setDelay(mEventEndTime)
-                .setOnComplete(() => { GetComponent<CameraManager>().StateChange(State.GamePlay); });
+                .setOnComplete(() => { GetComponent<CameraManager>().StateChange(State.GamePlay);
+                    GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
+                });
             });
         LeanTween.rotateLocal(gameObject, mToRotate, mMoveTime);
 
@@ -84,5 +90,10 @@ public class EventCamera : ICamera {
             yield return null;
         }
         action();
+    }
+
+    public void SetCompleteAction(System.Action action)
+    {
+        mCompleteAction = action;
     }
 }

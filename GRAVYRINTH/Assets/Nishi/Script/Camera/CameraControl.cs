@@ -83,7 +83,7 @@ public class CameraControl : ICamera
 
         //ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
         Vector3 parallel = Vector3.Cross(up, right);
-        mParallel = Quaternion.AngleAxis(horizontal, up) * parallel;
+        mParallel = Quaternion.AngleAxis(horizontal, up) * Vector3.Lerp(mParallel,parallel,0.08f);
         //mParallel = Quaternion.AngleAxis(horizontal, up) * parallel;
         //平行ベクトルをターゲットの上ベクトルを軸に回転さらに自身の横ベクトルを軸に回転しカメラの位置を計算
         Vector3 temp = Quaternion.AngleAxis(XAxisTotal, transform.right) * mParallel;
