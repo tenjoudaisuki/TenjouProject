@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
         {
             mCureentMode = GameMode.GamePlay;
             GameObject.Find("Camera").GetComponent<CameraManager>().mStateState = State.GamePlay;
+            mCurrentScene = SceneManager.GetSceneByName(mFastStageName);
         }
         else
         {
@@ -59,7 +60,6 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene("Title", LoadSceneMode.Additive);
             SceneManager.LoadScene(mFastStageName, LoadSceneMode.Additive);
             StartCoroutine("CameraWait", SceneManager.GetSceneByName(mFastStageName));
-            //SceneManager.LoadScene("Title", LoadSceneMode.Additive);
             mCurrentScene = SceneManager.GetSceneByName(mFastStageName);
         }
     }
