@@ -49,6 +49,7 @@ public class DangleMove : MonoBehaviour
         if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
             tr.parent = null;
+            tr.parent = GameObject.Find("Pausable").transform;
             touchIronBar = false;
 
             m_GravityDir.SetDirection(-tr.up);
