@@ -8,6 +8,7 @@ public enum State
     Select,
     GamePlay,
     Clear,
+    Event,
     Ending
 }
 
@@ -59,6 +60,7 @@ public class CameraManager : MonoBehaviour
             case State.GamePlay: ScriptChange(GetComponent<CameraControl>()); break;
             case State.Clear: ScriptChange(GetComponent<ClearCamera>()); break;
             case State.Ending: ScriptChange(GetComponent<EndingCamera>()); break;
+            case State.Event: ScriptChange(GetComponent<EventCamera>()); break;
         }
         mCurrentState = state;
     }
