@@ -97,7 +97,7 @@ public class MenuManager : MonoBehaviour
                 break;
 
             case MenuType.StageSelect:
-                if(GameObject.FindGameObjectWithTag("Fade").transform.childCount == 0) StageSelectInput();
+                if (GameObject.FindGameObjectWithTag("Fade").transform.childCount == 0) StageSelectInput();
                 break;
         }
     }
@@ -396,7 +396,7 @@ public class MenuManager : MonoBehaviour
             if (GameManager.Instance.GetCurrentSceneName() != mStageNameList[stageNumber])
             {
                 GameManager.Instance.SetNextSceneName(mStageNameList[stageNumber]);
-                GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance(Color.white,1.0f);
+                GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance(Color.white, 1.0f);
             }
             ////------------------------------------------------------------
 
@@ -586,6 +586,11 @@ public class MenuManager : MonoBehaviour
         {
             LeanTween.alpha(rectTr, 0.0f, 1.0f);
         }
+
+        StartCoroutine(DelayMethod(1.1f, () =>
+        {
+            Application.Quit();
+        }));
     }
 
     /// <summary>
