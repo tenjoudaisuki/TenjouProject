@@ -115,7 +115,7 @@ public class CannonBlock : MonoBehaviour
             ignoreTime += Time.deltaTime;
         }
 
-        if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.9f && isSet == true && ignoreTime >= 1.0f && Input.GetButton("Action") && currentDistance <= pushDistance)
+        if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.1f && isSet == true && ignoreTime >= 1.0f && Input.GetButton("Action") && currentDistance <= pushDistance)
         {
             isSetIgnore = true;
             isSet = false;
