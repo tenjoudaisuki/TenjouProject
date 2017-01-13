@@ -70,6 +70,7 @@ public class CrimbMove : MonoBehaviour
         if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
             tr.parent = null;
+            tr.parent = GameObject.Find("Pausable").transform;
             touchIronBar = false;
             m_MoveManager.SetState(PlayerState.NORMAL);
             //背面斜め上方向に方向にジャンプする
