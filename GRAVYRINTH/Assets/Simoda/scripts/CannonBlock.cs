@@ -16,8 +16,14 @@ public class CannonBlock : MonoBehaviour
     private float offsetY = 0.4f;
     private bool isSet = false;
     private bool isSetIgnore = false;
-    private Light blueLight;
     private float ignoreTime = 0.0f;
+
+    private GameObject blockBlue;
+    private Light blueLight;
+    private GameObject blockRed;
+    private GameObject taihouActived;
+    private GameObject taihouDesactived;
+    private Transform rotateCenter;
 
     public Vector3 moveVec;
     public bool isPush;
@@ -40,7 +46,13 @@ public class CannonBlock : MonoBehaviour
         offset = PlayerDirectionOffsetY(offsetY);
         isPush = false;
 
-        blueLight = tr.FindChild("blockblue").transform.FindChild("Point light blockblue").GetComponent<Light>();
+        blockBlue = tr.FindChild("blockblue").gameObject;
+        blockRed = tr.FindChild("blockred").gameObject;
+        taihouActived = tr.FindChild("f_taihou").gameObject.transform.FindChild("f_taihou_actived").gameObject;
+        taihouDesactived = tr.FindChild("f_taihou").gameObject.transform.FindChild("f_taihou_desactived").gameObject;
+        rotateCenter = tr.FindChild("f_taihoucolone").transform;
+
+        blueLight = blockBlue.transform.FindChild("Point light blockblue").GetComponent<Light>();
         blueLight.intensity = 2;
 
         if (Vector3.Distance(tr.position, cannonSetPoint.position) < 0.1f && isSet == false)
@@ -51,8 +63,10 @@ public class CannonBlock : MonoBehaviour
                 tr.rotation = Quaternion.Euler(Vector3.zero);
                 isSet = true;
                 managar.IsSetTrue();
-                tr.FindChild("blockblue").gameObject.active = false;
-                tr.FindChild("blockred").gameObject.active = true;
+                blockBlue.active = false;
+                blockRed.active = true;
+                taihouActived.active = true;
+                taihouDesactived.active = false;
             }
         }
     }
@@ -63,7 +77,7 @@ public class CannonBlock : MonoBehaviour
         {
             player.GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
             //ライトの明るさを変更
-            if (tr.FindChild("blockred").gameObject.active == false)
+            if (blockRed.active == false)
                 blueLight.intensity = 2;
         }
 
@@ -105,8 +119,10 @@ public class CannonBlock : MonoBehaviour
                 tr.rotation = Quaternion.Euler(Vector3.zero);
                 isSet = true;
                 managar.IsSetTrue();
-                tr.FindChild("blockblue").gameObject.active = false;
-                tr.FindChild("blockred").gameObject.active = true;
+                blockBlue.active = false;
+                blockRed.active = true;
+                taihouActived.active = true;
+                taihouDesactived.active = false;
             }
         }
 
@@ -121,8 +137,10 @@ public class CannonBlock : MonoBehaviour
             isSet = false;
             managar.IsSetFalse();
             ignoreTime = 0.0f;
-            tr.FindChild("blockblue").gameObject.active = true;
-            tr.FindChild("blockred").gameObject.active = false;
+            blockBlue.active = true;
+            blockRed.active = false;
+            taihouActived.active = false;
+            taihouDesactived.active = true;
             StartCoroutine(DelayMethod(1.0f, () =>
             {
                 isSetIgnore = false;
@@ -165,8 +183,7 @@ public class CannonBlock : MonoBehaviour
         player.GetComponent<PlayerMoveManager>().SetState(PlayerState.CANNON_BLOCK);
         player.GetComponent<CannonBlockMove>().SetCannonBlockObject(gameObject);
 
-        //地面との判定あり、移動はしないプレイヤーがほしい 入力がなくてもプレイヤーの上方向を設定してくれる
-        Transform rotateCenter = tr.FindChild("f_taihoucolone").transform;
+        //rotateCenterを軸に回転
         player.RotateAround(rotateCenter.position, Vector3.forward, (InputAxisVerticalDirection() * angle) * Time.deltaTime);
         tr.RotateAround(rotateCenter.position, Vector3.forward, (InputAxisVerticalDirection() * angle) * Time.deltaTime);
     }

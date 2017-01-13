@@ -154,7 +154,6 @@ public class NormalMoveTest : MonoBehaviour
 
     void LateUpdate()
     {
-
     }
 
     public void OnCollisionEnter(Collision collision)
@@ -165,10 +164,11 @@ public class NormalMoveTest : MonoBehaviour
             //鉄棒の方向
             Vector3 barV = Vector3.Normalize(collision.gameObject.GetComponent<IronBar>().GetBarVector());
             //自身と鉄棒のなす角に応じて状態変更
-            print(tr.up);
-            float dot = Vector3.Dot(tr.up, barV);
-            print(dot);
-            if (dot < 0.7071068)
+            float angle = Vector3.Angle(tr.up, barV);
+            //print(tr.up);
+            //float dot = Vector3.Dot(tr.up, barV);
+            print("angle" + angle);
+            if (angle > 45.0f)
             {
                 m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
             }
@@ -328,6 +328,11 @@ public class NormalMoveTest : MonoBehaviour
         }
 
         //前、右方向への移動処理
+        //プレイヤーの前ベクトルと上ベクトルを決定
+
+        //変更
+        //Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
+        //tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
 
         //補完なし
         //tr.localRotation = rotate;
@@ -336,7 +341,7 @@ public class NormalMoveTest : MonoBehaviour
         m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
 
         //ブロック移動ボタンを押していて、かつブロックが近くにある時
-        if (Input.GetButton("Action") && m_CollisionBlock != null)
+        if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true)
         {
             m_CollisionBlock.IsPushDistance();
             if (m_CollisionBlock.isPush == false) return;
@@ -348,6 +353,7 @@ public class NormalMoveTest : MonoBehaviour
 
             m_Front = -m_CollisionBlock.GetPlayerDirection().normal;
 
+            //追加
             Quaternion rotateBlock = Quaternion.LookRotation(m_Front, m_Up);
             tr.localRotation = Quaternion.Slerp(transform.localRotation, rotateBlock, 0.3f);
 
@@ -357,7 +363,7 @@ public class NormalMoveTest : MonoBehaviour
         //通常時
         else
         {
-            //プレイヤーの前ベクトルと上ベクトルを決定
+            //追加（移動）
             Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
             tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
 
@@ -474,6 +480,7 @@ public class NormalMoveTest : MonoBehaviour
             //アニメーションの設定
             anm.SetBool("Jump", true);
             //力を加えてジャンプ
+            rb.velocity = Vector3.zero;//いったんリセット
             rb.AddForce(tr.up * m_JumpPower);
             //一定時間経過まで地面との判定を行わない
             m_IsCheckGround = false;
@@ -599,6 +606,7 @@ public class NormalMoveTest : MonoBehaviour
     /// </summary>
     public void StartPoleKick(Vector3 v)
     {
+        rb.velocity = Vector3.zero;//いったんリセット
         rb.AddForce(v * m_PoleJumpPower);
     }
 
@@ -644,7 +652,8 @@ public class NormalMoveTest : MonoBehaviour
             //アニメーション変更
             anm.SetBool("Wall", true);
 
-            rb.velocity = Vector3.zero;
+            if (Vector3.Dot(tr.up, rb.velocity) < 0)
+                rb.velocity = Vector3.zero;
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump"))
             {
                 //操作不能にする
@@ -653,6 +662,7 @@ public class NormalMoveTest : MonoBehaviour
                 Vector3 dir = tr.up * m_WallKickHeight + wallNormal;
                 dir.Normalize();
 
+                rb.velocity = Vector3.zero;//いったんリセット
                 rb.AddForce(dir * m_WallKickPower);
 
                 m_Front = wallNormal;

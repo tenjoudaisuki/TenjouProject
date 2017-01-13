@@ -53,6 +53,8 @@ public class Block : MonoBehaviour
             blueLight.intensity = 2;
         }
 
+        if (player.GetComponent<NormalMove>().GetIsGroundHit() == false) return;
+
         //プレイヤーから自分へのRayがあたっているのが自身でなければ処理しない
         if (GetPlayerDirection().collider.gameObject != gameObject) return;
 
