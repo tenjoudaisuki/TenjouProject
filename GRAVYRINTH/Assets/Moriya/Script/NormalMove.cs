@@ -337,7 +337,7 @@ public class NormalMove : MonoBehaviour
         m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_MoveSpeed;
 
         //ブロック移動ボタンを押していて、かつブロックが近くにある時
-        if ((Input.GetButtonDown("Action") || Input.GetKey(KeyCode.B)) && m_CollisionBlock != null)
+        if ((Input.GetButton("Action") || Input.GetKey(KeyCode.B)) && m_CollisionBlock != null)
         {
             m_CollisionBlock.IsPushDistance();
             if (m_CollisionBlock.isPush == false) return;

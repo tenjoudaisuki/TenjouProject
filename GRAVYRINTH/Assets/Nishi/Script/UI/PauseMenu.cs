@@ -516,6 +516,11 @@ public class PauseMenu : MonoBehaviour
         {
             LeanTween.alpha(rectTr, 0.0f, 1.0f);
         }
+
+        StartCoroutine(DelayMethod(1.1f, () =>
+        {
+            Application.Quit();
+        }));
     }
 
 

@@ -6,11 +6,14 @@ public class ClearPoint : MonoBehaviour
     public string mNextStageName;
     public Color mFadeColor;
 
+    public bool isEnd = false;
+
     public void OnTriggerEnter(Collider other)
     {
         if(other.name == "Player")
         {
-            Clear();
+            if (isEnd) GameManager.Instance.GameModeChange(GameManager.GameMode.Select);
+            else Clear();
             other.GetComponent<NormalMove>().NormalToStageClear();
         }
     }
