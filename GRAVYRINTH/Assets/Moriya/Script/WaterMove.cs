@@ -10,7 +10,6 @@ using UnityEngine.UI;
 public class WaterMove : MonoBehaviour
 {
     Transform tr;
-    GameObject back;
 
 
     private Plane m_Plane;
@@ -33,13 +32,15 @@ public class WaterMove : MonoBehaviour
     void Awake()
     {
         tr = GetComponent<Transform>();
-        back = transform.FindChild("WaterBack").gameObject;
     }
 
     void Start()
     {
         m_Plane = new Plane(tr.up, m_Length);
-        m_Image = GameObject.FindGameObjectWithTag("InWaterImage").GetComponent<Image>();
+
+        GameObject image = GameObject.FindGameObjectWithTag("InWaterImage");
+        if (image != null)
+            m_Image = image.GetComponent<Image>();
         if(m_Image == null) return;
         m_Color = m_Image.color;
     }
