@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;
 
-[System.Serializable]
+// 音量クラス
+[Serializable]
 public class SoundVolume
 {
     public float bgm = 1.0f;

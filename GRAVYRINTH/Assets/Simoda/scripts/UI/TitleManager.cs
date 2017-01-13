@@ -17,6 +17,8 @@ public class TitleManager : MonoBehaviour
 
     void Start()
     {
+        SoundManager.Instance.PlayBgm("title");
+
         //StartCoroutine(DelayMethod(0, () => { SceneManager.LoadScene("TutorialTestSimoda", LoadSceneMode.Additive); }));
         //StartCoroutine(DelayMethod(1, () => { SceneManager.SetActiveScene(TutorialTest); }));
         //StartCoroutine(DelayMethod(0, () => { GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Title); }));
@@ -75,6 +77,7 @@ public class TitleManager : MonoBehaviour
             }
             else
             {
+                SoundManager.Instance.PlaySe("enter");
                 titleLogo.GetComponent<ImageFlashing>().FlashingStop(1.0f);
                 pressStartButtonBack.GetComponent<ImageFlashing>().FlashingStop(1.0f);
                 LeanTween.scale(pressStartButtonBack, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
