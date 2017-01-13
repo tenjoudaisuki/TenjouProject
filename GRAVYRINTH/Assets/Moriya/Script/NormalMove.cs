@@ -23,7 +23,7 @@ public class NormalMove : MonoBehaviour
     [SerializeField, TooltipAttribute("移動速度")]
     private float m_MoveSpeed = 3.0f;
     [SerializeField, TooltipAttribute("身長")]
-    private float m_Height = 0.5f;
+    private float m_Height = 0.65f;
     [SerializeField, TooltipAttribute("斜面と認識する角度（壁と斜面の境界値）")]
     private float m_SlopeDeg = 45.0f;
     [SerializeField, TooltipAttribute("ジャンプ力")]
@@ -33,7 +33,7 @@ public class NormalMove : MonoBehaviour
     [SerializeField, TooltipAttribute("地面との判定のレイの長さ")]
     private float m_RayLength = 0.7f;
     [SerializeField, TooltipAttribute("プレイヤー正面と壁との判定のレイの長さ")]
-    private float m_WallRayLength = 4.0f;
+    private float m_WallRayLength = 0.2f;
     [SerializeField, TooltipAttribute("ジャンプ後の地面と判定を行わない時間の長さ")]
     private float m_JumpedTime = 1.0f;
     [SerializeField, TooltipAttribute("アニメーション再生速度")]
@@ -100,9 +100,10 @@ public class NormalMove : MonoBehaviour
     //最初の親トランスフォーム
     private Transform m_InitParentTr;
 
-
-
-
+    //壁のぼり用タイマー
+    private float m_WallHoldTimer;
+    //壁のぼり判定フラグ
+    private bool m_WallHoldFlag;
 
     int count = 0;
 
@@ -145,8 +146,12 @@ public class NormalMove : MonoBehaviour
         if (!m_GroundHitInfo.isHit)
             WallKick();
 
-        //移動処理
-        Move();
+        //移動処理(壁のぼりをしていなければ)
+        if (m_WallHoldTimer == 0)
+            Move();
+
+        //壁のぼり
+        WallHold();
 
         //重力をセット
         m_GravityDir.SetDirection(GetDown());
@@ -504,8 +509,8 @@ public class NormalMove : MonoBehaviour
     /// </summary>
     private void Gravity()
     {
-        //地面にいないときは重力をかける
-        if (!m_GroundHitInfo.isHit)
+        //地面にいない、かつ壁のぼりをしていないときは重力をかける
+        if (!m_GroundHitInfo.isHit && m_WallHoldTimer == 0)
             rb.AddForce(GetDown() * m_GravityPower);
         else
         {
@@ -666,6 +671,7 @@ public class NormalMove : MonoBehaviour
                 rb.AddForce(dir * m_WallKickPower);
 
                 m_Front = wallNormal;
+                m_InputAngleY = 180;
 
                 //アニメーション変更
                 anm.SetBool("Wall", false);
@@ -714,6 +720,58 @@ public class NormalMove : MonoBehaviour
                 yield break;
             }
             yield return null;
+        }
+    }
+    /// <summary>
+    /// 崖つかまり
+    /// </summary>
+    public void WallHold()
+    {
+        Vector3 rayPos1 = tr.position + tr.up * m_Height;
+        Vector3 rayPos2 = tr.position + tr.up * m_Height * 3 / 4;
+        Ray ray1 = new Ray(rayPos1, tr.forward);
+        Ray ray2 = new Ray(rayPos2, tr.forward);
+
+        RaycastHit hit_hed, hit_neck;
+        RayHitInfo m_WallHitHead, m_WallHitNeck;
+
+        //[IgnoredObj]レイヤー以外と判定させる
+        int layermask = ~((1 << LayerMask.NameToLayer("IgnoredObj")) + (1 << LayerMask.NameToLayer("WallHold")));
+        m_WallHitHead.isHit = Physics.Raycast(ray1, out hit_hed, 0.3f, layermask);
+        m_WallHitNeck.isHit = Physics.Raycast(ray2, out hit_neck, 0.3f, layermask);
+
+        m_WallHitHead.hit = hit_hed;
+        m_WallHitNeck.hit = hit_neck;
+
+        //レイをデバッグ表示
+        Debug.DrawRay(rayPos1, tr.forward, Color.red, 1, false);
+        Debug.DrawRay(rayPos2, tr.forward, Color.red, 1, false);
+
+        //壁のぼり開始フラグ
+        if (m_WallHoldFlag)
+        {
+            m_WallHoldTimer += Time.deltaTime;
+        }
+        //壁のぼりが始まったら
+        if (m_WallHoldTimer > 0.1f)
+        {
+            tr.position += (m_Height * 1.2f * tr.up * Time.deltaTime) + (0.5f * tr.forward * Time.deltaTime);
+            if (anm.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash("Base Layer.Idle"))
+            {
+                anm.SetBool("ClambLarge", false);
+                m_WallHoldFlag = false;
+                m_WallHoldTimer = 0;
+            }
+            else
+                anm.SetBool("ClambLarge", true);
+        }
+        if (!m_WallHitHead.isHit && m_WallHitNeck.isHit)
+        {
+            m_WallHoldFlag = true;
+        }
+        else
+        {
+            //m_WallHoldFlag = false;
         }
     }
 }
