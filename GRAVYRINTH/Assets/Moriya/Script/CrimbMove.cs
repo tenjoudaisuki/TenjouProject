@@ -103,7 +103,7 @@ public class CrimbMove : MonoBehaviour
                 SetPlayerDirection(-tr.forward, tr.position - collisionIronBarPosition);
 
             barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
-            tr.up = barVectorNor;
+            //tr.up = barVectorNor;
 
             ironBarTouchPoint.transform.position = collisionIronBarPosition;
 

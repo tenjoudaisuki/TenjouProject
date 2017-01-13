@@ -21,13 +21,15 @@ public class IronBar : MonoBehaviour
 
     void Update()
     {
-
+        barVector = point2.transform.position - point1.transform.position;
+        barVector.Normalize();
+        moveArea = Vector3.Distance(transform.position, point1.transform.position);
     }
 
     public Vector3 GetBarVector()
     {
         //print(Vector3.Angle(player.up, player.position + barVector));
-        if (Vector3.Angle(player.up, player.position + barVector) > 120.0f)
+        if (Vector3.Angle(player.up, barVector) > 120.0f)
             return -barVector;
         else
             return barVector;
@@ -35,7 +37,7 @@ public class IronBar : MonoBehaviour
 
     public Vector3 GetIronBarVector()
     {
-        float angle = Vector3.Angle(player.right, player.position + barVector);
+        float angle = Vector3.Angle(player.right, barVector);
         //print(angle);
         if (angle > 90.0f)
             return -barVector;
@@ -45,9 +47,9 @@ public class IronBar : MonoBehaviour
 
     public Vector3 GetPoleVector()
     {
-        float angle = Vector3.Angle(player.up, player.position + barVector);
+        float angle = Vector3.Angle(player.up, barVector);
         //print(angle);
-        if (angle > 90.0f)
+        if (angle > 120.0f)
             return -barVector;
         else
             return barVector;
