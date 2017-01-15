@@ -54,10 +54,10 @@ public class SpinParent : MonoBehaviour {
             m_Timer += Time.deltaTime;
             if (m_SpinSpeed * m_Timer > m_StopAngle)
             {
-                //１度だけ正確な回転量に矯正する
+                //正確な回転量に矯正する
                 if(m_StopMoveTimer <= 0.0f)
                 {
-                    m_CureRotation = Quaternion.AngleAxis(m_StopAngle * m_StopCount, m_Axis);
+                    m_CureRotation = m_StartRotation * Quaternion.AngleAxis(m_StopAngle * m_StopCount, m_Axis);
                     tr.rotation = m_CureRotation;
                 }
 
