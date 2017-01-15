@@ -50,7 +50,8 @@ public class NormalMove : MonoBehaviour
     public float m_WallKickAbleAngle = 80.0f;
     [SerializeField, TooltipAttribute("壁キック後の操作不能時間")]
     public float m_DisableInputTime = 0.2f;
-
+    [SerializeField, TooltipAttribute("崖登りを行うか（デバッグ用）")]
+    public bool m_IsWallHold = false;
 
     /*==内部設定変数==*/
     //重力の方向を所持するクラス。プレイヤー以外で重力を扱う場合こちらのクラスを使用してください。
@@ -151,7 +152,8 @@ public class NormalMove : MonoBehaviour
             Move();
 
         //壁のぼり
-        WallHold();
+        if (m_IsWallHold)
+            WallHold();
 
         //重力をセット
         m_GravityDir.SetDirection(GetDown());
@@ -159,6 +161,7 @@ public class NormalMove : MonoBehaviour
 
     void LateUpdate()
     {
+
     }
 
     public void OnCollisionEnter(Collision collision)
@@ -179,7 +182,6 @@ public class NormalMove : MonoBehaviour
             }
             else
             {
-                print("climb");
                 m_MoveManager.SetState(PlayerState.IRON_BAR_CLIMB);
             }
         }
@@ -317,7 +319,7 @@ public class NormalMove : MonoBehaviour
         //アニメーション変更
         anm.SetBool("Move", inputVec.magnitude > 0.0f);
         //スティックが入力されたら向きを変える
-        if (inputVec.magnitude > 0.1f)
+        if (inputVec.magnitude > 0.3f)
         {
             //スティックの傾きを↑を0°として計算
             m_InputAngleY = Vector2.Angle(Vector2.up, inputVec);
@@ -360,7 +362,8 @@ public class NormalMove : MonoBehaviour
 
             //追加
             Quaternion rotateBlock = Quaternion.LookRotation(m_Front, m_Up);
-            tr.localRotation = Quaternion.Slerp(transform.localRotation, rotateBlock, 0.3f);
+            //tr.localRotation = Quaternion.Slerp(transform.localRotation, rotateBlock, 0.3f);
+            tr.localRotation = rotateBlock;
 
             //移動
             tr.position += m_MoveVelocity * Time.deltaTime;
@@ -370,7 +373,9 @@ public class NormalMove : MonoBehaviour
         {
             //追加
             Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
-            tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
+            //tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
+            tr.localRotation = rotate;
+
 
             //移動
             tr.position += m_MoveVelocity * Time.deltaTime;
@@ -671,7 +676,7 @@ public class NormalMove : MonoBehaviour
                 rb.AddForce(dir * m_WallKickPower);
 
                 m_Front = wallNormal;
-                m_InputAngleY = 180;
+                m_InputAngleY *= -1;
 
                 //アニメーション変更
                 anm.SetBool("Wall", false);

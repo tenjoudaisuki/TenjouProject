@@ -10,12 +10,15 @@ using UnityEngine.UI;
 public class WaterMove : MonoBehaviour
 {
     Transform tr;
+    MeshRenderer mr;
 
 
     private Plane m_Plane;
     private Image m_Image;
     private Color m_Color;
     private float m_Timer;
+    //子オブジェクトのWaterBack
+    private GameObject m_WaterBack;
 
     [SerializeField, Tooltip("移動速度最大値")]
     private float m_SpeedMax = 0.02f;
@@ -27,11 +30,14 @@ public class WaterMove : MonoBehaviour
     private float m_ImageAlphaMaxTime = 0.5f;
     [SerializeField, Tooltip("最大透明度")]
     private float m_ImageAlpaMax = 0.5f;
+    [SerializeField, Tooltip("水面裏の描画を行うか？")]
+    private bool m_IsWaterBackDraw = true;
 
 
     void Awake()
     {
         tr = GetComponent<Transform>();
+        mr = GetComponent<MeshRenderer>();
     }
 
     void Start()
@@ -43,6 +49,9 @@ public class WaterMove : MonoBehaviour
             m_Image = image.GetComponent<Image>();
         if(m_Image == null) return;
         m_Color = m_Image.color;
+
+        m_WaterBack = tr.FindChild("WaterBack").gameObject;
+        m_WaterBack.SetActive(false);
     }
 
     void Update()
@@ -69,11 +78,16 @@ public class WaterMove : MonoBehaviour
         {
             m_Timer += Time.deltaTime;
             m_Color.a = Mathf.Lerp(0.0f, m_ImageAlpaMax, m_Timer / m_ImageAlphaMaxTime);
+            mr.enabled = false;
+            if (m_IsWaterBackDraw)
+                m_WaterBack.SetActive(true);
         }
         else
         {
             m_Timer = 0.0f;
             m_Color.a = 0.0f;
+            mr.enabled = true;
+            m_WaterBack.SetActive(false);
         }
 
         m_Image.color = m_Color;
