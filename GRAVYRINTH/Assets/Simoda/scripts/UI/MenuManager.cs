@@ -151,6 +151,8 @@ public class MenuManager : MonoBehaviour
         {
             //現在選択されている項目がback以外の時のみ処理
             if (EventSystem.current.currentSelectedGameObject == menuBack.gameObject) return;
+            SoundManager.Instance.PlaySe("select");
+
 
             //メニューの項目を更新
             EventSystem.current.SetSelectedGameObject(
@@ -176,6 +178,7 @@ public class MenuManager : MonoBehaviour
         {
             //現在選択されている項目がback以外の時のみ処理
             if (EventSystem.current.currentSelectedGameObject == menuBack.gameObject) return;
+            SoundManager.Instance.PlaySe("select");
 
             //メニューの項目を更新
             EventSystem.current.SetSelectedGameObject(
@@ -202,6 +205,7 @@ public class MenuManager : MonoBehaviour
             //現在選択されている項目がbackの時のみ処理
             if (EventSystem.current.currentSelectedGameObject != menuBack.gameObject) return;
 
+            SoundManager.Instance.PlaySe("select");
             //メニューの項目を更新(過去に選択されていた項目に)
             EventSystem.current.SetSelectedGameObject(
                 previousSelectedObject.gameObject);
@@ -229,6 +233,7 @@ public class MenuManager : MonoBehaviour
         {
             //現在選択されている項目がback以外の時のみ処理
             if (EventSystem.current.currentSelectedGameObject == menuBack.gameObject) return;
+            SoundManager.Instance.PlaySe("select");
 
             //選択されている項目を過去のオブジェクトに格納
             previousSelectedObject = EventSystem.current.currentSelectedGameObject.GetComponent<RectTransform>();
@@ -327,6 +332,7 @@ public class MenuManager : MonoBehaviour
         {
             //現在選択されている項目がbackの時のみ処理
             if (EventSystem.current.currentSelectedGameObject != stageSelectBack.gameObject) return;
+            SoundManager.Instance.PlaySe("select");
 
             //メニューの項目を更新
             EventSystem.current.SetSelectedGameObject(
@@ -356,6 +362,7 @@ public class MenuManager : MonoBehaviour
         {
             //現在選択されている項目がback以外の時のみ処理
             if (EventSystem.current.currentSelectedGameObject == stageSelectBack.gameObject) return;
+            SoundManager.Instance.PlaySe("select");
 
             //メニューの項目を更新
             EventSystem.current.SetSelectedGameObject(
@@ -385,6 +392,7 @@ public class MenuManager : MonoBehaviour
         {
             //現在選択されている項目がback以外の時のみ処理
             if (EventSystem.current.currentSelectedGameObject == stageSelectBack.gameObject) return;
+            SoundManager.Instance.PlaySe("select");
 
             changingSelection = true;
 
@@ -417,6 +425,7 @@ public class MenuManager : MonoBehaviour
         {
             //現在選択されている項目がback以外の時のみ処理
             if (EventSystem.current.currentSelectedGameObject == stageSelectBack.gameObject) return;
+            SoundManager.Instance.PlaySe("select");
 
             changingSelection = true;
 
@@ -528,6 +537,8 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     public void StartGameButtonPressed()
     {
+        SoundManager.Instance.PlaySe("enter");
+
         LeanTween.scale(startGame, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
 
         //rectTransformsにBackgroundを追加
@@ -545,6 +556,7 @@ public class MenuManager : MonoBehaviour
             GameManager.Instance.GameModeChange(GameManager.GameMode.GamePlay);
             //------------------------------------------------------------------
             SceneManager.UnloadScene(menu);
+            SoundManager.Instance.PlayBgm("ingame");
         }));
 
     }
@@ -554,6 +566,8 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     public void SelectStageButtonPressed()
     {
+        SoundManager.Instance.PlaySe("enter");
+
         LeanTween.scale(selectStage, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
 
         foreach (RectTransform rectTr in rectTransforms)
@@ -576,6 +590,8 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     public void ExitGameButtonPressed()
     {
+        SoundManager.Instance.PlaySe("enter");
+
         LeanTween.scale(exitGame, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
 
         //rectTransformsにBackgroundを追加
@@ -598,6 +614,8 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     public void MenuBackButtonPressed()
     {
+        SoundManager.Instance.PlaySe("enter");
+
         LeanTween.scale(menuBack, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
 
         //rectTransformsにBackgroundを追加
@@ -620,6 +638,8 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     public void StageSubmitButtonPressed()
     {
+        SoundManager.Instance.PlaySe("enter");
+
         //LeanTween.scale(stage, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
         //LeanTween.scale(numbar, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
 
@@ -638,6 +658,7 @@ public class MenuManager : MonoBehaviour
         StartCoroutine(DelayMethod(1.1f, () =>
         {
             SceneManager.UnloadScene(menu);
+            SoundManager.Instance.PlayBgm("ingame");
         }));
     }
 
@@ -646,6 +667,8 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     public void SelectBackButtonPressed()
     {
+        SoundManager.Instance.PlaySe("enter");
+
         LeanTween.scale(stageSelectBack, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
 
         foreach (RectTransform rectTr in rectTransforms)
