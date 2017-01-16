@@ -7,7 +7,6 @@ public class CrimbMove : MonoBehaviour
     public GameObject ironBar;
     public Vector3 collisionIronBarPosition;
 
-    public GameObject ironBarTouchPoint;
     public float moveSpeed = 1.0f;
     public float angleSpeed = 90.0f;
 
@@ -16,6 +15,7 @@ public class CrimbMove : MonoBehaviour
     private Collision barCollision;
     private Vector3 barVectorNor;
     private GravityDirection m_GravityDir;
+    private GameObject ironBarTouchPoint;
     //プレイヤーの状態管理クラス
     private PlayerMoveManager m_MoveManager;
 
@@ -25,6 +25,7 @@ public class CrimbMove : MonoBehaviour
         tr = gameObject.transform;
         rb = gameObject.GetComponent<Rigidbody>();
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
+        ironBarTouchPoint = GameObject.Find("IronBarTouchPoint");
         m_MoveManager = GetComponent<PlayerMoveManager>();
 
     }
