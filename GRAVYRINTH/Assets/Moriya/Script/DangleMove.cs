@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DangleMove : MonoBehaviour 
+public class DangleMove : MonoBehaviour
 {
     public bool touchIronBar = false;
     public GameObject ironBar;
     public Vector3 collisionIronBarPosition;
     public GameObject ironBarTouchPoint;
+
+    public float moveSpeed = 1.0f;
+    public float angleSpeed = 90.0f;
 
     private Transform tr;
     private Rigidbody rb;
@@ -33,11 +36,11 @@ public class DangleMove : MonoBehaviour
             rb.velocity = Vector3.zero;
             Vector3 point = ironBar.transform.position;
             Debug.DrawRay(point, Vector3.up);
-            ironBarTouchPoint.transform.RotateAround(point, tr.right, Input.GetAxis("Vertical") * 60.0f * Time.deltaTime);
+            ironBarTouchPoint.transform.RotateAround(point, tr.right, Input.GetAxis("Vertical") * angleSpeed * Time.deltaTime);
 
             float moveArea = ironBar.GetComponent<IronBar>().GetMoveArea();
             Vector3 barPos = ironBar.transform.position;
-            Vector3 movement = barVectorNor * Input.GetAxis("Horizontal") * 0.1f;
+            Vector3 movement = barVectorNor * Input.GetAxis("Horizontal") * 0.1f * moveSpeed;
             ironBarTouchPoint.transform.position += movement;
             ironBarTouchPoint.transform.position =
                 new Vector3(
@@ -65,6 +68,8 @@ public class DangleMove : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.tag == "IronBar" && Vector3.Angle(tr.up, Vector3.Normalize(collision.gameObject.GetComponent<IronBar>().GetBarVector())) < 45.0f) return;
+
         Transform touchTr = tr;
         if (touchIronBar == true) return;
 

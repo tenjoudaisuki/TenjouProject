@@ -22,6 +22,8 @@ public class IronBarTouchPoint : MonoBehaviour
 
     void Update()
     {
+        Debug.DrawRay(player.position, player.up * 5.0f, Color.black);
+
         rb.velocity = Vector3.zero;
         Debug.DrawRay(tr.position, direction, Color.green);
         //if (isHit == true)
@@ -84,7 +86,9 @@ public class IronBarTouchPoint : MonoBehaviour
             Vector3 poleDirection = other.transform.position;
             poleDirection.y = player.position.y;
 
-            player.up = Vector3.Normalize(other.GetComponent<IronBar>().GetPoleVector());
+           // player.up = Vector3.Normalize(other.GetComponent<IronBar>().GetPoleVector());
+
+            player.rotation = Quaternion.LookRotation(player.forward, Vector3.Normalize(other.GetComponent<IronBar>().GetPoleVector()));
 
             //player.LookAt(poleDirection);
             //player.rotation = Quaternion.LookRotation(tr.position, tr.up);
