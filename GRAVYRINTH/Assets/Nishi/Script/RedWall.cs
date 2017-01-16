@@ -5,6 +5,7 @@ public class RedWall : MonoBehaviour
 {
 
     GameObject mTarget;
+    public GameObject mRedWall;
 
     public void Start()
     {
@@ -17,7 +18,7 @@ public class RedWall : MonoBehaviour
 
         if (mTarget.GetComponent<PlayerMoveManager>().GetState() == PlayerState.STAGE_FINAL_CLEAR)
         {
-            Destroy(gameObject.GetComponent<BoxCollider>());
+            Destroy(mRedWall.GetComponent<BoxCollider>());
         }
 
     }
