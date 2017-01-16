@@ -28,7 +28,7 @@ public class IronBar : MonoBehaviour
 
     public Vector3 GetBarVector()
     {
-        //print(Vector3.Angle(player.up, player.position + barVector));
+        print(Vector3.Angle(player.up, barVector));
         if (Vector3.Angle(player.up, barVector) > 120.0f)
             return -barVector;
         else

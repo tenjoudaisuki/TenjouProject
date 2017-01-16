@@ -8,6 +8,8 @@ public class CrimbMove : MonoBehaviour
     public Vector3 collisionIronBarPosition;
 
     public GameObject ironBarTouchPoint;
+    public float moveSpeed = 1.0f;
+    public float angleSpeed = 90.0f;
 
     private Transform tr;
     private Rigidbody rb;
@@ -39,21 +41,21 @@ public class CrimbMove : MonoBehaviour
 
             Vector3 point = ironBar.transform.position;
             Debug.DrawRay(point, Vector3.up);
-            ironBarTouchPoint.transform.RotateAround(point, tr.up, -Input.GetAxis("Horizontal") * 90.0f * Time.deltaTime);
+            ironBarTouchPoint.transform.RotateAround(point, tr.up, -Input.GetAxis("Horizontal") * angleSpeed * Time.deltaTime);
 
 
             float moveArea = ironBar.GetComponent<IronBar>().GetMoveArea();
             Vector3 barPos = ironBar.transform.position;
-            Vector3 movement = barVectorNor * -Input.GetAxis("Vertical") * -0.1f;
+            Vector3 movement = barVectorNor * -Input.GetAxis("Vertical") * -0.1f * moveSpeed;
 
             float distant = Mathf.Abs(tr.position.y - (ironBarTouchPoint.transform.position.y + movement.y));
             if (distant > 0.35f)
             {
                 tr.parent = null;
-                ironBarTouchPoint.transform.position = 
+                ironBarTouchPoint.transform.position =
                     new Vector3(ironBarTouchPoint.transform.position.x, tr.position.y, ironBarTouchPoint.transform.position.z);
                 tr.parent = ironBarTouchPoint.transform;
-                
+
             }
             else
             {
