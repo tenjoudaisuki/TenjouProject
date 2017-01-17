@@ -12,8 +12,15 @@ public class ClearPoint : MonoBehaviour
     {
         if(other.name == "Player")
         {
-            if (isEnd) GameManager.Instance.GameModeChange(GameManager.GameMode.Select);
-            else Clear();
+            if (isEnd)
+            {
+                GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeColorChange(mFadeColor);
+                GameManager.Instance.GameModeChange(GameManager.GameMode.Select);
+            }
+            else
+            {
+                Clear();
+            }
             other.GetComponent<NormalMove>().NormalToStageClear();
         }
     }

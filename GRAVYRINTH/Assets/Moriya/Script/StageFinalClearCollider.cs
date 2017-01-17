@@ -38,6 +38,8 @@ public class StageFinalClearCollider : MonoBehaviour
 
     public GameObject CameraTarget;
 
+    public float EventCameraEndTime = 8.0f;
+
     void Start()
     {
         //オブジェクトの検索
@@ -83,7 +85,7 @@ public class StageFinalClearCollider : MonoBehaviour
         if (isClear == false && m_CannonManager.GetIsSetAll() == true)
         {
             GameObject.Find("Camera").GetComponent<EventCamera>().SetMoveTime(0.0f);
-            GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(3.0f);
+            GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(EventCameraEndTime);
             GameObject.Find("Camera").GetComponent<EventCamera>().SetTarget(CameraTarget);
 
             GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Event);

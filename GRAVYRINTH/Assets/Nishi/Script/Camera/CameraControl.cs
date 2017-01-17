@@ -250,7 +250,11 @@ public class CameraControl : ICamera
             Debug.DrawRay(Target.position, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up, Color.green);
         }
 
-        if (Target.GetComponent<PlayerMoveManager>().GetState() != PlayerState.IRON_BAR_DANGLE) mCurrentState = State.Normal;
+        if (Target.GetComponent<PlayerMoveManager>().GetState() != PlayerState.IRON_BAR_DANGLE)
+        {
+            XAxisTotal = XAngleLimit;
+            mCurrentState = State.Normal;
+        }
 
     }
 

@@ -294,7 +294,7 @@ public class NormalMove : MonoBehaviour
             print(m_HoverTimer);
             // 01/17アニメーション
             m_HoverTimer += Time.deltaTime;
-            if (m_HoverTimer > 0.15f)
+            if (m_HoverTimer > 0.2f)
                 anm.SetBool("Hover", true);
         }
 
