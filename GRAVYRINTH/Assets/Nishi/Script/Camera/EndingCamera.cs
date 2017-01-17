@@ -15,11 +15,15 @@ public class EndingCamera : ICamera {
     private GameObject mTarget;
     private Vector3 mOffset;
 
+    private float mDistance = 2.0f;
+    public float mSpeed = 1.0f;
+
 	// Use this for initialization
 	public override void  Start ()
     {
         mCurrentPhase = Phase.Phase1;
-        mOffset = -Vector3.forward * 2;
+        mDistance = 2;
+        mOffset = -Vector3.forward * mDistance;
         mTarget = GameObject.FindGameObjectWithTag("Player");
 	}
 	
@@ -41,6 +45,9 @@ public class EndingCamera : ICamera {
 
     void Phase1()
     {
+
+        mDistance -= mSpeed * Time.deltaTime;
+        mOffset = -Vector3.forward * mDistance;
         transform.position = mTarget.transform.position + mOffset;
         transform.LookAt(mTarget.transform);
     }
