@@ -34,7 +34,7 @@ public class SwitchManager : MonoBehaviour
         if(isActive && other.tag == "Player")
         {
             LeanTween.rotate(mFinalDoor, new Vector3(90, 0, 0), 1.0f);
-            LeanTween.moveLocalY(gameObject, -0.03f, 1.0f);
+            gameObject.SetActive(false);
         }
     }
 }
