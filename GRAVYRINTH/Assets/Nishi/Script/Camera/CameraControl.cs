@@ -118,7 +118,7 @@ public class CameraControl : ICamera
         if (Physics.Raycast(ray, out hit, Distance + 0.5f,layermask, QueryTriggerInteraction.Ignore))
         {
             //壁に当たった位置をカメラ位置に
-            transform.position = hit.point + (hit.normal.normalized * 0.2f);
+            transform.position = hit.point;
         }
         else
         {
@@ -157,7 +157,7 @@ public class CameraControl : ICamera
         //transform.localRotation = Quaternion.Slerp(transform.localRotation,
         //Quaternion.LookRotation(-CameraPosDirection, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up), 0.5f);
         //補間なし版
-        transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up);
+        transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Target.up);
 
         Debug.DrawRay(Target.position, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up, Color.green);
 
