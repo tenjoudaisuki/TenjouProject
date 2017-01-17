@@ -104,6 +104,7 @@ public class StageFinalClearMove : MonoBehaviour
         while (true)
         {
             cc.enabled = false;
+            tr.position = m_SettingPosition;
             //回転
             tr.rotation *= Quaternion.AngleAxis(speed, Vector3.right);
             if (speed < m_SpinMaxSpeed)

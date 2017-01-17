@@ -117,8 +117,9 @@ public class CameraControl : ICamera
         int layermask = ~((1 << 10) | (1 << 8));
         if (Physics.Raycast(ray, out hit, Distance + 0.5f,layermask, QueryTriggerInteraction.Ignore))
         {
-            //壁に当たった位置をカメラ位置に
-            transform.position = hit.point;
+            //当たらなかったらray* Disをカメラ位置に
+            next = hit.point + hit.normal * 0.2f;
+            transform.position = next;
         }
         else
         {
