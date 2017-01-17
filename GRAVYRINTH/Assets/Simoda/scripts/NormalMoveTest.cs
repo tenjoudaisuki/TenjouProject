@@ -150,6 +150,7 @@ public class NormalMoveTest : MonoBehaviour
         //地面との判定処理
         Ground();
 
+        //鉄棒との判定処理
         IronBar();
 
         //空中にいるときは壁キック処理
@@ -173,7 +174,7 @@ public class NormalMoveTest : MonoBehaviour
 
     }
 
-    //鉄棒との判定
+    //鉄棒との判定処理
     public void IronBar()
     {
         m_IronBarHitDelay -= Time.deltaTime;
@@ -186,7 +187,7 @@ public class NormalMoveTest : MonoBehaviour
         int layerMask = 1 << 8;
 
         //鉄棒をポールとして判定
-        if (Physics.Raycast(forward.origin, forward.direction, out forwardHitInto, 0.2f, layerMask, QueryTriggerInteraction.Ignore))
+        if (Physics.SphereCast(forward.origin, 0.1f, forward.direction, out forwardHitInto, 0.2f, layerMask, QueryTriggerInteraction.Ignore))
         {
             float angle = Vector3.Angle(tr.up, forwardHitInto.collider.GetComponent<IronBar>().GetBarVector());
 
@@ -204,9 +205,9 @@ public class NormalMoveTest : MonoBehaviour
         Debug.DrawRay(up.origin, up.direction * 0.7f, Color.black);
 
         //鉄棒を鉄棒として判定
-        if (Physics.Raycast(up.origin, up.direction, out upHitInto, 0.7f, layerMask, QueryTriggerInteraction.Ignore))
+        if (Physics.SphereCast(up.origin, 0.1f, up.direction, out upHitInto, 0.7f, layerMask, QueryTriggerInteraction.Ignore))
         {
-            float angle = Vector3.Angle(tr.up, forwardHitInto.collider.GetComponent<IronBar>().GetBarVector());
+            float angle = Vector3.Angle(tr.up, upHitInto.collider.GetComponent<IronBar>().GetBarVector());
 
             if (upHitInto.collider.tag == ("IronBar") && angle >= 45.0f && m_IronBarHitDelay < 0.0f)
             {
