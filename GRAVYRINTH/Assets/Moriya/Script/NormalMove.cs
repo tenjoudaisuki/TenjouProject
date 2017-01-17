@@ -52,6 +52,8 @@ public class NormalMove : MonoBehaviour
     public float m_WallKickAbleAngle = 80.0f;
     [SerializeField, TooltipAttribute("壁キック後の操作不能時間")]
     public float m_DisableInputTime = 0.2f;
+    [SerializeField, TooltipAttribute("ジャンプ後、通常移動速度からジャンプ中の移動速度に変更するまでにかかる時間")]
+    public float m_ToJumpMoveSpeedTime = 0.5f;
     [SerializeField, TooltipAttribute("崖登りを行うか（デバッグ用）")]
     public bool m_IsWallHold = false;
 
@@ -114,6 +116,9 @@ public class NormalMove : MonoBehaviour
     // 01/17アニメーション
     private float m_HoverTimer;
 
+    //実際の移動速度
+    private float m_LastSpeed;
+
     /*==外部参照変数==*/
 
     void Awake()
@@ -140,6 +145,9 @@ public class NormalMove : MonoBehaviour
 
         //親を取得
         m_InitParentTr = tr.parent;
+
+
+        m_LastSpeed = m_MoveSpeed;
     }
 
     void Update()
@@ -356,10 +364,7 @@ public class NormalMove : MonoBehaviour
         }
 
         //前ベクトル×スティックの傾き×移動速度
-        float speed = m_MoveSpeed;
-        if (!m_GroundHitInfo.isHit)
-            speed = m_JumpMoveSpeed;
-        m_MoveVelocity = (tr.forward * inputVec.magnitude) * speed;
+        m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_LastSpeed;
 
         //ブロック移動ボタンを押していて、かつブロックが近くにある時
         if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true)
@@ -477,6 +482,8 @@ public class NormalMove : MonoBehaviour
             m_JumpedTimer = 0.0f;
 
             m_IsHitSlope = false;
+
+            StartCoroutine(LastSpeedCalc());
         }
     }
 
@@ -698,6 +705,28 @@ public class NormalMove : MonoBehaviour
             yield return null;
         }
     }
+
+    /// <summary>
+    /// ジャンプ後の速度計算コルーチン
+    /// </summary>
+    IEnumerator LastSpeedCalc()
+    {
+        float timer = 0.0f;
+        while (true)
+        {
+            timer += Time.deltaTime;
+            m_LastSpeed = Mathf.Lerp(m_MoveSpeed, m_JumpMoveSpeed, timer / m_ToJumpMoveSpeedTime);
+
+            if (m_GroundHitInfo.isHit)
+            {
+                m_LastSpeed = m_MoveSpeed;
+                yield break;
+            }
+            yield return null;
+        }
+    }
+    
+
     /// <summary>
     /// 崖つかまり
     /// </summary>
