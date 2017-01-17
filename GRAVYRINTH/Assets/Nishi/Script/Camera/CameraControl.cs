@@ -23,6 +23,9 @@ public class CameraControl : ICamera
     [SerializeField, TooltipAttribute("ぶら下り時のカメラ回転のスピード")]
     public Vector2 m_DangleRotate;
 
+    //横入力量
+    private float m_Horizontal;
+
     /// <summary>
     /// offsetをモデル座標化
     /// </summary>
@@ -47,6 +50,8 @@ public class CameraControl : ICamera
     private State mCurrentState = State.StartMove;
 
     private Vector3 mParallel;
+    private Vector3 mInitParallel;
+
 
     public float mTimer = 0.0f;
 
@@ -83,8 +88,10 @@ public class CameraControl : ICamera
 
         //ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
         Vector3 parallel = Vector3.Cross(up, right);
-        mParallel = Quaternion.AngleAxis(horizontal, up) * Vector3.Lerp(mParallel,parallel,0.08f);
-        //mParallel = Quaternion.AngleAxis(horizontal, up) * parallel;
+        //mParallel = Quaternion.AngleAxis(horizontal, up) * Vector3.Lerp(mParallel,parallel,0.08f);
+        mParallel = Quaternion.AngleAxis(horizontal, up) * parallel;
+        m_Horizontal = Mathf.Lerp(m_Horizontal, horizontal, 0.3f);
+
         //平行ベクトルをターゲットの上ベクトルを軸に回転さらに自身の横ベクトルを軸に回転しカメラの位置を計算
         Vector3 temp = Quaternion.AngleAxis(XAxisTotal, transform.right) * mParallel;
 
@@ -111,7 +118,7 @@ public class CameraControl : ICamera
         if (Physics.Raycast(ray, out hit, Distance + 0.5f,layermask, QueryTriggerInteraction.Ignore))
         {
             //壁に当たった位置をカメラ位置に
-            transform.position = hit.point + (hit.normal.normalized * 0.2f);
+            transform.position = hit.point;
         }
         else
         {
@@ -147,10 +154,10 @@ public class CameraControl : ICamera
         TargetAroundMove(Target.up, transform.right);
 
         //カメラを回転させる
-        transform.localRotation = Quaternion.Slerp(transform.localRotation,
-        Quaternion.LookRotation(-CameraPosDirection, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up), 0.5f);
+        //transform.localRotation = Quaternion.Slerp(transform.localRotation,
+        //Quaternion.LookRotation(-CameraPosDirection, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up), 0.5f);
         //補間なし版
-        //transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up);
+        transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Target.up);
 
         Debug.DrawRay(Target.position, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up, Color.green);
 
@@ -273,5 +280,10 @@ public class CameraControl : ICamera
     {
         Target = target.transform;
         CameraReset();
+    }
+
+    public float GetHorizontalInput()
+    {
+        return m_Horizontal;
     }
 }

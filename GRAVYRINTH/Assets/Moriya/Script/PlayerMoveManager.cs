@@ -11,6 +11,7 @@ using System.Collections.Generic;
 public class PlayerMoveManager : MonoBehaviour
 {
     ///*==所持コンポーネント==*/
+    Transform tr;
 
     ///*==外部設定変数==*/
     [SerializeField, TooltipAttribute("最初の状態")]
@@ -27,7 +28,7 @@ public class PlayerMoveManager : MonoBehaviour
     ///*==外部参照変数==*/
     void Awake()
     {
-
+        tr = GetComponent<Transform>();
     }
 
     void Start()
@@ -89,9 +90,14 @@ public class PlayerMoveManager : MonoBehaviour
         //通常→ステージクリアへの変更時
         else if (m_PrevPlayerState == PlayerState.NORMAL && m_PlayerState == PlayerState.STAGE_CLEAR)
         {
-            print("called");
-            //ステージクリア移動開始s
+            //ステージクリア移動開始
             m_Moves[PlayerState.STAGE_CLEAR].GetComponent<StageClearMove>().StartClearMove();
+        }
+        //大砲ブロック→通常への変更時
+        else if (m_PrevPlayerState == PlayerState.CANNON_BLOCK && m_PlayerState == PlayerState.NORMAL)
+        {
+            //上と前をNormalMoveへ引き継ぐ
+            SetPlayerUpFront(tr.up, tr.forward);
         }
         //最終ステージクリア時
         else if (m_PlayerState == PlayerState.STAGE_FINAL_CLEAR)

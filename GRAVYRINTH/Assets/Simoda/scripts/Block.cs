@@ -100,7 +100,7 @@ public class Block : MonoBehaviour
         //ブロックを持っている面に対して上方向のScale
         Vector3 scale = Vector3.zero;
         //Scaleの補正値
-        float scaleCorrect = -0.3f;
+        float scaleCorrect = -0.1f;
 
         float xDistance = Vector3.Distance(tr.position, tr.FindChild("x").position);
         float yDistance = Vector3.Distance(tr.position, tr.FindChild("y").position);
@@ -139,47 +139,71 @@ public class Block : MonoBehaviour
         }
 
         RaycastHit hitInto;
-        Ray forward_Center = new Ray(tr.position, -GetPlayerDirection().normal);
-        Ray forward_Up = new Ray(tr.position + scale, -GetPlayerDirection().normal);
-        Ray forward_Down = new Ray(tr.position - scale, -GetPlayerDirection().normal);
+        //Ray forward_Center = new Ray(tr.position, -GetPlayerDirection().normal);
+        //Ray forward_Up = new Ray(tr.position + scale, -GetPlayerDirection().normal);
+        //Ray forward_Down = new Ray(tr.position - scale, -GetPlayerDirection().normal);
 
-        Ray back_Center = new Ray(tr.position, GetPlayerDirection().normal);
-        Ray back_Up = new Ray(tr.position + scale, GetPlayerDirection().normal);
-        Ray back_Down = new Ray(tr.position - scale, GetPlayerDirection().normal);
+        //Ray back_Center = new Ray(tr.position, GetPlayerDirection().normal);
+        //Ray back_Up = new Ray(tr.position + scale, GetPlayerDirection().normal);
+        //Ray back_Down = new Ray(tr.position - scale, GetPlayerDirection().normal);
 
-        Ray[] forward_Rays = { forward_Center, forward_Up, forward_Down };
-        Ray[] back_rays = { back_Center, back_Up, back_Down };
+        //Ray[] forward_Rays = { forward_Center, forward_Up, forward_Down };
+        //Ray[] back_rays = { back_Center, back_Up, back_Down };
 
         distanceToWall += distanceToWallPlus;
 
         //int layermask = ~(1 << 10);
         int layermask = 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9;
-
-        foreach (Ray ray in forward_Rays)
+        //new Vector3(xDistance, yDistance, zDistance) / 14.0f
+        if (Physics.BoxCast(tr.position, new Vector3(xDistance, yDistance, zDistance), -GetPlayerDirection().normal, out hitInto, tr.rotation, distanceToWall / 14.0f, layermask, QueryTriggerInteraction.Ignore))
         {
-            if (Physics.Raycast(ray, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
+            if (Input.GetAxis("Vertical") > 0.1f)
             {
-                if (Input.GetAxis("Vertical") > 0.1f)
-                {
-                    return;
-                }
+                return;
             }
         }
 
-        foreach (Ray ray in back_rays)
+        if (Physics.BoxCast(tr.position, new Vector3(xDistance, yDistance, zDistance), GetPlayerDirection().normal, out hitInto, tr.rotation, distanceToWall / 14.0f, layermask, QueryTriggerInteraction.Ignore))
         {
-            if (Physics.Raycast(ray, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
+            if (Input.GetAxis("Vertical") < -0.1f)
             {
-                if (Input.GetAxis("Vertical") < -0.1f)
-                {
-                    return;
-                }
+                return;
             }
         }
 
-        Debug.DrawRay(forward_Center.origin, forward_Center.direction * distanceToWall, Color.black);
-        Debug.DrawRay(forward_Up.origin, forward_Up.direction * distanceToWall, Color.white);
-        Debug.DrawRay(forward_Down.origin, forward_Down.direction * distanceToWall, Color.yellow);
+        //if (Physics.BoxCast(tr.position, new Vector3(xDistance, yDistance, zDistance) / 14.0f, GetPlayerDirection().normal, out hitInto, tr.rotation, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
+        //{
+        //    if (Input.GetAxis("Vertical") < -0.1f)
+        //    {
+        //        return;
+        //    }
+        //}
+
+        //foreach (Ray ray in forward_Rays)
+        //{
+        //    if (Physics.Raycast(ray, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
+        //    {
+        //        if (Input.GetAxis("Vertical") > 0.1f)
+        //        {
+        //            return;
+        //        }
+        //    }
+        //}
+
+        //foreach (Ray ray in back_rays)
+        //{
+        //    if (Physics.Raycast(ray, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
+        //    {
+        //        if (Input.GetAxis("Vertical") < -0.1f)
+        //        {
+        //            return;
+        //        }
+        //    }
+        //}
+
+        //Debug.DrawRay(forward_Center.origin, forward_Center.direction * distanceToWall, Color.black);
+        //Debug.DrawRay(forward_Up.origin, forward_Up.direction * distanceToWall, Color.white);
+        //Debug.DrawRay(forward_Down.origin, forward_Down.direction * distanceToWall, Color.yellow);
 
         //[IgnoredObj]レイヤー以外と判定させる
         //int layermask = ~(1 << 10);
