@@ -19,6 +19,8 @@ public class StageFinalClearMove : MonoBehaviour
     /*==外部設定変数==*/
     [SerializeField, Tooltip("最初の定位置への移動にかける時間")]
     private float m_MoveEndTime = 2.0f;
+    [SerializeField, Tooltip("実際の座標とモデルの座標の最終的な位置の差")]
+    private float m_ModelOffset = -0.3f;
     [SerializeField, Tooltip("大砲に入ったあとの位置")]
     private Vector3 m_SettingPosition;
     [SerializeField, Tooltip("発射後に飛んでいくゴール位置")]
@@ -55,23 +57,21 @@ public class StageFinalClearMove : MonoBehaviour
     public void StartMove()
     {
         cc.enabled = false;
-        //モデルの位置をずらす
-        tr.FindChild("21.!Root").localPosition = new Vector3(0.0f, -0.5f, 0.0f);
         m_ClearPosition = tr.position;
-        StartCoroutine(MoveAndRoll());
+        StartCoroutine(SettingMove());
     }
 
     public void StopMove()
     {
-        StopCoroutine(MoveAndRoll());
+        StopCoroutine(SettingMove());
         StopCoroutine(Spin());
         StopCoroutine(Shot());
     }
 
     /// <summary>
-    /// 定位置に移動して丸まる
+    /// 定位置に移動
     /// </summary>
-    IEnumerator MoveAndRoll()
+    IEnumerator SettingMove()
     {
         float timer = 0.0f;
         while (true)
@@ -82,6 +82,12 @@ public class StageFinalClearMove : MonoBehaviour
             tr.position = Vector3.Lerp(
                 m_ClearPosition,
                 m_SettingPosition,
+                timer / m_MoveEndTime);
+
+            //モデルの位置もずらす
+            tr.FindChild("21.!Root").localPosition =Vector3.Lerp(
+                Vector3.zero,
+                new Vector3(0.0f, m_ModelOffset, 0.0f),
                 timer / m_MoveEndTime);
 
             if (timer > m_MoveEndTime)
@@ -101,10 +107,11 @@ public class StageFinalClearMove : MonoBehaviour
     IEnumerator Spin()
     {
         float speed = 0.0f;
+        //アニメーション開始
+        anm.SetBool("IsTaihouRoll", true);
         while (true)
         {
             cc.enabled = false;
-            tr.position = m_SettingPosition;
             //回転
             tr.rotation *= Quaternion.AngleAxis(speed * Time.deltaTime, Vector3.right);
             if (speed < m_SpinMaxSpeed)
@@ -124,6 +131,8 @@ public class StageFinalClearMove : MonoBehaviour
     /// </summary>
     IEnumerator Shot()
     {
+        //rigidbodyによる変更をできないようにする
+        rb.constraints = RigidbodyConstraints.FreezeAll;
         float timer = 0.0f;
         while (true)
         {

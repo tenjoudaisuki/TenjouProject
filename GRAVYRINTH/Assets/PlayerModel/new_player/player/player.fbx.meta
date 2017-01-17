@@ -93,7 +93,1299 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: player_wait_vmd
+      takeName: player_wait_vmd
+      firstFrame: 0
+      lastFrame: 80
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: player_walk_vmd
+      takeName: player_walk_vmd
+      firstFrame: 0
+      lastFrame: 80
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: player_clambbig_vmd
+      takeName: player_clambbig_vmd
+      firstFrame: 0
+      lastFrame: 80
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: player_clamblittle_vmd
+      takeName: player_clamblittle_vmd
+      firstFrame: 0
+      lastFrame: 80
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: player_hover_vmd
+      takeName: player_hover_vmd
+      firstFrame: 0
+      lastFrame: 80
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: player_jump_vmd
+      takeName: player_jump_vmd
+      firstFrame: 0
+      lastFrame: 80
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: player_landing_vmd
+      takeName: player_landing_vmd
+      firstFrame: 0
+      lastFrame: 80
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: player_polehorizontale_vmd
+      takeName: player_polehorizontale_vmd
+      firstFrame: 0
+      lastFrame: 80
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: player_polehorizontalewait_vmd
+      takeName: player_polehorizontalewait_vmd
+      firstFrame: 0
+      lastFrame: 80
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: player_poleverticale_vmd
+      takeName: player_poleverticale_vmd
+      firstFrame: 0
+      lastFrame: 80
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: player_poleverticalejump_vmd
+      takeName: player_poleverticalejump_vmd
+      firstFrame: 0
+      lastFrame: 80
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: player_poleverticalewait_vmd
+      takeName: player_poleverticalewait_vmd
+      firstFrame: 0
+      lastFrame: 95
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: player_pull_vmd
+      takeName: player_pull_vmd
+      firstFrame: 0
+      lastFrame: 95
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: player_push_vmd
+      takeName: player_push_vmd
+      firstFrame: 0
+      lastFrame: 95
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: player_taihou_vmd
+      takeName: player_taihou_vmd
+      firstFrame: 0
+      lastFrame: 95
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: player_wall_vmd
+      takeName: player_wall_vmd
+      firstFrame: 0
+      lastFrame: 95
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: player_walljump_vmd
+      takeName: player_walljump_vmd
+      firstFrame: 0
+      lastFrame: 95
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: 21.!Root
+        weight: 1
+      - path: 21.!Root/0.!joint_Center
+        weight: 1
+      - path: 21.!Root/0.!joint_Center/1.!joint_upper body dummy
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/3.joint_Neck/4.!joint_neck_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/5.joint_LeftShoulder/6.joint_LeftArm/7.joint_LeftElbow/8.!joint_elbow_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/2.joint_Torso/14.joint_RightShoulder/16.joint_RightArm/17.joint_RightElbow/18.!joint_elbow_R_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/10.!joint_HipMasterTip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/11.joint_LeftHip/12.joint_LeftKnee/13.!joint_knee_L_end
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee
+        weight: 1
+      - path: 21.!Root/9.joint_HipMaster/15.joint_RightHip/19.joint_RightKnee/20.!joint_knee_R_end
+        weight: 1
+      - path: U_Char
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
