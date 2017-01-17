@@ -200,21 +200,21 @@ public class StageFinalClearCollider : MonoBehaviour
         if (isFlashing == true && isTrigger == false)
         {
             isFlashing = false;
-            if (isTrigger == false) return;
+            if (isTrigger == true) return;
             LeanTween.value(m_TaihouRingArrow1, arrow1Alpha, arrow1Color, cursorFlashingTime).setOnUpdate((Color c) => { arrow1Mat.SetColor("_TintColor", c); })
                 .setOnComplete(() =>
                 {
-                    if (isTrigger == false) return;
+                    if (isTrigger == true) return;
                     LeanTween.value(m_TaihouRingArrow1, arrow1Color, arrow1Alpha, cursorFlashingTime).setOnUpdate((Color c) => { arrow1Mat.SetColor("_TintColor", c); });
                     LeanTween.value(m_TaihouRingArrow2, arrow2Alpha, arrow2Color, cursorFlashingTime).setOnUpdate((Color c) => { arrow2Mat.SetColor("_TintColor", c); })
                     .setOnComplete(() =>
                     {
-                        if (isTrigger == false) return;
+                        if (isTrigger == true) return;
                         LeanTween.value(m_TaihouRingArrow2, arrow2Color, arrow2Alpha, cursorFlashingTime).setOnUpdate((Color c) => { arrow2Mat.SetColor("_TintColor", c); });
                         LeanTween.value(m_TaihouRingArrow3, arrow3Alpha, arrow3Color, cursorFlashingTime).setOnUpdate((Color c) => { arrow3Mat.SetColor("_TintColor", c); })
                         .setOnComplete(() =>
                         {
-                            if (isTrigger == false) return;
+                            if (isTrigger == true) return;
                             LeanTween.value(m_TaihouRingArrow3, arrow3Color, arrow3Alpha, cursorFlashingTime).setOnUpdate((Color c) => { arrow3Mat.SetColor("_TintColor", c); });
                             isFlashing = true;
                         });
