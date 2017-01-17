@@ -23,12 +23,15 @@ public class IronBar : MonoBehaviour
     {
         barVector = point2.transform.position - point1.transform.position;
         barVector.Normalize();
+
+        Debug.DrawRay(transform.position, barVector, Color.cyan);
+
         moveArea = Vector3.Distance(transform.position, point1.transform.position);
     }
 
     public Vector3 GetBarVector()
     {
-        print(Vector3.Angle(player.up, barVector));
+        //print(Vector3.Angle(player.up, barVector));
         if (Vector3.Angle(player.up, barVector) > 120.0f)
             return -barVector;
         else

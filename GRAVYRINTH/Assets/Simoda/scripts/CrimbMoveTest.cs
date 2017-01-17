@@ -10,6 +10,8 @@ public class CrimbMoveTest : MonoBehaviour
     private GravityDirection m_GravityDir;
     private GameObject ironBarTouchPoint;
     private RaycastHit hitInto;
+    private Vector3 barVectorNor;
+    private GameObject ironBar;
 
     //プレイヤーの状態管理クラス
     private PlayerMoveManager m_MoveManager;
@@ -40,15 +42,14 @@ public class CrimbMoveTest : MonoBehaviour
 
         if (touchIronBar == true)
         {
+            print("aaaaaaaaa");
+
             rb.velocity = Vector3.zero;
-            GameObject ironBar = hitInto.collider.gameObject;
-            tr.parent = ironBar.transform;
 
-            Quaternion rotate = Quaternion.LookRotation(tr.forward, ironBar.GetComponent<IronBar>().GetBarVector());
-            tr.localRotation = rotate;
+            Debug.DrawRay(tr.position, barVectorNor * 5.0f, Color.yellow);
 
-            Vector3 barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
-            Vector3 movement = barVectorNor * -Input.GetAxis("Vertical") * -0.1f * 1.0f;
+            barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
+            Vector3 movement = barVectorNor * -Input.GetAxis("Vertical") * -0.1f;
             tr.localPosition += movement;
         }
     }
@@ -57,5 +58,13 @@ public class CrimbMoveTest : MonoBehaviour
     {
         this.hitInto = hitInto;
         touchIronBar = true;
+
+        
+        ironBar = hitInto.collider.gameObject;
+
+        tr.parent = ironBar.transform;
+
+        //Quaternion rotate = Quaternion.LookRotation(tr.forward, ironBar.GetComponent<IronBar>().GetBarVector());
+        //tr.localRotation = rotate;
     }
 }
