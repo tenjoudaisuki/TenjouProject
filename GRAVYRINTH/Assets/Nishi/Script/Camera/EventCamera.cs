@@ -11,7 +11,7 @@ public class EventCamera : ICamera {
 
     float timer;
 
-    System.Action mCompleteAction;
+    System.Action mCompleteAction = () => { };
 
     // Use this for initialization
     public override void Start ()
