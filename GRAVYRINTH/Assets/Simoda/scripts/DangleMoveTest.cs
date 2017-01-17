@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CrimbMoveTest : MonoBehaviour
+public class DangleMoveTest : MonoBehaviour
 {
     public bool touchIronBar = false;
     public float moveSpeed = 1.0f;
@@ -29,19 +29,6 @@ public class CrimbMoveTest : MonoBehaviour
 
     void Update()
     {
-        //Ray forward = new Ray(tr.position, tr.forward);
-        //RaycastHit hitInto;
-
-        //int layerMask = 1 << 8;
-
-        //if (Physics.Raycast(forward.origin, forward.direction, out hitInto, 1.0f, layerMask, QueryTriggerInteraction.Ignore))
-        //{
-        //    if (hitInto.collider.tag == ("IronBar"))
-        //    {
-        //        touchIronBar = true;
-        //    }
-        //}
-
         if (touchIronBar == true)
         {
             rb.velocity = Vector3.zero;
@@ -49,10 +36,10 @@ public class CrimbMoveTest : MonoBehaviour
             //プレイヤーの位置から回転軸までの距離　0.009はIronBarの半径
             float distance = hitInto.distance + 0.009f;
 
-            tr.RotateAround(tr.position + tr.forward * distance, tr.up, -Input.GetAxis("Horizontal") * angleSpeed * Time.deltaTime);
+            tr.RotateAround(tr.position + tr.up * distance, tr.right, Input.GetAxis("Vertical") * angleSpeed * Time.deltaTime);
 
-            barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
-            Vector3 movement = barVectorNor * -Input.GetAxis("Vertical") * -0.1f * moveSpeed;
+            barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetIronBarVector());
+            Vector3 movement = barVectorNor * Input.GetAxis("Horizontal") * 0.1f * moveSpeed;
             tr.localPosition += movement;
         }
 
@@ -60,9 +47,16 @@ public class CrimbMoveTest : MonoBehaviour
         {
             //tr.parent = null;
             //tr.parent = GameObject.Find("Pausable").transform;
+            //touchIronBar = false;
+
+            m_GravityDir.SetDirection(-tr.up);
             m_MoveManager.SetState(PlayerState.NORMAL);
-            //背面斜め上方向に方向にジャンプする
-            m_MoveManager.PlayerPoleKick(Vector3.Normalize(-tr.forward + tr.up));
+            //プレイヤーの向きを更新する
+            m_MoveManager.SetPlayerUpFront(tr.up, Vector3.Cross(tr.up, Camera.main.transform.right));
+            //rb.AddForce(-tr.up * 200.0f);
+
+            //カメラの視点をプレイヤーにする
+            GameObject.Find("Camera").GetComponent<CameraControl>().SetTarget(gameObject);
 
             GetComponent<NormalMove>().SetIronBarHitDelay(1.0f);
 
@@ -79,15 +73,16 @@ public class CrimbMoveTest : MonoBehaviour
 
         //tr.parent = ironBar.transform;
 
-        Quaternion rotate = Quaternion.LookRotation(tr.forward, ironBar.GetComponent<IronBar>().GetBarVector());
-        tr.localRotation = rotate;
+        //Vector3 forward = Vector3.Cross(tr.up, ironBar.GetComponent<IronBar>().GetIronBarVector());
+        //Quaternion rotate = Quaternion.LookRotation(forward, tr.up);
+        //tr.localRotation = rotate;
     }
 }
 
 //using UnityEngine;
 //using System.Collections;
 
-//public class CrimbMove : MonoBehaviour
+//public class DangleMove : MonoBehaviour
 //{
 //    public bool touchIronBar = false;
 //    public GameObject ironBar;
@@ -108,52 +103,32 @@ public class CrimbMoveTest : MonoBehaviour
 
 //    void Start()
 //    {
+//        ironBarTouchPoint = GameObject.Find("IronBarTouchPoint");
 //        tr = gameObject.transform;
 //        rb = gameObject.GetComponent<Rigidbody>();
 //        m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
-//        ironBarTouchPoint = GameObject.Find("IronBarTouchPoint");
 //        m_MoveManager = GetComponent<PlayerMoveManager>();
 
 //    }
 
 //    void Update()
 //    {
-//        Debug.DrawRay(tr.position, tr.up, Color.red, 1.0f, false);
-//        Debug.DrawRay(tr.position, tr.right);
-//        //Debug.DrawRay(ironBarTouchPoint.transform.position, ironBarTouchPoint.transform.right);
-
 //        if (touchIronBar == true)
 //        {
 //            rb.velocity = Vector3.zero;
-
 //            Vector3 point = ironBar.transform.position;
 //            Debug.DrawRay(point, Vector3.up);
-//            ironBarTouchPoint.transform.RotateAround(point, tr.up, -Input.GetAxis("Horizontal") * angleSpeed * Time.deltaTime);
-
+//            ironBarTouchPoint.transform.RotateAround(point, tr.right, Input.GetAxis("Vertical") * angleSpeed * Time.deltaTime);
 
 //            float moveArea = ironBar.GetComponent<IronBar>().GetMoveArea();
 //            Vector3 barPos = ironBar.transform.position;
-//            Vector3 movement = barVectorNor * -Input.GetAxis("Vertical") * -0.1f * moveSpeed;
-
-//            float distant = Mathf.Abs(tr.position.y - (ironBarTouchPoint.transform.position.y + movement.y));
-//            if (distant > 0.35f)
-//            {
-//                tr.parent = null;
-//                ironBarTouchPoint.transform.position =
-//                    new Vector3(ironBarTouchPoint.transform.position.x, tr.position.y, ironBarTouchPoint.transform.position.z);
-//                tr.parent = ironBarTouchPoint.transform;
-
-//            }
-//            else
-//            {
-//                ironBarTouchPoint.transform.position += movement;
-//                ironBarTouchPoint.transform.position =
-//                    new Vector3(
-//                        Mathf.Clamp(ironBarTouchPoint.transform.position.x, barPos.x - moveArea, barPos.x + moveArea),
-//                        Mathf.Clamp(ironBarTouchPoint.transform.position.y, barPos.y - moveArea, barPos.y + moveArea),
-//                        Mathf.Clamp(ironBarTouchPoint.transform.position.z, barPos.z - moveArea, barPos.z + moveArea));
-
-//            }
+//            Vector3 movement = barVectorNor * Input.GetAxis("Horizontal") * 0.1f * moveSpeed;
+//            ironBarTouchPoint.transform.position += movement;
+//            ironBarTouchPoint.transform.position =
+//                new Vector3(
+//                    Mathf.Clamp(ironBarTouchPoint.transform.position.x, barPos.x - moveArea, barPos.x + moveArea),
+//                    Mathf.Clamp(ironBarTouchPoint.transform.position.y, barPos.y - moveArea, barPos.y + moveArea),
+//                    Mathf.Clamp(ironBarTouchPoint.transform.position.z, barPos.z - moveArea, barPos.z + moveArea));
 //        }
 
 //        if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
@@ -161,23 +136,28 @@ public class CrimbMoveTest : MonoBehaviour
 //            tr.parent = null;
 //            tr.parent = GameObject.Find("Pausable").transform;
 //            touchIronBar = false;
+
+//            m_GravityDir.SetDirection(-tr.up);
 //            m_MoveManager.SetState(PlayerState.NORMAL);
-//            //背面斜め上方向に方向にジャンプする
-//            m_MoveManager.PlayerPoleKick(Vector3.Normalize(-tr.forward + tr.up));
+//            //プレイヤーの向きを更新する
+//            m_MoveManager.SetPlayerUpFront(tr.up, Vector3.Cross(tr.up, Camera.main.transform.right));
+//            //rb.AddForce(-tr.up * 200.0f);
+
+//            //カメラの視点をプレイヤーにする
+//            GameObject.Find("Camera").GetComponent<CameraControl>().SetTarget(gameObject);
 //        }
 //    }
 
-
 //    public void OnCollisionEnter(Collision collision)
 //    {
-//        //if (collision.gameObject.tag == "IronBar" && Vector3.Angle(tr.up, Vector3.Normalize(collision.gameObject.GetComponent<IronBar>().GetBarVector())) > 45.0f) return;
+//        if (collision.gameObject.tag == "IronBar" && Vector3.Angle(tr.up, Vector3.Normalize(collision.gameObject.GetComponent<IronBar>().GetBarVector())) < 45.0f) return;
 
 //        Transform touchTr = tr;
 //        if (touchIronBar == true) return;
 
 //        if (collision.gameObject.tag == "IronBar")
 //        {
-//            print("Crimb");
+//            print("Dangle");
 
 //            rb.isKinematic = true;
 
@@ -188,27 +168,25 @@ public class CrimbMoveTest : MonoBehaviour
 //            rb.isKinematic = false;
 //            barCollision = collision;
 //            collisionIronBarPosition = barCollision.contacts[0].point;
-//            ironBarTouchPoint.transform.position = collisionIronBarPosition;
+
 
 //            ironBar = collision.gameObject;
-//            //barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetBarVector());
+//            barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetBarVector());
 
-//            ironBarTouchPoint.GetComponent<IronBarTouchPoint>().
-//                SetPlayerDirection(-tr.forward, tr.position - collisionIronBarPosition);
-
-//            barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
-//            //tr.up = barVectorNor;
-
-//            //コメントアウト
 //            ironBarTouchPoint.transform.position = collisionIronBarPosition;
 
+//            //とりあえずコメントアウト
 //            //ironBarTouchPoint.GetComponent<IronBarTouchPoint>().
-//            //       SetPlayerDirection(-tr.forward, tr.position - collisionIronBarPosition);
+//            //    SetPlayerDirection(-tr.up, tr.position - collisionIronBarPosition);
 
-//            //barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
-//            //tr.up = barVectorNor;
+//            barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetIronBarVector());
+//            tr.right = barVectorNor;
+
+//            ////カメラの視点をアイアンバーにする
+//            //GameObject.Find("Camera").GetComponent<CameraControl>().SetTarget(ironBarTouchPoint);
 //        }
 //    }
+
 
 //    public void OnDrawGizmos()
 //    {
@@ -238,3 +216,4 @@ public class CrimbMoveTest : MonoBehaviour
 //        return new Vector3(Mathf.Abs(origin.x), Mathf.Abs(origin.y), Mathf.Abs(origin.z));
 //    }
 //}
+

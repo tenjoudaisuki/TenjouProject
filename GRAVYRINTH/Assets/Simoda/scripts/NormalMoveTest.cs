@@ -114,6 +114,9 @@ public class NormalMoveTest : MonoBehaviour
     // 01/17アニメーション
     private float m_HoverTimer;
 
+    //連続で鉄棒に当たらないようにするための待ち時間
+    private float m_IronBarHitDelay = 0.0f;
+
     /*==外部参照変数==*/
 
     void Awake()
@@ -147,6 +150,8 @@ public class NormalMoveTest : MonoBehaviour
         //地面との判定処理
         Ground();
 
+        IronBar();
+
         //空中にいるときは壁キック処理
         if (!m_GroundHitInfo.isHit)
             WallKick();
@@ -161,8 +166,6 @@ public class NormalMoveTest : MonoBehaviour
 
         //重力をセット
         m_GravityDir.SetDirection(GetDown());
-
-        IronBar();
     }
 
     void LateUpdate()
@@ -170,23 +173,48 @@ public class NormalMoveTest : MonoBehaviour
 
     }
 
+    //鉄棒との判定
     public void IronBar()
     {
+        m_IronBarHitDelay -= Time.deltaTime;
+
         Ray forward = new Ray(tr.position, tr.forward);
-        RaycastHit hitInto;
+        RaycastHit forwardHitInto;
 
         Debug.DrawRay(forward.origin, forward.direction * 0.2f, Color.yellow);
 
         int layerMask = 1 << 8;
 
-        if (Physics.Raycast(forward.origin, forward.direction, out hitInto, 0.2f, layerMask, QueryTriggerInteraction.Ignore))
+        //鉄棒をポールとして判定
+        if (Physics.Raycast(forward.origin, forward.direction, out forwardHitInto, 0.2f, layerMask, QueryTriggerInteraction.Ignore))
         {
-            if (hitInto.collider.tag == ("IronBar"))
+            float angle = Vector3.Angle(tr.up, forwardHitInto.collider.GetComponent<IronBar>().GetBarVector());
+
+            if (forwardHitInto.collider.tag == ("IronBar") && angle < 45.0f && m_IronBarHitDelay < 0.0f)
             {
                 m_MoveManager.SetState(PlayerState.IRON_BAR_CLIMB);
-                GetComponent<CrimbMoveTest>().SetTouchIronBar(true, hitInto);
+                GetComponent<CrimbMoveTest>().SetTouchIronBar(true, forwardHitInto);
             }
         }
+
+
+        Ray up = new Ray(tr.position, tr.up);
+        RaycastHit upHitInto;
+
+        Debug.DrawRay(up.origin, up.direction * 0.7f, Color.black);
+
+        //鉄棒を鉄棒として判定
+        if (Physics.Raycast(up.origin, up.direction, out upHitInto, 0.7f, layerMask, QueryTriggerInteraction.Ignore))
+        {
+            float angle = Vector3.Angle(tr.up, forwardHitInto.collider.GetComponent<IronBar>().GetBarVector());
+
+            if (upHitInto.collider.tag == ("IronBar") && angle >= 45.0f && m_IronBarHitDelay < 0.0f)
+            {
+                m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
+                GetComponent<DangleMoveTest>().SetTouchIronBar(true, upHitInto);
+            }
+        }
+
     }
 
     //public void OnCollisionEnter(Collision collision)
@@ -315,7 +343,7 @@ public class NormalMoveTest : MonoBehaviour
             print(m_HoverTimer);
             // 01/17アニメーション
             m_HoverTimer += Time.deltaTime;
-            if (m_HoverTimer > 0.15f)
+            if (m_HoverTimer > 0.2f)
                 anm.SetBool("Hover", true);
         }
 
@@ -770,5 +798,11 @@ public class NormalMoveTest : MonoBehaviour
         {
             //m_WallHoldFlag = false;
         }
+    }
+
+    //連続で鉄棒に当たらないための時間を設定
+    public void SetIronBarHitDelay(float delay)
+    {
+        m_IronBarHitDelay = delay;
     }
 }
