@@ -106,7 +106,7 @@ public class StageFinalClearMove : MonoBehaviour
             cc.enabled = false;
             tr.position = m_SettingPosition;
             //回転
-            tr.rotation *= Quaternion.AngleAxis(speed, Vector3.right);
+            tr.rotation *= Quaternion.AngleAxis(speed * Time.deltaTime, Vector3.right);
             if (speed < m_SpinMaxSpeed)
                 speed += m_SpinAddSpeed * Time.deltaTime;
             else
@@ -138,7 +138,7 @@ public class StageFinalClearMove : MonoBehaviour
                 m_GoalPosition,
                 timer / m_FlyEndTime);
             //回転
-            tr.rotation *= Quaternion.AngleAxis(m_SpinMaxSpeed, Vector3.right);
+            tr.rotation *= Quaternion.AngleAxis(m_SpinMaxSpeed * Time.deltaTime, Vector3.right);
             yield return null;
         }
     }
