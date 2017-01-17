@@ -356,8 +356,6 @@ public class NormalMove : MonoBehaviour
                     );
                 //m_Front = -to * m_Front;           
             }
-
-
         }
 
         //前ベクトル×スティックの傾き×移動速度
@@ -394,7 +392,6 @@ public class NormalMove : MonoBehaviour
             Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
             tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
             //tr.localRotation = rotate;
-
 
             //移動
             tr.position += m_MoveVelocity * Time.deltaTime;
