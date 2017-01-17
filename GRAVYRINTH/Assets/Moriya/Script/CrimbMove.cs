@@ -84,11 +84,15 @@ public class CrimbMove : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
+        //if (collision.gameObject.tag == "IronBar" && Vector3.Angle(tr.up, Vector3.Normalize(collision.gameObject.GetComponent<IronBar>().GetBarVector())) > 45.0f) return;
+
         Transform touchTr = tr;
         if (touchIronBar == true) return;
 
         if (collision.gameObject.tag == "IronBar")
         {
+            print("Crimb");
+
             rb.isKinematic = true;
 
             tr = touchTr;
@@ -98,9 +102,10 @@ public class CrimbMove : MonoBehaviour
             rb.isKinematic = false;
             barCollision = collision;
             collisionIronBarPosition = barCollision.contacts[0].point;
+            ironBarTouchPoint.transform.position = collisionIronBarPosition;
 
             ironBar = collision.gameObject;
-            barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetBarVector());
+            //barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetBarVector());
 
             ironBarTouchPoint.GetComponent<IronBarTouchPoint>().
                 SetPlayerDirection(-tr.forward, tr.position - collisionIronBarPosition);
@@ -108,6 +113,7 @@ public class CrimbMove : MonoBehaviour
             barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
             //tr.up = barVectorNor;
 
+            //コメントアウト
             ironBarTouchPoint.transform.position = collisionIronBarPosition;
 
             //ironBarTouchPoint.GetComponent<IronBarTouchPoint>().

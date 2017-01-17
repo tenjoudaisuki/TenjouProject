@@ -76,6 +76,8 @@ public class DangleMove : MonoBehaviour
 
         if (collision.gameObject.tag == "IronBar")
         {
+            print("Dangle");
+
             rb.isKinematic = true;
 
             tr = touchTr;

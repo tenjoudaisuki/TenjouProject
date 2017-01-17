@@ -22,7 +22,8 @@ public class IronBarTouchPoint : MonoBehaviour
 
     void Update()
     {
-        Debug.DrawRay(player.position, player.up * 5.0f, Color.black);
+        //Debug.DrawRay(player.position, player.up * 5.0f, Color.black);
+        Debug.DrawRay(tr.position, tr.right, Color.black);
 
         rb.velocity = Vector3.zero;
         Debug.DrawRay(tr.position, direction, Color.green);
@@ -54,6 +55,8 @@ public class IronBarTouchPoint : MonoBehaviour
 
     public void TriggerExit(Collider other)
     {
+        isHit = false;
+
         if (player.GetComponent<PlayerMoveManager>().GetState() == PlayerState.IRON_BAR_DANGLE)
         {
             //鉄棒が持っているベクトルを右に設定
@@ -64,7 +67,9 @@ public class IronBarTouchPoint : MonoBehaviour
 
             //プレイヤーの位置・回転を設定
             //player.localPosition = new Vector3(0, -6.2f, 0);
-            player.localPosition = -direction * -7.0f;
+
+            //player.localPosition = -direction * -7.0f;
+            player.localPosition = new Vector3(0.0f, -7.0f, player.localPosition.z);
 
             //player.localRotation = Quaternion.Euler(player.localRotation.eulerAngles.x, 0.0f, player.localRotation.eulerAngles.z);
             //player.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
@@ -86,7 +91,7 @@ public class IronBarTouchPoint : MonoBehaviour
             Vector3 poleDirection = other.transform.position;
             poleDirection.y = player.position.y;
 
-           // player.up = Vector3.Normalize(other.GetComponent<IronBar>().GetPoleVector());
+            // player.up = Vector3.Normalize(other.GetComponent<IronBar>().GetPoleVector());
 
             player.rotation = Quaternion.LookRotation(player.forward, Vector3.Normalize(other.GetComponent<IronBar>().GetPoleVector()));
 
