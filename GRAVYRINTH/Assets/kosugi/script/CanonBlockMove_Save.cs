@@ -1,12 +1,7 @@
-﻿/**==========================================================================*/
-/**
- * 最終ステージの大砲ギミックを完成させるためのブロックを押しているときの移動
- * 作成者：守屋   作成日：16/12/15
-/**==========================================================================*/
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
-public class CannonBlockMove : MonoBehaviour 
+public class CanonBlockMove_Save : MonoBehaviour
 {
     /*==所持コンポーネント==*/
     private Transform tr;
@@ -34,16 +29,16 @@ public class CannonBlockMove : MonoBehaviour
     //掴んでいるブロック
     private GameObject m_CannonBlock;
 
-	void Start()
+    void Start()
     {
         //コンポーネント取得
         tr = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
         anm = GetComponent<Animator>();
         m_MoveManager = GetComponent<PlayerMoveManager>();
-	}
-	
-	void Update()
+    }
+
+    void Update()
     {
         // 01/17アニメーション
         anm.SetBool("Block", true);

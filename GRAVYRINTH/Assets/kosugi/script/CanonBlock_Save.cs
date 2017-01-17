@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CannonBlock : MonoBehaviour
+public class CanonBlock_Save : MonoBehaviour
 {
     private CannonBlockManagar managar;
     private BlockCursorDraw cursorDraw;

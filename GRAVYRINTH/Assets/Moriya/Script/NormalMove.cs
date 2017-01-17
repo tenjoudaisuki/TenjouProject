@@ -83,8 +83,6 @@ public class NormalMove : MonoBehaviour
     //ヒットしているブロック（動かすブロック）
     private Block m_CollisionBlock;
     //  アニメーション用変数
-    private float m_HoverTimer;
-    private float m_JumpTimer;
     private float m_WallJumpTimer;
     //操作不能か？
     private bool m_DisableInput = false;
@@ -113,9 +111,8 @@ public class NormalMove : MonoBehaviour
     //親の回転
     private Quaternion m_ParentRotation;
 
-    int count = 0;
-
-
+    // 01/17アニメーション
+    private float m_HoverTimer;
 
     /*==外部参照変数==*/
 
@@ -250,11 +247,6 @@ public class NormalMove : MonoBehaviour
                 //上方向を当たった平面の法線方向に変更
                 m_Up = m_GroundHitInfo.hit.normal.normalized;
 
-                //アニメーション変更
-                m_JumpTimer = 0;
-                m_HoverTimer = 0;
-                anm.SetFloat("HoverTimer", m_HoverTimer);
-
                 //ヒットした相手のトランスフォーム
                 Transform hitTr = m_GroundHitInfo.hit.transform;
                 //回転床と当たっているなら
@@ -295,24 +287,29 @@ public class NormalMove : MonoBehaviour
                 m_Up.Normalize();
                 m_Front = front;
             }
+            m_HoverTimer = 0;
         }
         else
         {
-            m_HoverTimer += 1 * Time.deltaTime;
-            //アニメーション変更
-            anm.SetFloat("HoverTimer", m_HoverTimer);
+            print(m_HoverTimer);
+            // 01/17アニメーション
+            m_HoverTimer += Time.deltaTime;
+            if (m_HoverTimer > 0.2f)
+                anm.SetBool("Hover", true);
         }
 
 
         //着地した瞬間の処理
         if (m_IsGroundHitTrigger)
         {
-            //アニメーション変更
+            // 01/17アニメーション
             anm.SetBool("Jump", false);
             anm.SetBool("Wall", false);
             anm.SetBool("WallJump", false);
             anm.SetBool("PoleHJump", false);
             anm.SetBool("PoleVJump", false);
+            anm.SetBool("Hover", false);
+
             // アニメーション用の変数初期化
             isWallTouch = false;
             m_WallJumpTimer = 0;
@@ -367,6 +364,9 @@ public class NormalMove : MonoBehaviour
         //ブロック移動ボタンを押していて、かつブロックが近くにある時
         if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true)
         {
+            // 01/17アニメーション
+            anm.SetBool("Block", true);
+
             m_CollisionBlock.IsPushDistance();
             if (m_CollisionBlock.isPush == false) return;
 
@@ -384,6 +384,19 @@ public class NormalMove : MonoBehaviour
 
             //移動
             tr.position += m_MoveVelocity * Time.deltaTime;
+
+            // 01/17アニメーション
+            if (m_MoveVelocity == Vector3.zero)
+            {
+                anm.SetBool("BlockMove", false);
+            }
+            else
+            {
+                anm.SetBool("BlockMove", true);
+            }
+            anm.SetFloat("Block_x", m_MoveVelocity.x * m_Front.x);
+            anm.SetFloat("Block_y", m_MoveVelocity.y * m_Front.y);
+            anm.SetFloat("Block_z", m_MoveVelocity.z * m_Front.z);
         }
         //通常時
         else
@@ -395,6 +408,9 @@ public class NormalMove : MonoBehaviour
 
             //移動
             tr.position += m_MoveVelocity * Time.deltaTime;
+
+            // 01/17アニメーション
+            anm.SetBool("Block", false);
         }
 
         //ジャンプ処理
@@ -406,6 +422,11 @@ public class NormalMove : MonoBehaviour
             m_MoveSpeed = 0;
         else
             m_MoveSpeed = m_Save;
+
+        // 01/17アニメーション
+        anm.SetFloat("Jump_x", rb.velocity.x * tr.up.x);
+        anm.SetFloat("Jump_y", rb.velocity.y * tr.up.y);
+        anm.SetFloat("Jump_z", rb.velocity.z * tr.up.z);
     }
 
     /// <summary>
@@ -442,8 +463,9 @@ public class NormalMove : MonoBehaviour
         //地面にいるときのジャンプ始動処理
         if (m_GroundHitInfo.isHit && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
-            //アニメーションの設定
+            // 01/17アニメーション
             anm.SetBool("Jump", true);
+
             //力を加えてジャンプ
             rb.velocity = Vector3.zero;//いったんリセット
             rb.AddForce(m_Up * m_JumpPower);
@@ -455,12 +477,6 @@ public class NormalMove : MonoBehaviour
             m_JumpedTimer = 0.0f;
 
             m_IsHitSlope = false;
-        }
-        if (anm.GetBool("Jump"))
-        {
-            m_JumpTimer += 1 * Time.deltaTime;
-            //アニメーションの設定
-            anm.SetFloat("JumpTimer", m_JumpTimer);
         }
     }
 
