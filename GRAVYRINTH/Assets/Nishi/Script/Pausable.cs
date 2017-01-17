@@ -55,6 +55,12 @@ public class Pausable : MonoBehaviour
     /// </summary>
     ParticleSystem[] pausingParticleSystem;
 
+
+    /// <summary>
+    /// ポーズ中のanimationの配列
+    /// </summary>
+    Animator[] animator;
+
     /// <summary>
     /// 更新処理
     /// </summary>
@@ -108,6 +114,14 @@ public class Pausable : MonoBehaviour
             particleSystem.Pause();
         }
 
+        Predicate<Animator> animation =
+            obj => obj.enabled;
+        animator = Array.FindAll(transform.GetComponentsInChildren<Animator>(), animation);
+        foreach (var anime in animator)
+        {
+            anime.enabled = false;
+        }
+
 
 
     }
@@ -134,6 +148,11 @@ public class Pausable : MonoBehaviour
         foreach (var particleSystem in pausingParticleSystem)
         {
             particleSystem.Play();
+        }
+
+        foreach (var anime in animator)
+        {
+            anime.enabled = true;
         }
     }
 }
