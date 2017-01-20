@@ -630,6 +630,7 @@ public class MenuManager : MonoBehaviour
         StartCoroutine(DelayMethod(1.1f, () =>
         {
             SceneManager.UnloadScene(menu);
+            GameManager.Instance.GameModeChange(GameManager.GameMode.Title);
         }));
     }
 
