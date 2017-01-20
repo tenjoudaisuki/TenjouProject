@@ -54,6 +54,8 @@ public class NormalMove : MonoBehaviour
     public float m_DisableInputTime = 0.2f;
     [SerializeField, TooltipAttribute("ジャンプ後、通常移動速度からジャンプ中の移動速度に変更するまでにかかる時間")]
     public float m_ToJumpMoveSpeedTime = 0.5f;
+    [SerializeField, TooltipAttribute("ぶら下がりをスペースキーで解除時、当たり判定を消滅させる時間")]
+    public float m_DangleColliderOffTime = 0.6f;
     [SerializeField, TooltipAttribute("崖登りを行うか（デバッグ用）")]
     public bool m_IsWallHold = false;
 
@@ -177,6 +179,12 @@ public class NormalMove : MonoBehaviour
         m_GravityDir.SetDirection(GetDown());
     }
 
+    void FixedUpdate()
+    {
+        //重力で下方向に移動する
+        Gravity();
+    }
+
     void LateUpdate()
     {
 
@@ -254,8 +262,6 @@ public class NormalMove : MonoBehaviour
     /// </summary>
     private void Ground()
     {
-        //重力で下方向に移動する
-        Gravity();
         //ジャンプした直後の、地面と判定させない時間計測処理
         if (!m_IsCheckGround)
         {
@@ -678,6 +684,9 @@ public class NormalMove : MonoBehaviour
         m_Front = front;
         //重力などをリセット
         rb.velocity = Vector3.zero;
+        //向きを変更
+        Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
+        tr.localRotation = rotate;
     }
 
 
@@ -780,7 +789,31 @@ public class NormalMove : MonoBehaviour
             yield return null;
         }
     }
-    
+
+    /// <summary>
+    /// ぶら下がり解除時の当たり判定消滅時間計測コルーチン
+    /// </summary>
+    IEnumerator DangleToNormalColliderOff()
+    {
+        float timer = 0.0f;
+        CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
+        col.enabled = false;
+        while (timer < m_DangleColliderOffTime)
+        {
+            yield return null;
+        }
+        col.enabled = true;
+        yield break;
+    }
+
+    /// <summary>
+    /// ぶら下がりから通常時へ移行したときの処理
+    /// </summary>
+    public void DangleToNormal()
+    {
+        StartCoroutine(DangleToNormalColliderOff());
+    }
+
 
     /// <summary>
     /// 崖つかまり

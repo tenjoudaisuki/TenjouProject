@@ -85,12 +85,12 @@ public class PlayerMoveManager : MonoBehaviour
             && m_PlayerState == PlayerState.NORMAL)
         {
             //地面との当たり判定を有効にする
-            m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().StateIronbarToNormal();
+            m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().IronbarToNormal();
 
             if(m_PrevPlayerState == PlayerState.IRON_BAR_DANGLE)
             {
                 //一定時間カプセルの当たり判定をオフにする処理を実行
-                m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().StateDangleToNormal();
+                m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().DangleToNormal();
             }
             
         }
