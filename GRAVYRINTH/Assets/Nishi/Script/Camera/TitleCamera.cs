@@ -29,27 +29,6 @@ public class TitleCamera : ICamera {
             transform.position = (mStageCenter.transform.forward * -mDistance) + mOffset;
         }
         transform.LookAt(mStageCenter.transform);
-        transform.RotateAround(mStageCenter.transform.position, Vector3.up, mSpeed);
-
-        ////デバック用　あとで消す
-        //if (Input.GetKeyDown(KeyCode.C))
-        //{
-        //    GetComponent<CameraManager>().StateChange(State.Select);
-        //}
-
-        //if(isStart)
-        //{
-        //    if (mTimer >= 1.2f)
-        //    {
-        //        GetComponent<CameraControl>().enabled = true;
-        //        this.enabled = false;
-        //    }
-        //    mTimer += Time.deltaTime;
-        //    GameObject player = GameObject.Find("Player");
-        //    transform.LookAt(player.transform);
-        //    Vector3 nextPos = player.transform.position + (player.transform.forward * -2) + new Vector3(0,0.4f,0);
-        //    Debug.Log(nextPos);
-        //    transform.position = Vector3.Lerp(mFromPos,nextPos,mTimer);
-        //}
+        transform.RotateAround(mStageCenter.transform.position, Vector3.up, mSpeed * Time.deltaTime);
     }
 }
