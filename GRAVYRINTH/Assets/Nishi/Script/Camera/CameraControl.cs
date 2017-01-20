@@ -173,7 +173,11 @@ public class CameraControl : ICamera
 
     private void StartMove()
     {
-        if (mTimer > 1) mCurrentState = State.Normal;
+        if (mTimer > 1)
+        {
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
+            mCurrentState = State.Normal;
+        }
 
         CameraPosDirection = -m_Target.forward;
         offset = m_Target.right * m_TargetOffset.x + m_Target.up * m_TargetOffset.y + m_Target.forward * m_TargetOffset.z;
