@@ -8,7 +8,7 @@ public class JumpCursorDraw : MonoBehaviour
     private Transform tr;
     private Vector3 offset;
     private MeshRenderer cursorRenderer;
-    private bool isTrigger = false;
+    public bool isHit = false;
 
     //public GameObject jumpCursorPrefab;
 
@@ -30,8 +30,10 @@ public class JumpCursorDraw : MonoBehaviour
 
     void Update()
     {
-        if (isTrigger == true)
+        if (isHit == true)
             JumpCursorControl();
+        else
+            cursorRenderer.enabled = false;
     }
 
     private void JumpCursorControl()
@@ -43,18 +45,8 @@ public class JumpCursorDraw : MonoBehaviour
         jumpCursor.transform.Rotate(-90.0f, 0.0f, 0.0f);
     }
 
-    public void OnTriggerEnter(Collider other)
+    public void IsHit(bool hit)
     {
-        if (other.tag == "Player")
-            isTrigger = true;
-    }
-
-    public void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "Player")
-        {
-            isTrigger = false;
-            cursorRenderer.enabled = false;
-        }
+        isHit = hit;
     }
 }

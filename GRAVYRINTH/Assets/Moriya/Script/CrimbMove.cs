@@ -14,6 +14,7 @@ public class CrimbMove : MonoBehaviour
     private RaycastHit hitInto;
     private Vector3 barVectorNor;
     private GameObject ironBar;
+    private JumpCursorDraw jumpCursor;
 
     //プレイヤーの状態管理クラス
     private PlayerMoveManager m_MoveManager;
@@ -24,6 +25,7 @@ public class CrimbMove : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody>();
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
         //ironBarTouchPoint = GameObject.Find("IronBarTouchPoint");
+        jumpCursor = GameObject.Find("JumpCursor").GetComponent<JumpCursorDraw>();
         m_MoveManager = GetComponent<PlayerMoveManager>();
     }
 
@@ -76,6 +78,8 @@ public class CrimbMove : MonoBehaviour
             GetComponent<NormalMove>().SetIronBarHitDelay(1.0f);
 
             touchIronBar = false;
+
+            jumpCursor.IsHit(false);
         }
     }
 
@@ -88,7 +92,39 @@ public class CrimbMove : MonoBehaviour
 
         //tr.parent = ironBar.transform;
 
-        Quaternion rotate = Quaternion.LookRotation(tr.forward, ironBar.GetComponent<IronBar>().GetBarVector());
-        tr.localRotation = rotate;
+        jumpCursor.IsHit(true);
+
+        StartCoroutine(DelayMethod(1.0f, () =>
+        {
+            Quaternion rotate = Quaternion.LookRotation(tr.forward, ironBar.GetComponent<IronBar>().GetBarVector());
+            tr.localRotation = rotate;
+        }));
+    }
+
+    /// <summary>
+    /// 渡された処理を指定時間後に実行する
+    /// </summary>
+    /// <param name="waitTime">遅延時間[ミリ秒]</param>
+    /// <param name="action">実行したい処理</param>
+    /// <returns></returns>
+    private IEnumerator DelayMethod(float waitTime, System.Action action)
+    {
+        yield return new WaitForSeconds(waitTime);
+        action();
+    }
+
+    /// <summary>
+    /// 渡された処理を指定時間後に実行する
+    /// </summary>
+    /// <param name="delayFrameCount"></param>
+    /// <param name="action">実行したい処理</param>
+    /// <returns></returns>
+    private IEnumerator DelayMethod(int delayFrameCount, System.Action action)
+    {
+        for (var i = 0; i < delayFrameCount; i++)
+        {
+            yield return null;
+        }
+        action();
     }
 }
