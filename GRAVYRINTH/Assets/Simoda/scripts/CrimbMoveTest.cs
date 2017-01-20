@@ -51,9 +51,18 @@ public class CrimbMoveTest : MonoBehaviour
 
             tr.RotateAround(tr.position + tr.forward * distance, tr.up, -Input.GetAxis("Horizontal") * angleSpeed * Time.deltaTime);
 
+
+            float moveArea = ironBar.GetComponent<IronBar>().GetMoveArea();
+            Vector3 barPos = ironBar.transform.position;
+
             barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
-            Vector3 movement = barVectorNor * -Input.GetAxis("Vertical") * -0.1f * moveSpeed;
+            Vector3 movement = barVectorNor * -Input.GetAxis("Vertical") * -moveSpeed * Time.deltaTime;
             tr.localPosition += movement;
+            tr.localPosition =
+                new Vector3(
+                    Mathf.Clamp(tr.localPosition.x, barPos.x - moveArea, barPos.x + moveArea),
+                    Mathf.Clamp(tr.localPosition.y, barPos.y - moveArea + 0.62f, barPos.y + moveArea),
+                    Mathf.Clamp(tr.localPosition.z, barPos.z - moveArea, barPos.z + moveArea));
         }
 
         if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))

@@ -59,7 +59,9 @@ public class BlockCursorDraw : MonoBehaviour
 
         float currentDistance = Vector3.Distance(targetBlock.transform.position, player.position + offset);
 
-        if (currentDistance <= targetBlock.GetComponent<Block>().GetPushDistance())
+        if (currentDistance <= targetBlock.GetComponent<Block>().GetPushDistance()
+            && player.GetComponent<NormalMove>().GetIsGroundHit()
+            && Vector3.Angle(player.up, targetBlock.GetComponent<Block>().GetPlayerDirection().normal) == 90.0f)
         {
             //表示をする
             cursorRenderer.enabled = true;
@@ -81,7 +83,8 @@ public class BlockCursorDraw : MonoBehaviour
     {
         float currentDistance = Vector3.Distance(targetBlock.transform.position, player.position + offset);
 
-        if (currentDistance <= targetBlock.GetComponent<CannonBlock>().GetPushDistance())
+        if (currentDistance <= targetBlock.GetComponent<CannonBlock>().GetPushDistance()
+            && Vector3.Angle(player.up, targetBlock.GetComponent<CannonBlock>().GetPlayerDirection().normal) != 0.0f)
         {
             //表示をする
             cursorRenderer.enabled = true;
