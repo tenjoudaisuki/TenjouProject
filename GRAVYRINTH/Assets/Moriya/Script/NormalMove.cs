@@ -500,8 +500,8 @@ public class NormalMove : MonoBehaviour
         Vector3 rayPos = tr.position + m_Up * m_Height;
         Ray ray = new Ray(rayPos, GetDown());
         RaycastHit hit;
-        //[IgnoredObj]レイヤー以外と判定させる
-        int layermask = ~(1 << 10);
+        //[IgnoredObj][IronBar]レイヤー以外と判定させる
+        int layermask = ~(1 << 10 | 1 << LayerMask.NameToLayer("IronBar"));
         m_GroundHitInfo.isHit = Physics.Raycast(ray, out hit, m_RayLength, layermask, QueryTriggerInteraction.Ignore);
         m_GroundHitInfo.hit = hit;
         ////レイをデバッグ表示
