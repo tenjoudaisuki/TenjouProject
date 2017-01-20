@@ -610,7 +610,7 @@ public class NormalMoveTest : MonoBehaviour
     /// <summary>
     /// 鉄棒状態から通常状態へ遷移時したときの処理
     /// </summary>
-    public void IronbarToNormal()
+    public void StateIronbarToNormal()
     {
         //地面との判定を再開
         m_IsCheckGround = true;
