@@ -18,6 +18,9 @@ public class CrimbMove : MonoBehaviour
     //プレイヤーの状態管理クラス
     private PlayerMoveManager m_MoveManager;
 
+    //アニメーション
+    private Animator anm;
+
     void Start()
     {
         tr = gameObject.transform;
@@ -25,6 +28,9 @@ public class CrimbMove : MonoBehaviour
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
         //ironBarTouchPoint = GameObject.Find("IronBarTouchPoint");
         m_MoveManager = GetComponent<PlayerMoveManager>();
+
+        //アニメーション
+        anm = GetComponent<Animator>();
     }
 
     void Update()
@@ -42,6 +48,9 @@ public class CrimbMove : MonoBehaviour
         //    }
         //}
 
+        //アニメーション
+        anm.SetBool("PoleV", true);
+
         if (touchIronBar == true)
         {
             rb.velocity = Vector3.zero;
@@ -51,9 +60,18 @@ public class CrimbMove : MonoBehaviour
 
             tr.RotateAround(tr.position + tr.forward * distance, tr.up, -Input.GetAxis("Horizontal") * angleSpeed * Time.deltaTime);
 
+
+            float moveArea = ironBar.GetComponent<IronBar>().GetMoveArea();
+            Vector3 barPos = ironBar.transform.position;
+
             barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
-            Vector3 movement = barVectorNor * -Input.GetAxis("Vertical") * -0.1f * moveSpeed;
+            Vector3 movement = barVectorNor * -Input.GetAxis("Vertical") * -moveSpeed * Time.deltaTime;
             tr.localPosition += movement;
+            tr.localPosition =
+                new Vector3(
+                    Mathf.Clamp(tr.localPosition.x, barPos.x - moveArea, barPos.x + moveArea),
+                    Mathf.Clamp(tr.localPosition.y, barPos.y - moveArea + 0.62f, barPos.y + moveArea),
+                    Mathf.Clamp(tr.localPosition.z, barPos.z - moveArea, barPos.z + moveArea));
         }
 
         if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
@@ -68,6 +86,12 @@ public class CrimbMove : MonoBehaviour
 
             touchIronBar = false;
         }
+
+        //アニメーション
+        if (Input.GetAxis("Vertical") != 0)
+            anm.SetBool("PoleVMove", true);
+        else
+            anm.SetBool("PoleVMove", false);
     }
 
     public void SetTouchIronBar(bool ishit, RaycastHit hitInto)
