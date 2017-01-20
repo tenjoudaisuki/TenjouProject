@@ -11,13 +11,13 @@ public class CameraControl : ICamera
     }
 
     [SerializeField, TooltipAttribute("注視点の対象")]
-    public Transform Target;
+    public Transform m_Target;
     [SerializeField, TooltipAttribute("注視点との距離")]
-    public float Distance;
+    public float m_Distance;
     [SerializeField, TooltipAttribute("X回転の上限下限")]
-    public float XAngleLimit;
+    public float m_XAngleLimit;
     [SerializeField, TooltipAttribute("注視点の調整")]
-    public Vector3 TargetOffset;
+    public Vector3 m_TargetOffset;
     [SerializeField, TooltipAttribute("回転のスピード")]
     public Vector2 m_RotateSpeed = new Vector2(2.0f,2.0f);
     [SerializeField, TooltipAttribute("ぶら下り時のカメラ回転のスピード")]
@@ -53,7 +53,7 @@ public class CameraControl : ICamera
     private Vector3 mInitParallel;
 
 
-    public float mTimer = 0.0f;
+    private float mTimer = 0.0f;
 
     private Vector3 mUp;
 
@@ -84,7 +84,7 @@ public class CameraControl : ICamera
 
         XAxisTotal += vertical;
         //X軸の回転の限界を設定
-        XAxisTotal = Mathf.Clamp(XAxisTotal, -XAngleLimit, XAngleLimit);
+        XAxisTotal = Mathf.Clamp(XAxisTotal, -m_XAngleLimit, m_XAngleLimit);
 
         //ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
         Vector3 parallel = Vector3.Cross(up, right);
@@ -109,13 +109,13 @@ public class CameraControl : ICamera
         //移動先
         Vector3 next;
         //ターゲットを原点にrayを飛ばす
-        Ray ray = new Ray(Target.position + offset, CameraPosDirection.normalized);
+        Ray ray = new Ray(m_Target.position + offset, CameraPosDirection.normalized);
 
         RaycastHit hit;
         //rayの方向の指定距離以内に障害物が無いか？
         //[IgnoredObj]レイヤー以外と判定させる
         int layermask = ~((1 << 10) | (1 << 8));
-        if (Physics.Raycast(ray, out hit, Distance + 0.5f,layermask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ray, out hit, m_Distance + 0.5f,layermask, QueryTriggerInteraction.Ignore))
         {
             //当たらなかったらray* Disをカメラ位置に
             next = hit.point + hit.normal * 0.2f;
@@ -124,12 +124,12 @@ public class CameraControl : ICamera
         else
         {
             //当たらなかったらray* Disをカメラ位置に
-            next = (Target.position + offset) +(CameraPosDirection.normalized * Distance);
+            next = (m_Target.position + offset) +(CameraPosDirection.normalized * m_Distance);
             transform.position = next;
         }
         //next = (Target.position + offset) + (CameraPosDirection * Distance);
         //デバック表示
-        Debug.DrawRay(Target.position + offset, CameraPosDirection, Color.yellow);
+        Debug.DrawRay(m_Target.position + offset, CameraPosDirection, Color.yellow);
 
         //補間あり移動
         //transform.position = Vector3.Lerp(transform.position, next, 0.1f);
@@ -144,29 +144,29 @@ public class CameraControl : ICamera
     private void Normal()
     {
         //モデル座標でのオフセット座標を求める
-        offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
+        offset = m_Target.right * m_TargetOffset.x + m_Target.up * m_TargetOffset.y + m_Target.forward * m_TargetOffset.z;
 
         //ターゲットから見てカメラの方向でカメラの前ベクトルを求める
         Vector3 f = CameraPosDirection;
         //ターゲットの上ベクトルを　右ベクトルを軸にXAxisTotal度回転して　カメラの上ベクトルを求める
-        Vector3 up = Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up;
+        Vector3 up = Quaternion.AngleAxis(XAxisTotal, transform.right) * m_Target.up;
 
         //ターゲットの周りをステイックによって回転移動
-        TargetAroundMove(Target.up, transform.right);
+        TargetAroundMove(m_Target.up, transform.right);
 
         //カメラを回転させる
         //transform.localRotation = Quaternion.Slerp(transform.localRotation,
         //Quaternion.LookRotation(-CameraPosDirection, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up), 0.5f);
         //補間なし版
-        transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Target.up);
+        transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, m_Target.up);
 
-        Debug.DrawRay(Target.position, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up, Color.green);
+        Debug.DrawRay(m_Target.position, Quaternion.AngleAxis(XAxisTotal, transform.right) * m_Target.up, Color.green);
 
-        if (Target.GetComponent<PlayerMoveManager>().GetState() == PlayerState.IRON_BAR_DANGLE)
+        if (m_Target.GetComponent<PlayerMoveManager>().GetState() == PlayerState.IRON_BAR_DANGLE)
         {
-            CameraPosDirection = -Target.forward;
-            transform.position = (Target.position) + (CameraPosDirection * Distance);
-            transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Target.up);
+            CameraPosDirection = -m_Target.forward;
+            transform.position = (m_Target.position) + (CameraPosDirection * m_Distance);
+            transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, m_Target.up);
             mCurrentState = State.BraDown;
         }
     }
@@ -175,14 +175,14 @@ public class CameraControl : ICamera
     {
         if (mTimer > 1) mCurrentState = State.Normal;
 
-        CameraPosDirection = -Target.forward;
-        offset = Target.right * TargetOffset.x + Target.up * TargetOffset.y + Target.forward * TargetOffset.z;
-        Vector3 next = (Target.position + offset) + (CameraPosDirection * Distance);
+        CameraPosDirection = -m_Target.forward;
+        offset = m_Target.right * m_TargetOffset.x + m_Target.up * m_TargetOffset.y + m_Target.forward * m_TargetOffset.z;
+        Vector3 next = (m_Target.position + offset) + (CameraPosDirection * m_Distance);
 
         transform.position = Vector3.Lerp(mFastPosition, next, mTimer);
         transform.localRotation = Quaternion.Slerp(
             transform.localRotation,
-            Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up),
+            Quaternion.LookRotation((m_Target.position + offset) - transform.position, m_Target.up),
             mTimer);
 
         XAxisTotal = 0;
@@ -204,24 +204,24 @@ public class CameraControl : ICamera
         if (Input.GetAxisRaw("Vertical") != 0)
         {
             XAxisTotal = 90;
-            CameraPosDirection = Target.up;
-            transform.position = (Target.position) + (CameraPosDirection * Distance);
-            transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Target.forward);
+            CameraPosDirection = m_Target.up;
+            transform.position = (m_Target.position) + (CameraPosDirection * m_Distance);
+            transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, m_Target.forward);
         }
         else
         {
             //ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
-            Vector3 parallel = Vector3.Cross(Target.transform.up, transform.right);
+            Vector3 parallel = Vector3.Cross(m_Target.transform.up, transform.right);
             //Vector3 parallel = -transform.forward;
             mParallel = parallel;
 
-            Vector3 temp = Quaternion.AngleAxis(horizontal, Target.transform.up) * Quaternion.AngleAxis(XAxisTotal, transform.right) * mParallel;
+            Vector3 temp = Quaternion.AngleAxis(horizontal, m_Target.transform.up) * Quaternion.AngleAxis(XAxisTotal, transform.right) * mParallel;
             CameraPosDirection = temp;
 
             //カメラを移動させる
             Vector3 next;
             //ターゲットを原点にrayを飛ばす
-            Ray ray = new Ray(Target.position, CameraPosDirection.normalized);
+            Ray ray = new Ray(m_Target.position, CameraPosDirection.normalized);
 
             //RaycastHit hit;
             ////rayの方向の指定距離以内に障害物が無いか？
@@ -235,9 +235,9 @@ public class CameraControl : ICamera
             //    //当たらなかったらray* Disをカメラ位置に
             //    next = (Target.position) + (CameraPosDirection * Distance);
             //}
-            next = (Target.position) + (CameraPosDirection * Distance);
+            next = (m_Target.position) + (CameraPosDirection * m_Distance);
             //デバック表示
-            Debug.DrawRay(Target.position, CameraPosDirection, Color.yellow);
+            Debug.DrawRay(m_Target.position, CameraPosDirection, Color.yellow);
 
             //補間あり移動
             //transform.position = Vector3.Lerp(transform.position, next, 0.3f);
@@ -247,13 +247,13 @@ public class CameraControl : ICamera
             Vector3 DirUp = Vector3.Cross(transform.right, CameraPosDirection);
             //transform.localRotation = Quaternion.Slerp(transform.localRotation,
             //        Quaternion.LookRotation((player.transform.position) - transform.position,up), 0.5f);
-            transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up);
-            Debug.DrawRay(Target.position, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up, Color.green);
+            transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, Quaternion.AngleAxis(XAxisTotal, transform.right) * m_Target.up);
+            Debug.DrawRay(m_Target.position, Quaternion.AngleAxis(XAxisTotal, transform.right) * m_Target.up, Color.green);
         }
 
-        if (Target.GetComponent<PlayerMoveManager>().GetState() != PlayerState.IRON_BAR_DANGLE)
+        if (m_Target.GetComponent<PlayerMoveManager>().GetState() != PlayerState.IRON_BAR_DANGLE)
         {
-            XAxisTotal = XAngleLimit;
+            XAxisTotal = m_XAngleLimit;
             mCurrentState = State.Normal;
         }
 
@@ -264,10 +264,10 @@ public class CameraControl : ICamera
     /// </summary>
     private void CameraReset()
     {
-        CameraPosDirection = -Target.forward;
+        CameraPosDirection = -m_Target.forward;
         CameraMove();
         //カメラを回転させる
-        transform.localRotation = Quaternion.LookRotation((Target.position + offset) - transform.position, Target.up);
+        transform.localRotation = Quaternion.LookRotation((m_Target.position + offset) - transform.position, m_Target.up);
         XAxisTotal = 0;
     }
 
@@ -283,7 +283,7 @@ public class CameraControl : ICamera
 
     public void SetTarget(GameObject target)
     {
-        Target = target.transform;
+        m_Target = target.transform;
         CameraReset();
     }
 
