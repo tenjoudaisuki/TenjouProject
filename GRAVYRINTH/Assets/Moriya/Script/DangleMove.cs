@@ -14,6 +14,7 @@ public class DangleMove : MonoBehaviour
     private RaycastHit hitInto;
     private Vector3 barVectorNor;
     private GameObject ironBar;
+    private JumpCursorDraw jumpCursor;
 
     //プレイヤーの状態管理クラス
     private PlayerMoveManager m_MoveManager;
@@ -29,6 +30,7 @@ public class DangleMove : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody>();
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
         //ironBarTouchPoint = GameObject.Find("IronBarTouchPoint");
+        jumpCursor = GameObject.Find("JumpCursor").GetComponent<JumpCursorDraw>();
         m_MoveManager = GetComponent<PlayerMoveManager>();
 
         //アニメーション
@@ -83,6 +85,8 @@ public class DangleMove : MonoBehaviour
             GetComponent<NormalMove>().SetIronBarHitDelay(1.0f);
 
             touchIronBar = false;
+
+            jumpCursor.IsHit(false);
         }
 
         //アニメーション
@@ -98,6 +102,8 @@ public class DangleMove : MonoBehaviour
         touchIronBar = true;
 
         ironBar = hitInto.collider.gameObject;
+
+        jumpCursor.IsHit(true);
 
         //tr.parent = ironBar.transform;
         StartCoroutine(DelayMethod(1.0f, () =>
