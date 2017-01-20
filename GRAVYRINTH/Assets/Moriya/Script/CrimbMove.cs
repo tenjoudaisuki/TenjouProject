@@ -18,6 +18,9 @@ public class CrimbMove : MonoBehaviour
     //プレイヤーの状態管理クラス
     private PlayerMoveManager m_MoveManager;
 
+    //アニメーション
+    private Animator anm;
+
     void Start()
     {
         tr = gameObject.transform;
@@ -25,6 +28,9 @@ public class CrimbMove : MonoBehaviour
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
         //ironBarTouchPoint = GameObject.Find("IronBarTouchPoint");
         m_MoveManager = GetComponent<PlayerMoveManager>();
+
+        //アニメーション
+        anm = GetComponent<Animator>();
     }
 
     void Update()
@@ -41,6 +47,9 @@ public class CrimbMove : MonoBehaviour
         //        touchIronBar = true;
         //    }
         //}
+
+        //アニメーション
+        anm.SetBool("PoleV", true);
 
         if (touchIronBar == true)
         {
@@ -77,6 +86,12 @@ public class CrimbMove : MonoBehaviour
 
             touchIronBar = false;
         }
+
+        //アニメーション
+        if (Input.GetAxis("Vertical") != 0)
+            anm.SetBool("PoleVMove", true);
+        else
+            anm.SetBool("PoleVMove", false);
     }
 
     public void SetTouchIronBar(bool ishit, RaycastHit hitInto)

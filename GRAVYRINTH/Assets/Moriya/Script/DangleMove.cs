@@ -20,6 +20,9 @@ public class DangleMove : MonoBehaviour
 
     private Vector3 forward;
 
+    //アニメーション
+    private Animator anm;
+
     void Start()
     {
         tr = gameObject.transform;
@@ -27,10 +30,16 @@ public class DangleMove : MonoBehaviour
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
         //ironBarTouchPoint = GameObject.Find("IronBarTouchPoint");
         m_MoveManager = GetComponent<PlayerMoveManager>();
+
+        //アニメーション
+        anm = GetComponent<Animator>();
     }
 
     void Update()
     {
+        //アニメーション
+        anm.SetBool("PoleH", true);
+
         if (touchIronBar == true)
         {
             rb.velocity = Vector3.zero;
@@ -75,6 +84,12 @@ public class DangleMove : MonoBehaviour
 
             touchIronBar = false;
         }
+
+        //アニメーション
+        if (Input.GetAxis("Horizontal") != 0)
+            anm.SetBool("PoleHMove", true);
+        else
+            anm.SetBool("PoleHMove", false);
     }
 
     public void SetTouchIronBar(bool ishit, RaycastHit hitInto)
