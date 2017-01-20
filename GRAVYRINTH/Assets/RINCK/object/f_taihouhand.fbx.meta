@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: b34d4f53d22abde4594524ab153b0908
-timeCreated: 1481532340
+guid: 0ce88eab6ab756a4ba0093da8bf0b241
+timeCreated: 1484259457
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: f_taihouhandaura
+    4300000: f_taihouhand
   materials:
     importMaterials: 1
     materialName: 0
