@@ -24,7 +24,7 @@ public class EventCamera : ICamera {
                 LeanTween.move(gameObject, gameObject.transform.position, 0.0f)
                 .setDelay(mEventEndTime)
                 .setOnComplete(() => { GetComponent<CameraManager>().StateChange(State.GamePlay);
-                    GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
+                    GetComponent<CameraManager>().CameraReset();
                 });
             });
         LeanTween.rotateLocal(gameObject, mToRotate, mMoveTime);
