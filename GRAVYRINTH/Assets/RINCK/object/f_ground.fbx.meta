@@ -1,57 +1,32 @@
 fileFormatVersion: 2
-guid: ebaf93f3ea1ee2e4a9d036d119c8399b
-timeCreated: 1481519152
+guid: 7369a5c921323cb4e945f4129262e17f
+timeCreated: 1484943336
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: f_aurablue
-    100002: f_auragreen
-    100004: f_aurared
-    100006: f_aurayellow
-    100008: //RootNode
-    100010: f_ground
-    100012: f_groundaura
-    100014: f_grounddetail
-    100016: f_grounddetail_MeshPart0
-    100018: f_grounddetail_MeshPart1
-    400000: f_aurablue
-    400002: f_auragreen
-    400004: f_aurared
-    400006: f_aurayellow
-    400008: f_ground
-    400010: //RootNode
-    400012: f_groundaura
-    400014: f_grounddetail
-    400016: f_grounddetail_MeshPart0
-    400018: f_grounddetail_MeshPart1
-    2300000: f_aurablue
-    2300002: f_auragreen
-    2300004: f_aurared
-    2300006: f_aurayellow
-    2300008: f_ground
-    2300010: //RootNode
-    2300012: f_groundaura
-    2300014: f_grounddetail_MeshPart0
-    2300016: f_grounddetail_MeshPart1
-    3300000: f_aurablue
-    3300002: f_auragreen
-    3300004: f_aurared
-    3300006: f_aurayellow
-    3300008: f_ground
-    3300010: //RootNode
-    3300012: f_groundaura
-    3300014: f_grounddetail_MeshPart0
-    3300016: f_grounddetail_MeshPart1
-    4300000: stagef
-    4300002: f_ground
-    4300004: f_grounddetail_MeshPart0
-    4300006: f_grounddetail_MeshPart1
-    4300008: f_groundaura
-    4300010: f_aurared
-    4300012: f_aurablue
-    4300014: f_auragreen
-    4300016: f_aurayellow
+    100000: //RootNode
+    100002: f_groundaura
+    100004: f_grounddetail
+    100006: f_grounddetail_MeshPart0
+    100008: f_grounddetail_MeshPart1
+    400000: //RootNode
+    400002: f_groundaura
+    400004: f_grounddetail
+    400006: f_grounddetail_MeshPart0
+    400008: f_grounddetail_MeshPart1
+    2300000: //RootNode
+    2300002: f_groundaura
+    2300004: f_grounddetail_MeshPart0
+    2300006: f_grounddetail_MeshPart1
+    3300000: //RootNode
+    3300002: f_groundaura
+    3300004: f_grounddetail_MeshPart0
+    3300006: f_grounddetail_MeshPart1
+    4300000: f_ground
+    4300002: f_grounddetail_MeshPart0
+    4300004: f_grounddetail_MeshPart1
+    4300006: f_groundaura
   materials:
     importMaterials: 1
     materialName: 0

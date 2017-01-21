@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: a1acd73ba3fc71340aae68e882390ade
-timeCreated: 1481535711
+guid: 3d64fc2c748243649ad5a87f44125e1c
+timeCreated: 1484215971
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -34,12 +34,12 @@ ModelImporter:
     3300010: f_finaldoorswitchwhitedesactived
     3300012: f_finaldoorswitchyellow
     4300000: f_finaldoorswitch
-    4300002: f_finaldoorswitchwhiteactived
-    4300004: f_finaldoorswitchwhitedesactived
-    4300006: f_finaldoorswitchred
-    4300008: f_finaldoorswitchyellow
-    4300010: f_finaldoorswitchgreen
-    4300012: f_finaldoorswitchblue
+    4300002: f_finaldoorswitchblue
+    4300004: f_finaldoorswitchgreen
+    4300006: f_finaldoorswitchyellow
+    4300008: f_finaldoorswitchred
+    4300010: f_finaldoorswitchwhiteactived
+    4300012: f_finaldoorswitchwhitedesactived
   materials:
     importMaterials: 1
     materialName: 0
