@@ -1,22 +1,22 @@
 fileFormatVersion: 2
-guid: 0dd4815da950ea04cab6ba0ae5499d98
-timeCreated: 1481514391
+guid: 5844f8c1eaed8c242a48a51993ec014f
+timeCreated: 1485076311
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: object6aura
-    100004: object6detail
-    400000: //RootNode
-    400002: object6aura
-    400004: object6detail
-    2300000: //RootNode
-    2300002: object6aura
-    2300004: object6detail
-    3300000: //RootNode
-    3300002: object6aura
-    3300004: object6detail
+    100000: object6aura
+    100002: object6detail
+    100004: //RootNode
+    400000: object6aura
+    400002: object6detail
+    400004: //RootNode
+    2300000: object6aura
+    2300002: object6detail
+    2300004: //RootNode
+    3300000: object6aura
+    3300002: object6detail
+    3300004: //RootNode
     4300000: object6
     4300002: object6detail
     4300004: object6aura
