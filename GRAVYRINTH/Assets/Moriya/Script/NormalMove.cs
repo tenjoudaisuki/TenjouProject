@@ -16,6 +16,7 @@ public class NormalMove : MonoBehaviour
     private Transform tr;
     private Rigidbody rb;
     private Animator anm;
+    private CapsuleCollider cc;
     //プレイヤーの状態管理クラス
     private PlayerMoveManager m_MoveManager;
 
@@ -42,8 +43,6 @@ public class NormalMove : MonoBehaviour
     private float m_AnimSpeed = 1.5f;
     [SerializeField, TooltipAttribute("ポールからジャンプするときの強さ")]
     private float m_PoleJumpPower = 140.0f;
-    //[SerializeField, TooltipAttribute("壁キック時の操作不能時間")]　実装するかも？
-    //private float m_WallJumpDisableInputTime = 1.0f;
     [SerializeField, TooltipAttribute("壁キックの強さ")]
     public float m_WallKickPower = 200.0f;
     [SerializeField, TooltipAttribute("壁キックの高さ（上方向へ向かう量、0だと真横、1だと斜め45度）")]
@@ -56,6 +55,10 @@ public class NormalMove : MonoBehaviour
     public float m_ToJumpMoveSpeedTime = 0.5f;
     [SerializeField, TooltipAttribute("ぶら下がりをスペースキーで解除時、当たり判定を消滅させる時間")]
     public float m_DangleColliderOffTime = 0.6f;
+    [SerializeField, TooltipAttribute("壁に着地したとき、押し返す量")]
+    public float m_OnWallPushBack = 0.1f;
+    [SerializeField, TooltipAttribute("プレイヤーを入力方向へ向ける速さ　補完値")]
+    public float m_RotateLerpValue = 0.3f;
     [SerializeField, TooltipAttribute("崖登りを行うか（デバッグ用）")]
     public bool m_IsWallHold = false;
 
@@ -86,8 +89,7 @@ public class NormalMove : MonoBehaviour
     private float m_WallJumpTimer;
     //操作不能か？
     private bool m_DisableInput = false;
-    //地面ではなく斜面との衝突中か？
-    private bool m_IsHitSlope = false;
+
 
     //壁との判定で使用 レイのヒット情報
     RayHitInfo m_WallHitInfoFront, m_WallHitInfoLeft, m_WallHitInfoRight;
@@ -96,7 +98,7 @@ public class NormalMove : MonoBehaviour
     //壁キックできるか？
     bool m_IsWallKick;
     //壁に触っているか？
-    bool isWallTouch;
+    bool m_IsWallTouch;
 
     //最初の親トランスフォーム
     private Transform m_InitParentTr;
@@ -132,6 +134,7 @@ public class NormalMove : MonoBehaviour
         tr = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
         anm = GetComponent<Animator>();
+        cc = GetComponent<CapsuleCollider>();
         m_MoveManager = GetComponent<PlayerMoveManager>();
     }
 
@@ -192,7 +195,6 @@ public class NormalMove : MonoBehaviour
 
     void LateUpdate()
     {
-
 
     }
 
@@ -285,7 +287,6 @@ public class NormalMove : MonoBehaviour
             {
                 //操作不能にする
                 m_DisableInput = true;
-                m_IsHitSlope = false;
                 Vector3 dir = tr.up * m_WallKickHeight + m_WallNormal;
                 dir.Normalize();
 
@@ -307,7 +308,7 @@ public class NormalMove : MonoBehaviour
             {
                 rb.velocity = Vector3.zero;
                 rb.AddForce(GetDown() * 50);
-                isWallTouch = true;
+                m_IsWallTouch = true;
             }
         }
         else
@@ -404,7 +405,7 @@ public class NormalMove : MonoBehaviour
 
             //向きを変更
             Quaternion rotateBlock = Quaternion.LookRotation(m_Front, m_Up);
-            tr.localRotation = Quaternion.Slerp(transform.localRotation, rotateBlock, 0.3f);
+            tr.localRotation = Quaternion.Slerp(transform.localRotation, rotateBlock, m_RotateLerpValue);
             //tr.localRotation = rotateBlock;
 
             //アニメーション
@@ -424,7 +425,7 @@ public class NormalMove : MonoBehaviour
             m_Front.Normalize();
             m_Up.Normalize();
             Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
-            tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
+            tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, m_RotateLerpValue);
             //tr.localRotation = rotate;
 
             //アニメーション
@@ -559,8 +560,6 @@ public class NormalMove : MonoBehaviour
             //判定の結果も切っておく
             m_GroundHitInfo.isHit = false;
 
-            m_IsHitSlope = false;
-
             //最終的な移動量の計算コルーチン実行
             StartCoroutine(LastSpeedCalc());
             //ジャンプ後の地面との判定を行わない時間計測コルーチン実行
@@ -601,7 +600,7 @@ public class NormalMove : MonoBehaviour
         anm.SetBool("Hover", false);
 
         // アニメーション用の変数初期化
-        isWallTouch = false;
+        m_IsWallTouch = false;
         m_WallJumpTimer = 0;
         //外積をスティックの角度で回転させて前ベクトルを計算
         m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * cameraFoward;
@@ -620,8 +619,6 @@ public class NormalMove : MonoBehaviour
         if (angle <= m_SlopeDeg)
         {
             print("on ground");
-            //斜面と衝突していない
-            m_IsHitSlope = false;
             //当たった地点に移動
             tr.position = m_GroundHitInfo.hit.point;
             //上方向を当たった平面の法線方向に変更
@@ -656,18 +653,29 @@ public class NormalMove : MonoBehaviour
         else
         {
             print("on wall");
-            //斜面と衝突している
-            m_IsHitSlope = true;
             //壁に対して水平方向がupになるようにする
-            //まずは前方向を確定
-            Vector3 n = m_GroundHitInfo.hit.normal;
-            Vector3 front = -n.normalized;
+
+            //壁の向き
+            Vector3 n = m_GroundHitInfo.hit.normal.normalized;
+            //壁に向かう方向
+            Vector3 wallFront = -n;
+            //現在の前方向と壁に向かう方向を比較して右を確定
+            Vector3 right = tr.right;
+            if (Vector3.Dot(m_Front, wallFront) <= 0)
+                right = -right;
+
+
             //上方向を計算
-            Quaternion toUp = Quaternion.AngleAxis(-90.0f, tr.right);
-            m_Up = toUp * front;
+            Quaternion toUp = Quaternion.AngleAxis(-90.0f, right);
+            m_Up = toUp * wallFront;
             m_Up.Normalize();
-            m_Front = front;
+            m_Front = wallFront;
+
+            //ちょっと押し返して壁にめり込まないようにする
+            tr.position += n * m_OnWallPushBack;
         }
+        print(m_GroundHitInfo.hit.normal.normalized);
+
         m_HoverTimer = 0;
     }
 
