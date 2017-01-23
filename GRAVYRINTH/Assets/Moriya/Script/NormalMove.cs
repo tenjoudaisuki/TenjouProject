@@ -270,31 +270,41 @@ public class NormalMove : MonoBehaviour
     /// </summary>
     private void WallKick()
     {
-        Vector3 inputAxis = new Vector3(MoveFunctions.GetMoveInputAxis().x, 0, MoveFunctions.GetMoveInputAxis().y);
+        float wallAngle = Vector3.Angle(m_Front, m_WallNormal);
 
-        float wallAngle = Vector3.Angle(tr.forward, m_WallNormal);
-        float frontAngle = Vector3.Angle(tr.forward, tr.forward * inputAxis.magnitude);
+        ////不要になった
+        //Vector3 inputAxis = new Vector3(MoveFunctions.GetMoveInputAxis().x, 0, MoveFunctions.GetMoveInputAxis().y);
+        //float frontAngle = Vector3.Angle(m_Front, m_Front * inputAxis.magnitude);
 
+        //壁に触れているか？
         if ((180 - m_WallKickAbleAngle / 2 < wallAngle && wallAngle < 180 + m_WallKickAbleAngle / 2))
         {
             //アニメーション
             anm.SetBool("Wall", true);
             anm.SetBool("WallJump", false);
 
+            //落下中なら
             if (Vector3.Dot(tr.up, rb.velocity) < 0)
+            {
                 rb.velocity = Vector3.zero;
+                rb.AddForce(GetDown() * 10);
+            }
+               
+            //壁キックボタンを押したとき
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump"))
             {
-                //操作不能にする
-                m_DisableInput = true;
+                //壁キックする方向
                 Vector3 dir = tr.up * m_WallKickHeight + m_WallNormal;
                 dir.Normalize();
 
+                //壁キック
                 rb.velocity = Vector3.zero;//いったんリセット
                 rb.AddForce(dir * m_WallKickPower);
 
+                //前方向を壁キックした壁の方向にする
                 m_Front = m_WallNormal;
-                m_InputAngleY *= -1;
+                //入力方向も反対にする
+                m_InputAngleY += 180;
 
                 //アニメーション
                 anm.SetBool("Wall", false);
@@ -304,12 +314,12 @@ public class NormalMove : MonoBehaviour
                 StartCoroutine(WallKickInputDisable());
             }
 
-            if (frontAngle > 1)
-            {
-                rb.velocity = Vector3.zero;
-                rb.AddForce(GetDown() * 50);
-                m_IsWallTouch = true;
-            }
+            //if (frontAngle >= 0)
+            //{
+            //    rb.velocity = Vector3.zero;
+            //    rb.AddForce(GetDown() * 10);
+            //    m_IsWallTouch = true;
+            //}
         }
         else
         {
@@ -323,8 +333,6 @@ public class NormalMove : MonoBehaviour
             else
                 m_WallJumpTimer = 0;
         }
-        //if (m_GroundHitInfo.isHit)
-        //    m_IsWallKick = false;
     }
 
     /// <summary>
@@ -618,7 +626,6 @@ public class NormalMove : MonoBehaviour
         //斜面として認識する角度以下なら地面に当たったとする
         if (angle <= m_SlopeDeg)
         {
-            print("on ground");
             //当たった地点に移動
             tr.position = m_GroundHitInfo.hit.point;
             //上方向を当たった平面の法線方向に変更
@@ -652,7 +659,6 @@ public class NormalMove : MonoBehaviour
         //斜面として認識する角度より大きいなら壁に当たったとする（その後はずり落ちる）
         else
         {
-            print("on wall");
             //壁に対して水平方向がupになるようにする
 
             //壁の向き
@@ -662,8 +668,9 @@ public class NormalMove : MonoBehaviour
             //現在の前方向と壁に向かう方向を比較して右を確定
             Vector3 right = tr.right;
             if (Vector3.Dot(m_Front, wallFront) <= 0)
+            {
                 right = -right;
-
+            }
 
             //上方向を計算
             Quaternion toUp = Quaternion.AngleAxis(-90.0f, right);
@@ -674,7 +681,6 @@ public class NormalMove : MonoBehaviour
             //ちょっと押し返して壁にめり込まないようにする
             tr.position += n * m_OnWallPushBack;
         }
-        print(m_GroundHitInfo.hit.normal.normalized);
 
         m_HoverTimer = 0;
     }
@@ -751,6 +757,8 @@ public class NormalMove : MonoBehaviour
     /// </summary>
     IEnumerator WallKickInputDisable()
     {
+        //操作不能にする
+        m_DisableInput = true;
         float timer = 0.0f;
         while (true)
         {
