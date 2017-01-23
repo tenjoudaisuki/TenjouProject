@@ -21,6 +21,7 @@ public class DangleMove : MonoBehaviour
 
     private Vector3 forward;
 
+
     //アニメーション
     private Animator anm;
 
