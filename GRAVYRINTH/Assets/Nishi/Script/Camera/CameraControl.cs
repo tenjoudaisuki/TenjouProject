@@ -90,7 +90,8 @@ public class CameraControl : ICamera
         XAxisTotal = Mathf.Clamp(XAxisTotal, -m_XAngleLimit, m_XAngleLimit);
 
         //ターゲットの上ベクトルと自身の横ベクトルの外積で地面と平行なベクトルを作る
-        Vector3 parallel = Vector3.Cross(up, right);
+        mUp = Vector3.Lerp(mUp, up, 0.05f);
+        Vector3 parallel = Vector3.Cross(mUp, right);
         //mParallel = Quaternion.AngleAxis(horizontal, up) * Vector3.Lerp(mParallel,parallel,0.08f);
         mParallel = Quaternion.AngleAxis(horizontal, up) * parallel;
         m_Horizontal = Mathf.Lerp(m_Horizontal, horizontal, 0.3f);
@@ -161,7 +162,7 @@ public class CameraControl : ICamera
         //transform.localRotation = Quaternion.Slerp(transform.localRotation,
         //    Quaternion.LookRotation(-CameraPosDirection, m_Target.up) ,0.5f);
         //補間なし版
-        transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, m_Target.up);
+        transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, mUp);
 
         Debug.DrawRay(m_Target.position, Quaternion.AngleAxis(XAxisTotal, transform.right) * m_Target.up, Color.green);
 
