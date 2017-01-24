@@ -116,7 +116,7 @@ public class DangleMove : MonoBehaviour
         jumpCursor.IsHit(true);
 
         //tr.parent = ironBar.transform;
-        StartCoroutine(DelayMethod(1.0f, () =>
+        StartCoroutine(DelayMethod(1, () =>
         {
             forward = Vector3.Cross(tr.up, ironBar.GetComponent<IronBar>().GetIronBarVector());
             Quaternion rotate = Quaternion.LookRotation(-forward, tr.up);

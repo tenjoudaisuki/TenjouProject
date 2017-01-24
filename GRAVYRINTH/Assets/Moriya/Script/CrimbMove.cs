@@ -111,7 +111,7 @@ public class CrimbMove : MonoBehaviour
 
         jumpCursor.IsHit(true);
 
-        StartCoroutine(DelayMethod(1.0f, () =>
+        StartCoroutine(DelayMethod(1, () =>
         {
             Quaternion rotate = Quaternion.LookRotation(tr.forward, ironBar.GetComponent<IronBar>().GetBarVector());
             tr.localRotation = rotate;

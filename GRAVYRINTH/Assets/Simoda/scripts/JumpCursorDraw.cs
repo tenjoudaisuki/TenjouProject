@@ -41,8 +41,7 @@ public class JumpCursorDraw : MonoBehaviour
         cursorRenderer.enabled = true;
         jumpCursor.transform.position = player.position + player.up * 0.8f;
 
-        jumpCursor.transform.forward = Camera.main.transform.forward;
-        jumpCursor.transform.Rotate(-90.0f, 0.0f, 0.0f);
+        jumpCursor.transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward, Camera.main.transform.up);
     }
 
     public void IsHit(bool hit)
