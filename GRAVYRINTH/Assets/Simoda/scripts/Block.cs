@@ -13,12 +13,13 @@ public class Block : MonoBehaviour
     private float pushDistance;
     private float offsetY = 0.4f;
     private Light blueLight;
+    private float pushDistancePlus;
+    private float distanceToWallPlus;
+    private float distanceToWallDivide;
 
 
     public Vector3 moveVec;
     public bool isPush;
-    public float pushDistancePlus = 0.5f;
-    public float distanceToWallPlus = 0.0f;
 
     void Start()
     {
@@ -34,6 +35,9 @@ public class Block : MonoBehaviour
         tr = gameObject.transform;
         offset = PlayerDirectionOffsetY(offsetY);
         isPush = false;
+        pushDistancePlus = GameObject.Find("BlockManager").GetComponent<BlockManager>().GetPushDistancePlus();
+        distanceToWallPlus = GameObject.Find("BlockManager").GetComponent<BlockManager>().GetDistanceToWallPlus();
+        distanceToWallDivide = GameObject.Find("BlockManager").GetComponent<BlockManager>().GetDistanceToWallDivide();
 
         blueLight = tr.FindChild("blockblue").transform.FindChild("Point light blockblue").GetComponent<Light>();
         blueLight.intensity = 2;
@@ -155,7 +159,7 @@ public class Block : MonoBehaviour
         //int layermask = ~(1 << 10);
         int layermask = 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9;
         //new Vector3(xDistance, yDistance, zDistance) / 14.0f
-        if (Physics.BoxCast(tr.position, new Vector3(xDistance, yDistance, zDistance), -GetPlayerDirection().normal, out hitInto, tr.rotation, distanceToWall / 14.0f, layermask, QueryTriggerInteraction.Ignore))
+        if (Physics.BoxCast(tr.position, new Vector3(xDistance, yDistance, zDistance), -GetPlayerDirection().normal, out hitInto, tr.rotation, distanceToWall / distanceToWallDivide, layermask, QueryTriggerInteraction.Ignore))
         {
             if (Input.GetAxis("Vertical") > 0.1f)
             {
@@ -163,7 +167,7 @@ public class Block : MonoBehaviour
             }
         }
 
-        if (Physics.BoxCast(tr.position, new Vector3(xDistance, yDistance, zDistance), GetPlayerDirection().normal, out hitInto, tr.rotation, distanceToWall / 14.0f, layermask, QueryTriggerInteraction.Ignore))
+        if (Physics.BoxCast(tr.position, new Vector3(xDistance, yDistance, zDistance), GetPlayerDirection().normal, out hitInto, tr.rotation, distanceToWall / distanceToWallDivide, layermask, QueryTriggerInteraction.Ignore))
         {
             if (Input.GetAxis("Vertical") < -0.1f)
             {
