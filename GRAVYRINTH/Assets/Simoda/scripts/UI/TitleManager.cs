@@ -14,6 +14,7 @@ public class TitleManager : MonoBehaviour
     private RectTransform pressStartButton;
 
     private bool isSkip = true;
+    private bool isSubmit = false;
 
     void Start()
     {
@@ -60,23 +61,25 @@ public class TitleManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Submit"))
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Submit")) && isSubmit == false)
         {
             if (isSkip == true)
             {
+                StartCoroutine(DelayMethod(0, () =>
+                {
+                    isSkip = false;
+                }));
+
                 RectTransform[] rectTransforms = GameObject.Find("Frame").GetComponentsInChildren<RectTransform>();
                 foreach (RectTransform rectTr in rectTransforms)
                 {
                     LeanTween.alpha(rectTr, 1.0f, 0.0f);
                 }
-
-                StartCoroutine(DelayMethod(0, () =>
-                {
-                    isSkip = false;
-                }));
             }
             else
             {
+                isSubmit = true;
+
                 SoundManager.Instance.PlaySe("enter");
                 titleLogo.GetComponent<ImageFlashing>().FlashingStop(1.0f);
                 pressStartButtonBack.GetComponent<ImageFlashing>().FlashingStop(1.0f);

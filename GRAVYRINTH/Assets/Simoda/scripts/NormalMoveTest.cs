@@ -52,6 +52,10 @@ public class NormalMoveTest : MonoBehaviour
     public float m_WallKickAbleAngle = 80.0f;
     [SerializeField, TooltipAttribute("壁キック後の操作不能時間")]
     public float m_DisableInputTime = 0.2f;
+    [SerializeField, TooltipAttribute("ジャンプ後、通常移動速度からジャンプ中の移動速度に変更するまでにかかる時間")]
+    public float m_ToJumpMoveSpeedTime = 0.5f;
+    [SerializeField, TooltipAttribute("ぶら下がりをスペースキーで解除時、当たり判定を消滅させる時間")]
+    public float m_DangleColliderOffTime = 0.6f;
     [SerializeField, TooltipAttribute("崖登りを行うか（デバッグ用）")]
     public bool m_IsWallHold = false;
 
@@ -114,6 +118,9 @@ public class NormalMoveTest : MonoBehaviour
     // 01/17アニメーション
     private float m_HoverTimer;
 
+    //実際の移動速度
+    private float m_LastSpeed;
+
     //連続で鉄棒に当たらないようにするための待ち時間
     private float m_IronBarHitDelay = 0.0f;
 
@@ -143,6 +150,9 @@ public class NormalMoveTest : MonoBehaviour
 
         //親を取得
         m_InitParentTr = tr.parent;
+
+
+        m_LastSpeed = m_MoveSpeed;
     }
 
     void Update()
@@ -169,6 +179,12 @@ public class NormalMoveTest : MonoBehaviour
         m_GravityDir.SetDirection(GetDown());
     }
 
+    void FixedUpdate()
+    {
+        //重力で下方向に移動する
+        Gravity();
+    }
+
     void LateUpdate()
     {
 
@@ -187,14 +203,33 @@ public class NormalMoveTest : MonoBehaviour
         int layerMask = 1 << 8;
 
         //鉄棒をポールとして判定
-        if (Physics.SphereCast(forward.origin, 0.1f, forward.direction, out forwardHitInto, 0.2f, layerMask, QueryTriggerInteraction.Ignore))
+        if (Physics.SphereCast(forward.origin, 0.1f, forward.direction, out forwardHitInto, 0.1f, layerMask, QueryTriggerInteraction.Ignore))
         {
             float angle = Vector3.Angle(tr.up, forwardHitInto.collider.GetComponent<IronBar>().GetBarVector());
 
             if (forwardHitInto.collider.tag == ("IronBar") && angle < 45.0f && m_IronBarHitDelay < 0.0f)
             {
                 m_MoveManager.SetState(PlayerState.IRON_BAR_CLIMB);
-                GetComponent<CrimbMoveTest>().SetTouchIronBar(true, forwardHitInto);
+                GetComponent<CrimbMove>().SetTouchIronBar(true, forwardHitInto);
+            }
+        }
+
+        Ray down = new Ray(tr.position, -tr.up);
+        RaycastHit downHitInto;
+
+        Debug.DrawRay(down.origin, down.direction * 0.7f, Color.black);
+
+        //鉄棒を鉄棒として判定
+        if (Physics.BoxCast(down.origin, Vector3.one * 0.2f, down.direction, out downHitInto, tr.localRotation, 0.2f, layerMask, QueryTriggerInteraction.Ignore)
+            && !GetIsGroundHit()
+            && m_MoveManager.GetState() != PlayerState.IRON_BAR_DANGLE)
+        {
+            float angle = Vector3.Angle(tr.up, downHitInto.collider.GetComponent<IronBar>().GetBarVector());
+
+            if (downHitInto.collider.tag == ("IronBar") && angle >= 45.0f && m_IronBarHitDelay < 0.0f)
+            {
+                m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
+                GetComponent<DangleMove>().SetTouchIronBar(true, downHitInto, "Down");
             }
         }
 
@@ -205,14 +240,15 @@ public class NormalMoveTest : MonoBehaviour
         Debug.DrawRay(up.origin, up.direction * 0.7f, Color.black);
 
         //鉄棒を鉄棒として判定
-        if (Physics.SphereCast(up.origin, 0.1f, up.direction, out upHitInto, 0.7f, layerMask, QueryTriggerInteraction.Ignore))
+        if (Physics.BoxCast(up.origin, Vector3.one * 0.1f, up.direction, out upHitInto, tr.localRotation, 0.7f, layerMask, QueryTriggerInteraction.Ignore)
+            && m_MoveManager.GetState() != PlayerState.IRON_BAR_DANGLE)
         {
             float angle = Vector3.Angle(tr.up, upHitInto.collider.GetComponent<IronBar>().GetBarVector());
 
             if (upHitInto.collider.tag == ("IronBar") && angle >= 45.0f && m_IronBarHitDelay < 0.0f)
             {
                 m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
-                GetComponent<DangleMoveTest>().SetTouchIronBar(true, upHitInto);
+                GetComponent<DangleMove>().SetTouchIronBar(true, upHitInto, "Up");
             }
         }
 
@@ -246,8 +282,6 @@ public class NormalMoveTest : MonoBehaviour
     /// </summary>
     private void Ground()
     {
-        //重力で下方向に移動する
-        Gravity();
         //ジャンプした直後の、地面と判定させない時間計測処理
         if (!m_IsCheckGround)
         {
@@ -341,8 +375,7 @@ public class NormalMoveTest : MonoBehaviour
         }
         else
         {
-            print(m_HoverTimer);
-            // 01/17アニメーション
+            //アニメーション
             m_HoverTimer += Time.deltaTime;
             if (m_HoverTimer > 0.2f)
                 anm.SetBool("Hover", true);
@@ -353,6 +386,7 @@ public class NormalMoveTest : MonoBehaviour
         if (m_IsGroundHitTrigger)
         {
             // 01/17アニメーション
+            anm.SetBool("Landing", true);
             anm.SetBool("Jump", false);
             anm.SetBool("Wall", false);
             anm.SetBool("WallJump", false);
@@ -374,7 +408,7 @@ public class NormalMoveTest : MonoBehaviour
         //入力不可状態なら入力を取得しない
         if (!m_DisableInput)
             inputVec = MoveFunctions.GetMoveInputAxis();
-        //アニメーション変更
+        //アニメーション
         anm.SetBool("Move", inputVec.magnitude > 0.0f);
         //スティックが入力されたら向きを変える
         if (inputVec.magnitude > 0.3f)
@@ -406,15 +440,19 @@ public class NormalMoveTest : MonoBehaviour
         }
 
         //前ベクトル×スティックの傾き×移動速度
-        float speed = m_MoveSpeed;
-        if (!m_GroundHitInfo.isHit)
-            speed = m_JumpMoveSpeed;
-        m_MoveVelocity = (tr.forward * inputVec.magnitude) * speed;
+        m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_LastSpeed;
+
+        //ブロックが近くになかったらnullを設定
+        if (m_CollisionBlock != null
+            && m_CollisionBlock.GetPushDistance() < Vector3.Distance(tr.position, m_CollisionBlock.gameObject.transform.position))
+        {
+            m_CollisionBlock = null;
+        }
 
         //ブロック移動ボタンを押していて、かつブロックが近くにある時
         if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true)
         {
-            // 01/17アニメーション
+            //アニメーション
             anm.SetBool("Block", true);
 
             m_CollisionBlock.IsPushDistance();
@@ -435,15 +473,12 @@ public class NormalMoveTest : MonoBehaviour
             //移動
             tr.position += m_MoveVelocity * Time.deltaTime;
 
-            // 01/17アニメーション
+            //アニメーション
             if (m_MoveVelocity == Vector3.zero)
-            {
                 anm.SetBool("BlockMove", false);
-            }
             else
-            {
                 anm.SetBool("BlockMove", true);
-            }
+
             anm.SetFloat("Block_x", m_MoveVelocity.x * m_Front.x);
             anm.SetFloat("Block_y", m_MoveVelocity.y * m_Front.y);
             anm.SetFloat("Block_z", m_MoveVelocity.z * m_Front.z);
@@ -459,7 +494,7 @@ public class NormalMoveTest : MonoBehaviour
             //移動
             tr.position += m_MoveVelocity * Time.deltaTime;
 
-            // 01/17アニメーション
+            //アニメーション
             anm.SetBool("Block", false);
         }
 
@@ -473,10 +508,12 @@ public class NormalMoveTest : MonoBehaviour
         else
             m_MoveSpeed = m_Save;
 
-        // 01/17アニメーション
+        //アニメーション
         anm.SetFloat("Jump_x", rb.velocity.x * tr.up.x);
         anm.SetFloat("Jump_y", rb.velocity.y * tr.up.y);
         anm.SetFloat("Jump_z", rb.velocity.z * tr.up.z);
+        anm.SetBool("PoleH", false);
+        anm.SetBool("PoleV", false);
     }
 
     /// <summary>
@@ -495,8 +532,8 @@ public class NormalMoveTest : MonoBehaviour
         Vector3 rayPos = tr.position + m_Up * m_Height;
         Ray ray = new Ray(rayPos, GetDown());
         RaycastHit hit;
-        //[IgnoredObj]レイヤー以外と判定させる
-        int layermask = ~(1 << 10);
+        //[IgnoredObj][IronBar]レイヤー以外と判定させる
+        int layermask = ~(1 << 10 | 1 << LayerMask.NameToLayer("IronBar"));
         m_GroundHitInfo.isHit = Physics.Raycast(ray, out hit, m_RayLength, layermask, QueryTriggerInteraction.Ignore);
         m_GroundHitInfo.hit = hit;
         ////レイをデバッグ表示
@@ -513,7 +550,7 @@ public class NormalMoveTest : MonoBehaviour
         //地面にいるときのジャンプ始動処理
         if (m_GroundHitInfo.isHit && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
-            // 01/17アニメーション
+            //アニメーション
             anm.SetBool("Jump", true);
 
             //力を加えてジャンプ
@@ -527,6 +564,8 @@ public class NormalMoveTest : MonoBehaviour
             m_JumpedTimer = 0.0f;
 
             m_IsHitSlope = false;
+
+            StartCoroutine(LastSpeedCalc());
         }
     }
 
@@ -537,7 +576,12 @@ public class NormalMoveTest : MonoBehaviour
     {
         //地面にいない、かつ壁のぼりをしていないときは重力をかける
         if (!m_GroundHitInfo.isHit && m_WallHoldTimer == 0)
+        {
             rb.AddForce(GetDown() * m_GravityPower);
+
+            //アニメーション
+            anm.SetBool("Landing", false);
+        }
         else
         {
             rb.velocity = Vector3.zero;
@@ -574,7 +618,7 @@ public class NormalMoveTest : MonoBehaviour
         RaycastHit hit_front, hit_left, hit_right;
 
         //[IgnoredObj]レイヤー以外と判定させる
-        int layermask = ~(1 << 10);
+        int layermask = ~(1 << 10 | 1 << LayerMask.NameToLayer("IronBar"));
         m_WallHitInfoFront.isHit = Physics.Raycast(ray_front, out hit_front, m_WallRayLength, layermask, QueryTriggerInteraction.Ignore);
         m_WallHitInfoLeft.isHit = Physics.Raycast(ray_left, out hit_left, m_WallRayLength, layermask, QueryTriggerInteraction.Ignore);
         m_WallHitInfoRight.isHit = Physics.Raycast(ray_right, out hit_right, m_WallRayLength, layermask, QueryTriggerInteraction.Ignore);
@@ -610,7 +654,7 @@ public class NormalMoveTest : MonoBehaviour
     /// <summary>
     /// 鉄棒状態から通常状態へ遷移時したときの処理
     /// </summary>
-    public void StateIronbarToNormal()
+    public void IronbarToNormal()
     {
         //地面との判定を再開
         m_IsCheckGround = true;
@@ -667,6 +711,9 @@ public class NormalMoveTest : MonoBehaviour
         m_Front = front;
         //重力などをリセット
         rb.velocity = Vector3.zero;
+        //向きを変更
+        Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
+        tr.localRotation = rotate;
     }
 
 
@@ -680,8 +727,9 @@ public class NormalMoveTest : MonoBehaviour
 
         if ((180 - m_WallKickAbleAngle / 2 < wallAngle && wallAngle < 180 + m_WallKickAbleAngle / 2))
         {
-            //アニメーション変更
+            //アニメーション
             anm.SetBool("Wall", true);
+            anm.SetBool("WallJump", false);
 
             if (Vector3.Dot(tr.up, rb.velocity) < 0)
                 rb.velocity = Vector3.zero;
@@ -699,9 +747,9 @@ public class NormalMoveTest : MonoBehaviour
                 m_Front = wallNormal;
                 m_InputAngleY *= -1;
 
-                //アニメーション変更
+                //アニメーション
                 anm.SetBool("Wall", false);
-                anm.SetTrigger("WallJump");
+                anm.SetBool("WallJump", true);
 
                 //操作不能時間計測開始
                 StartCoroutine(WallKickInputDisable());
@@ -748,6 +796,52 @@ public class NormalMoveTest : MonoBehaviour
             yield return null;
         }
     }
+
+    /// <summary>
+    /// ジャンプ後の速度計算コルーチン
+    /// </summary>
+    IEnumerator LastSpeedCalc()
+    {
+        float timer = 0.0f;
+        while (true)
+        {
+            timer += Time.deltaTime;
+            m_LastSpeed = Mathf.Lerp(m_MoveSpeed, m_JumpMoveSpeed, timer / m_ToJumpMoveSpeedTime);
+
+            if (m_GroundHitInfo.isHit)
+            {
+                m_LastSpeed = m_MoveSpeed;
+                yield break;
+            }
+            yield return null;
+        }
+    }
+
+    /// <summary>
+    /// ぶら下がり解除時の当たり判定消滅時間計測コルーチン
+    /// </summary>
+    IEnumerator DangleToNormalColliderOff()
+    {
+        float timer = 0.0f;
+        CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
+        col.enabled = false;
+        while (timer < m_DangleColliderOffTime)
+        {
+            yield return null;
+        }
+        col.enabled = true;
+        yield break;
+    }
+
+    /// <summary>
+    /// ぶら下がりから通常時へ移行したときの処理
+    /// </summary>
+    public void DangleToNormal()
+    {
+        StartCoroutine(DangleToNormalColliderOff());
+    }
+
+
     /// <summary>
     /// 崖つかまり
     /// </summary>
@@ -782,6 +876,8 @@ public class NormalMoveTest : MonoBehaviour
         if (m_WallHoldTimer > 0.1f)
         {
             tr.position += (m_Height * 1.2f * tr.up * Time.deltaTime) + (0.5f * tr.forward * Time.deltaTime);
+
+            //アニメーション
             if (anm.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash("Base Layer.Idle"))
             {
                 anm.SetBool("ClambLarge", false);
