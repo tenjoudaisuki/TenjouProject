@@ -61,7 +61,8 @@ public class BlockCursorDraw : MonoBehaviour
 
         if (currentDistance <= targetBlock.GetComponent<Block>().GetPushDistance()
             && player.GetComponent<NormalMove>().GetIsGroundHit()
-            && Vector3.Angle(player.up, targetBlock.GetComponent<Block>().GetPlayerDirection().normal) == 90.0f)
+            && Vector3.Angle(player.up, targetBlock.GetComponent<Block>().GetPlayerDirection().normal) >= 89.0f
+            && Vector3.Angle(player.up, targetBlock.GetComponent<Block>().GetPlayerDirection().normal) <= 91.0f)
         {
             //表示をする
             cursorRenderer.enabled = true;
@@ -69,8 +70,9 @@ public class BlockCursorDraw : MonoBehaviour
             transform.position = player.position + player.up * 0.8f;
 
             //常にカメラの方向を見るように回転
-            transform.forward = Camera.main.transform.forward;
-            transform.Rotate(-90.0f, 0.0f, 0.0f);
+            //transform.forward = Camera.main.transform.forward;
+            //transform.Rotate(-90.0f, 0.0f, 0.0f);
+            transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward, Camera.main.transform.up);
         }
         else
         {

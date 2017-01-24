@@ -49,7 +49,7 @@ public class DangleMove : MonoBehaviour
             //プレイヤーの位置から回転軸までの距離　0.009はIronBarの半径
             float distance = 0.62f + 0.009f;
 
-            tr.RotateAround(tr.position + tr.up * distance, tr.right, Input.GetAxis("Vertical") * angleSpeed * Time.deltaTime);
+            tr.RotateAround(tr.position + tr.up * distance, tr.right, -Input.GetAxis("Vertical") * angleSpeed * Time.deltaTime);
 
 
             float moveArea = ironBar.GetComponent<IronBar>().GetMoveArea();
