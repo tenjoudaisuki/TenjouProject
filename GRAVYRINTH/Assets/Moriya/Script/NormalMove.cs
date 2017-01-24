@@ -896,6 +896,8 @@ public class NormalMove : MonoBehaviour
     {
         rb.velocity = Vector3.zero;//いったんリセット
         rb.AddForce(v * m_PoleJumpPower);
+        m_InputAngleY += 180;
+        StartCoroutine(DangleToNormalColliderOff());
     }
 
     /// <summary>
