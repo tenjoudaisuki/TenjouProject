@@ -5,6 +5,7 @@ public class CameraControl : ICamera
 {
     private enum State
     {
+        None,
         StartMove,
         Normal,
         BraDown,
@@ -175,13 +176,15 @@ public class CameraControl : ICamera
 
         if (m_Target.GetComponent<PlayerMoveManager>().GetState() == PlayerState.IRON_BAR_CLIMB)
         {
-            CameraPosDirection = -m_Target.forward;
-            var position = (m_Target.position) + (CameraPosDirection * m_Distance);
-            var rotate = Quaternion.LookRotation(CameraPosDirection, m_Target.up);
 
-            transform.position = position;
-            transform.localRotation = rotate;
-            mCurrentState = State.Crimb;
+            offset = m_Target.right * m_TargetOffset.x + m_Target.up * m_TargetOffset.y + m_Target.forward * m_TargetOffset.z;
+
+            CameraPosDirection = m_Target.forward;
+            var position = (m_Target.position + offset) + (CameraPosDirection.normalized * m_Distance); ;
+            var rotate = Quaternion.LookRotation(-CameraPosDirection, m_Target.up);
+
+            transform.position = Vector3.Lerp(transform.position, position, 0.3f);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
         }
     }
 
@@ -219,7 +222,7 @@ public class CameraControl : ICamera
         YAxisTotal += horizontal;
         //YAxisTotal = Mathf.Clamp(YAxisTotal, -89, 89);
 
-        if (Input.GetAxisRaw("Vertical") != 0)
+        if (Input.GetAxisRaw("Vertical") != 0 || Input.GetAxisRaw("Horizontal") != 0)
         {
             XAxisTotal = 90;
             CameraPosDirection = m_Target.up;
@@ -285,8 +288,10 @@ public class CameraControl : ICamera
 
         if (Input.GetAxisRaw("Vertical") != 0 || Input.GetAxisRaw("Horizontal") != 0)
         {
+            offset = m_Target.right * m_TargetOffset.x + m_Target.up * m_TargetOffset.y + m_Target.forward * m_TargetOffset.z;
+
             CameraPosDirection = m_Target.forward;
-            var position = (m_Target.position) + (CameraPosDirection * m_Distance);
+            var position = (m_Target.position + offset) + (CameraPosDirection.normalized * m_Distance); ;
             var rotate = Quaternion.LookRotation(-CameraPosDirection,m_Target.up);
 
             transform.position = Vector3.Lerp(transform.position, position, 0.3f);
