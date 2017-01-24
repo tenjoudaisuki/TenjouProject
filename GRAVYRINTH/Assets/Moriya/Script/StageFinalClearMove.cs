@@ -58,9 +58,9 @@ public class StageFinalClearMove : MonoBehaviour
     {
         //rigidbodyによる変更をできないようにする
         rb.constraints = RigidbodyConstraints.FreezeAll;
-
         cc.enabled = false;
         m_ClearPosition = tr.position;
+
         StartCoroutine(SettingMove());
     }
 
@@ -76,6 +76,8 @@ public class StageFinalClearMove : MonoBehaviour
     /// </summary>
     IEnumerator SettingMove()
     {
+        //ホバーアニメーション開始
+        anm.SetBool("Hover", true);
         float timer = 0.0f;
         while (true)
         {
@@ -110,7 +112,8 @@ public class StageFinalClearMove : MonoBehaviour
     IEnumerator Spin()
     {
         float speed = 0.0f;
-        //アニメーション開始
+        //丸まりアニメーション開始
+        anm.SetBool("Hover", false);
         anm.SetBool("IsTaihouRoll", true);
         while (true)
         {
