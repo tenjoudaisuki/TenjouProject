@@ -94,8 +94,9 @@ public class BlockCursorDraw : MonoBehaviour
             transform.position = player.position + player.up * 0.8f;
 
             //常にカメラの方向を見るように回転
-            transform.forward = Camera.main.transform.forward;
-            transform.Rotate(-90.0f, 0.0f, 0.0f);
+            //transform.forward = Camera.main.transform.forward;
+            //transform.Rotate(-90.0f, 0.0f, 0.0f);
+            transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward, Camera.main.transform.up);
         }
         else
         {
