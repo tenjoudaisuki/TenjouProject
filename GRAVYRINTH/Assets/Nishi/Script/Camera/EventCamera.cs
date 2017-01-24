@@ -16,7 +16,7 @@ public class EventCamera : ICamera {
     // Use this for initialization
     public override void Start ()
     {
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NONE);
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
         LeanTween.move(gameObject, mToPosition, mMoveTime)
             .setOnComplete(()=> {
                 mCompleteAction();

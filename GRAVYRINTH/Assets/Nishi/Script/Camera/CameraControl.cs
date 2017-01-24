@@ -7,7 +7,8 @@ public class CameraControl : ICamera
     {
         StartMove,
         Normal,
-        BraDown
+        BraDown,
+        Crimb,
     }
 
     [SerializeField, TooltipAttribute("注視点の対象")]
@@ -165,10 +166,22 @@ public class CameraControl : ICamera
 
         if (m_Target.GetComponent<PlayerMoveManager>().GetState() == PlayerState.IRON_BAR_DANGLE)
         {
-            CameraPosDirection = -m_Target.forward;
+            XAxisTotal = 90;
+            CameraPosDirection = m_Target.up;
             transform.position = (m_Target.position) + (CameraPosDirection * m_Distance);
             transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, m_Target.up);
             mCurrentState = State.BraDown;
+        }
+
+        if (m_Target.GetComponent<PlayerMoveManager>().GetState() == PlayerState.IRON_BAR_CLIMB)
+        {
+            CameraPosDirection = -m_Target.forward;
+            var position = (m_Target.position) + (CameraPosDirection * m_Distance);
+            var rotate = Quaternion.LookRotation(CameraPosDirection, m_Target.up);
+
+            transform.position = position;
+            transform.localRotation = rotate;
+            mCurrentState = State.Crimb;
         }
     }
 
@@ -267,6 +280,46 @@ public class CameraControl : ICamera
 
     }
 
+    private void Crimb()
+    {
+
+        if (Input.GetAxisRaw("Vertical") != 0 || Input.GetAxisRaw("Horizontal") != 0)
+        {
+            CameraPosDirection = m_Target.forward;
+            var position = (m_Target.position) + (CameraPosDirection * m_Distance);
+            var rotate = Quaternion.LookRotation(-CameraPosDirection,m_Target.up);
+
+            transform.position = Vector3.Lerp(transform.position, position, 0.3f);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
+        }
+        else
+        {
+            //モデル座標でのオフセット座標を求める
+            offset = m_Target.right * m_TargetOffset.x + m_Target.up * m_TargetOffset.y + m_Target.forward * m_TargetOffset.z;
+
+            //ターゲットから見てカメラの方向でカメラの前ベクトルを求める
+            Vector3 f = CameraPosDirection;
+            //ターゲットの上ベクトルを　右ベクトルを軸にXAxisTotal度回転して　カメラの上ベクトルを求める
+            Vector3 up = Quaternion.AngleAxis(XAxisTotal, transform.right) * m_Target.up;
+
+            //ターゲットの周りをステイックによって回転移動
+            TargetAroundMove(m_Target.up, transform.right);
+
+            //カメラを回転させる
+            //transform.localRotation = Quaternion.Slerp(transform.localRotation,
+            //    Quaternion.LookRotation(-CameraPosDirection, m_Target.up) ,0.5f);
+            //補間なし版
+            transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, m_Target.up);
+
+            Debug.DrawRay(m_Target.position, Quaternion.AngleAxis(XAxisTotal, transform.right) * m_Target.up, Color.green);
+        }
+
+        if (m_Target.GetComponent<PlayerMoveManager>().GetState() != PlayerState.IRON_BAR_CLIMB)
+        {
+            mCurrentState = State.Normal;
+        }
+    }
+
     /// <summary>
     /// カメラを最初の状態に
     /// </summary>
@@ -286,6 +339,7 @@ public class CameraControl : ICamera
             case State.StartMove: StartMove(); break;
             case State.Normal: Normal(); break;
             case State.BraDown: BraDown(); break;
+            case State.Crimb: Crimb(); break;
         }
     }
 
