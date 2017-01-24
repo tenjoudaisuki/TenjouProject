@@ -36,8 +36,8 @@ public class MenuManager : MonoBehaviour
     private RectTransform stage;
     private RectTransform stageSubmitButton;
     private RectTransform numbar;
-    private RectTransform tutorial;
-    private RectTransform hyphen;
+    //private RectTransform tutorial;
+    //private RectTransform hyphen;
     private RectTransform rightArrow;
     private RectTransform leftArrow;
     private RectTransform stageSelectBack;
@@ -81,7 +81,7 @@ public class MenuManager : MonoBehaviour
         sprites = Resources.LoadAll<Sprite>("UIImage/number");
 
         //実際に描画されるステージ番号の配列を登録
-        drawingStageNumbars = new int[] { 1, 1, 2, 3, 2, 4, 5, 6, 3, 11 };
+        drawingStageNumbars = new int[] { 0, 1, 2, 3, 4, 11 };
     }
 
     void Update()
@@ -269,8 +269,8 @@ public class MenuManager : MonoBehaviour
         stage = GameObject.Find("StageText").GetComponent<RectTransform>();
         stageSubmitButton = GameObject.Find("StageSubmitButton").GetComponent<RectTransform>();
         numbar = GameObject.Find("StageNumbar").GetComponent<RectTransform>();
-        tutorial = GameObject.Find("Tutorial").GetComponent<RectTransform>();
-        hyphen = GameObject.Find("Hyphen").GetComponent<RectTransform>();
+        //tutorial = GameObject.Find("Tutorial").GetComponent<RectTransform>();
+        //hyphen = GameObject.Find("Hyphen").GetComponent<RectTransform>();
         rightArrow = GameObject.Find("RightArrow").GetComponent<RectTransform>();
         leftArrow = GameObject.Find("LeftArrow").GetComponent<RectTransform>();
         stageSelectBack = GameObject.Find("StageSelectBack").GetComponent<RectTransform>();
@@ -281,8 +281,8 @@ public class MenuManager : MonoBehaviour
         rectTransforms.Remove(GameObject.Find("StageSelectFrame").GetComponent<RectTransform>());
 
         //いったん削除
-        rectTransforms.Remove(tutorial);
-        rectTransforms.Remove(hyphen);
+        //rectTransforms.Remove(tutorial);
+        //rectTransforms.Remove(hyphen);
 
         //Listの中身のAlphaを1.0秒かけて1.0にTween
         foreach (RectTransform rectTr in rectTransforms)
@@ -299,8 +299,8 @@ public class MenuManager : MonoBehaviour
             ArrowAlpha();
 
             //追加
-            rectTransforms.Add(tutorial);
-            rectTransforms.Add(hyphen);
+            //rectTransforms.Add(tutorial);
+            //rectTransforms.Add(hyphen);
         }));
 
         //ステージの番号を0に設定
@@ -458,7 +458,7 @@ public class MenuManager : MonoBehaviour
     private void StageNumbarInitialize(int numbar)
     {
         //stageNumbarを範囲内に収める
-        numbar = Mathf.Clamp(numbar, 0, 9);
+        numbar = Mathf.Clamp(numbar, 0, 5);
 
         //stageNumbrを範囲内に収める
         stageNumber = numbar;
@@ -472,25 +472,27 @@ public class MenuManager : MonoBehaviour
         //SourceImageをStageNumberのものに変更
         img.sprite = System.Array.Find<Sprite>(sprites, (sprite) => sprite.name.Equals(fileName));
 
+        LeanTween.move(this.numbar, new Vector2(114, 275), 0.0f);
+
         //ステージ番号がチュートリアルの場合　配置を変更
-        if (numbar == 0 || numbar == 4 || numbar == 8)
-        {
-            LeanTween.alpha(tutorial, 1.0f, 1.0f);
-            LeanTween.alpha(hyphen, 1.0f, 1.0f);
-            LeanTween.move(this.numbar, new Vector2(162, 275), 0.0f);
-        }
-        else
-        {
-            LeanTween.alpha(tutorial, 0.0f, 0.0f);
-            LeanTween.alpha(hyphen, 0.0f, 0.0f);
-            LeanTween.move(this.numbar, new Vector2(114, 275), 0.0f);
-        }
+        //if (numbar == 0 || numbar == 4 || numbar == 8)
+        //{
+        //    LeanTween.alpha(tutorial, 1.0f, 1.0f);
+        //    LeanTween.alpha(hyphen, 1.0f, 1.0f);
+        //    LeanTween.move(this.numbar, new Vector2(162, 275), 0.0f);
+        //}
+        //else
+        //{
+        //    LeanTween.alpha(tutorial, 0.0f, 0.0f);
+        //    LeanTween.alpha(hyphen, 0.0f, 0.0f);
+        //    LeanTween.move(this.numbar, new Vector2(114, 275), 0.0f);
+        //}
     }
 
     private void StageNumbarUpdate(int numbar)
     {
         //stageNumbarを範囲内に収める
-        numbar = Mathf.Clamp(numbar, 0, 9);
+        numbar = Mathf.Clamp(numbar, 0, 5);
 
         //stageNumbrを範囲内に収める
         stageNumber = numbar;
@@ -504,19 +506,21 @@ public class MenuManager : MonoBehaviour
         //SourceImageをStageNumberのものに変更
         img.sprite = System.Array.Find<Sprite>(sprites, (sprite) => sprite.name.Equals(fileName));
 
+        LeanTween.move(this.numbar, new Vector2(114, 275), 0.0f);
+
         //ステージ番号がチュートリアルの場合　配置を変更
-        if (numbar == 0 || numbar == 4 || numbar == 8)
-        {
-            LeanTween.alpha(tutorial, 1.0f, 0.1f);
-            LeanTween.alpha(hyphen, 1.0f, 0.1f);
-            LeanTween.move(this.numbar, new Vector2(162, 275), 0.0f);
-        }
-        else
-        {
-            LeanTween.alpha(tutorial, 0.0f, 0.1f);
-            LeanTween.alpha(hyphen, 0.0f, 0.1f);
-            LeanTween.move(this.numbar, new Vector2(114, 275), 0.0f);
-        }
+        //if (numbar == 0 || numbar == 4 || numbar == 8)
+        //{
+        //    LeanTween.alpha(tutorial, 1.0f, 0.1f);
+        //    LeanTween.alpha(hyphen, 1.0f, 0.1f);
+        //    LeanTween.move(this.numbar, new Vector2(162, 275), 0.0f);
+        //}
+        //else
+        //{
+        //    LeanTween.alpha(tutorial, 0.0f, 0.1f);
+        //    LeanTween.alpha(hyphen, 0.0f, 0.1f);
+        //    LeanTween.move(this.numbar, new Vector2(114, 275), 0.0f);
+        //}
     }
 
     private void ArrowAlpha()
@@ -526,7 +530,7 @@ public class MenuManager : MonoBehaviour
         else
             LeanTween.alpha(leftArrow, 1.0f, 0.3f);
 
-        if (stageNumber == 9)
+        if (stageNumber == 5)
             LeanTween.alpha(rightArrow, 0.5f, 0.3f);
         else
             LeanTween.alpha(rightArrow, 1.0f, 0.3f);
