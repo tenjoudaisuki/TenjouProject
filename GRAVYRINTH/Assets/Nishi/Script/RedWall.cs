@@ -34,6 +34,7 @@ public class RedWall : MonoBehaviour
                 Vector3 position = other.gameObject.transform.position + (-Vector3.forward * 10);
                 GameObject.Find("GravityDirection").GetComponent<GravityDirection>().SetDirection(-Vector3.up);
                 other.gameObject.GetComponent<NormalMove>().Respawn(position, transform.up, -transform.forward);
+                GameObject.Find("Camera").GetComponent<CameraManager>().CameraReset(); ;
             }
         }
     }
