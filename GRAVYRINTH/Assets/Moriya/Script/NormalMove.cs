@@ -224,7 +224,7 @@ public class NormalMove : MonoBehaviour
     /// <summary>
     /// 鉄棒との判定処理
     /// </summary>
-    private void IronBar()
+    public void IronBar()
     {
         m_IronBarHitDelay -= Time.deltaTime;
 
@@ -236,7 +236,7 @@ public class NormalMove : MonoBehaviour
         int layerMask = 1 << 8;
 
         //鉄棒をポールとして判定
-        if (Physics.SphereCast(forward.origin, 0.1f, forward.direction, out forwardHitInto, 0.2f, layerMask, QueryTriggerInteraction.Ignore))
+        if (Physics.SphereCast(forward.origin, 0.1f, forward.direction, out forwardHitInto, 0.1f, layerMask, QueryTriggerInteraction.Ignore))
         {
             float angle = Vector3.Angle(tr.up, forwardHitInto.collider.GetComponent<IronBar>().GetBarVector());
 
@@ -247,22 +247,44 @@ public class NormalMove : MonoBehaviour
             }
         }
 
+        Ray down = new Ray(tr.position, -tr.up);
+        RaycastHit downHitInto;
+
+        Debug.DrawRay(down.origin, down.direction * 0.7f, Color.black);
+
+        //鉄棒を鉄棒として判定
+        if (Physics.BoxCast(down.origin, Vector3.one * 0.2f, down.direction, out downHitInto, tr.localRotation, 0.2f, layerMask, QueryTriggerInteraction.Ignore)
+            && !GetIsGroundHit()
+            && m_MoveManager.GetState() != PlayerState.IRON_BAR_DANGLE)
+        {
+            float angle = Vector3.Angle(tr.up, downHitInto.collider.GetComponent<IronBar>().GetBarVector());
+
+            if (downHitInto.collider.tag == ("IronBar") && angle >= 45.0f && m_IronBarHitDelay < 0.0f)
+            {
+                m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
+                GetComponent<DangleMove>().SetTouchIronBar(true, downHitInto, "Down");
+            }
+        }
+
 
         Ray up = new Ray(tr.position, tr.up);
         RaycastHit upHitInto;
+
         Debug.DrawRay(up.origin, up.direction * 0.7f, Color.black);
 
         //鉄棒を鉄棒として判定
-        if (Physics.SphereCast(up.origin, 0.1f, up.direction, out upHitInto, 0.7f, layerMask, QueryTriggerInteraction.Ignore))
+        if (Physics.BoxCast(up.origin, Vector3.one * 0.1f, up.direction, out upHitInto, tr.localRotation, 0.7f, layerMask, QueryTriggerInteraction.Ignore)
+            && m_MoveManager.GetState() != PlayerState.IRON_BAR_DANGLE)
         {
             float angle = Vector3.Angle(tr.up, upHitInto.collider.GetComponent<IronBar>().GetBarVector());
 
             if (upHitInto.collider.tag == ("IronBar") && angle >= 45.0f && m_IronBarHitDelay < 0.0f)
             {
                 m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
-                GetComponent<DangleMove>().SetTouchIronBar(true, upHitInto);
+                GetComponent<DangleMove>().SetTouchIronBar(true, upHitInto, "Up");
             }
         }
+
     }
 
     /// <summary>
@@ -391,6 +413,13 @@ public class NormalMove : MonoBehaviour
 
         //前ベクトル×スティックの傾き×移動速度
         m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_LastSpeed;
+
+        //ブロックが近くになかったらnullを設定
+        if (m_CollisionBlock != null
+            && m_CollisionBlock.GetPushDistance() < Vector3.Distance(tr.position, m_CollisionBlock.gameObject.transform.position))
+        {
+            m_CollisionBlock = null;
+        }
 
         //ブロック移動ボタンを押していて、かつブロックが近くにある時
         if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true)

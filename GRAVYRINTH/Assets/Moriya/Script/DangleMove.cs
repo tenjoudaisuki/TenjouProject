@@ -21,7 +21,6 @@ public class DangleMove : MonoBehaviour
 
     private Vector3 forward;
 
-
     //アニメーション
     private Animator anm;
 
@@ -48,7 +47,7 @@ public class DangleMove : MonoBehaviour
             rb.velocity = Vector3.zero;
 
             //プレイヤーの位置から回転軸までの距離　0.009はIronBarの半径
-            float distance = hitInto.distance + 0.009f;
+            float distance = 0.62f + 0.009f;
 
             tr.RotateAround(tr.position + tr.up * distance, tr.right, Input.GetAxis("Vertical") * angleSpeed * Time.deltaTime);
 
@@ -97,8 +96,18 @@ public class DangleMove : MonoBehaviour
             anm.SetBool("PoleHMove", false);
     }
 
-    public void SetTouchIronBar(bool ishit, RaycastHit hitInto)
+    public void SetTouchIronBar(bool ishit, RaycastHit hitInto, string upOrDown)
     {
+        if (upOrDown == "Up")
+        {
+            tr.localPosition = hitInto.point + -tr.up * 0.62f;
+
+        }
+        else if (upOrDown == "Down")
+        {
+            tr.localPosition = hitInto.point + -tr.up * (0.009f + 0.62f);
+        }
+
         this.hitInto = hitInto;
         touchIronBar = true;
 

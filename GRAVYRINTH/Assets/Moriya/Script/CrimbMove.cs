@@ -100,6 +100,8 @@ public class CrimbMove : MonoBehaviour
 
     public void SetTouchIronBar(bool ishit, RaycastHit hitInto)
     {
+        tr.localPosition += tr.forward * 0.2f;
+
         this.hitInto = hitInto;
         touchIronBar = true;
 
