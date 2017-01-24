@@ -1,15 +1,30 @@
 fileFormatVersion: 2
-guid: 9ec81448cb529634689c90f6f7bd0f2e
-timeCreated: 1481532340
+guid: a53b41bfee227474aafe2dc040770fe4
+timeCreated: 1485151349
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
+    100002: f_taihou_1actived
+    100004: f_taihou_1aura
+    100006: f_taihou_1desactived
     400000: //RootNode
+    400002: f_taihou_1actived
+    400004: f_taihou_1aura
+    400006: f_taihou_1desactived
     2300000: //RootNode
+    2300002: f_taihou_1actived
+    2300004: f_taihou_1aura
+    2300006: f_taihou_1desactived
     3300000: //RootNode
-    4300000: f_taihou1aura
+    3300002: f_taihou_1actived
+    3300004: f_taihou_1aura
+    3300006: f_taihou_1desactived
+    4300000: f_taihou_1
+    4300002: f_taihou_1desactived
+    4300004: f_taihou_1actived
+    4300006: f_taihou_1aura
   materials:
     importMaterials: 1
     materialName: 0

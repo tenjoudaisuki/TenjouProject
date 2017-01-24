@@ -45,11 +45,11 @@ public class PlayerRespawn : MonoBehaviour
 
 	void Update ()
     {
-        //リスポーンする
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Respawn(GameObject.FindGameObjectWithTag("StartPoint").transform.position);
-        }            
+        ////リスポーンする
+        //if (Input.GetKeyDown(KeyCode.R))
+        //{
+        //    Respawn(GameObject.FindGameObjectWithTag("StartPoint").transform.position);
+        //}            
 	}
 
     /// <summary>

@@ -38,6 +38,7 @@ public class PlayerMoveManager : MonoBehaviour
         m_Moves = new Dictionary<PlayerState, MonoBehaviour>()
         {
             {PlayerState.NORMAL, GetComponent<NormalMove>() },
+            {PlayerState.NOT_MOVE, GetComponent<NotMove>() },
             {PlayerState.IRON_BAR_DANGLE, GetComponent<DangleMove>() },
             {PlayerState.IRON_BAR_CLIMB, GetComponent<CrimbMove>() },
             {PlayerState.CANNON_BLOCK, GetComponent<CannonBlockMove>() },
@@ -92,7 +93,6 @@ public class PlayerMoveManager : MonoBehaviour
                 //一定時間カプセルの当たり判定をオフにする処理を実行
                 m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().DangleToNormal();
             }
-            
         }
         //通常→ステージクリアへの変更時
         else if (m_PrevPlayerState == PlayerState.NORMAL && m_PlayerState == PlayerState.STAGE_CLEAR)
@@ -111,6 +111,19 @@ public class PlayerMoveManager : MonoBehaviour
         {
             //移動開始
             m_Moves[PlayerState.STAGE_FINAL_CLEAR].GetComponent<StageFinalClearMove>().StartMove();
+        }
+        else if(m_PlayerState == PlayerState.NOT_MOVE)
+        {
+            NotMove nm = m_Moves[PlayerState.NOT_MOVE].GetComponent<NotMove>();
+            nm.SetUpFront(tr.up, tr.forward);
+            nm.AnimationInitialize();
+        }
+
+        else if (
+            m_PrevPlayerState == PlayerState.NOT_MOVE
+            && m_PlayerState == PlayerState.NORMAL)
+        {
+            m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().SetUpFront(tr.up, tr.forward);
         }
     }
 

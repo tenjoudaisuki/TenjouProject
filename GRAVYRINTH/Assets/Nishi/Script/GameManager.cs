@@ -69,6 +69,7 @@ public class GameManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NONE);
     }
 
     public void Update()
@@ -120,7 +121,6 @@ public class GameManager : MonoBehaviour
 
     void GamePlayMode()
     {
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
         GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.GamePlay);
     }
 

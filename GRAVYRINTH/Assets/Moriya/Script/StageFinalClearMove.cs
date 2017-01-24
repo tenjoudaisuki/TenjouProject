@@ -56,6 +56,9 @@ public class StageFinalClearMove : MonoBehaviour
 
     public void StartMove()
     {
+        //rigidbodyによる変更をできないようにする
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+
         cc.enabled = false;
         m_ClearPosition = tr.position;
         StartCoroutine(SettingMove());
@@ -131,8 +134,6 @@ public class StageFinalClearMove : MonoBehaviour
     /// </summary>
     IEnumerator Shot()
     {
-        //rigidbodyによる変更をできないようにする
-        rb.constraints = RigidbodyConstraints.FreezeAll;
         float timer = 0.0f;
         while (true)
         {

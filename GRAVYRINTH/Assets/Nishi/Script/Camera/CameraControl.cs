@@ -59,6 +59,7 @@ public class CameraControl : ICamera
 
     public override void Start()
     {
+        mTimer = 0.0f;
         mFastPosition = transform.position;
         mCurrentState = State.StartMove;
     }
@@ -156,7 +157,7 @@ public class CameraControl : ICamera
 
         //カメラを回転させる
         //transform.localRotation = Quaternion.Slerp(transform.localRotation,
-        //Quaternion.LookRotation(-CameraPosDirection, Quaternion.AngleAxis(XAxisTotal, transform.right) * Target.up), 0.5f);
+        //    Quaternion.LookRotation(-CameraPosDirection, m_Target.up) ,0.5f);
         //補間なし版
         transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, m_Target.up);
 
@@ -173,7 +174,11 @@ public class CameraControl : ICamera
 
     private void StartMove()
     {
-        if (mTimer > 1) mCurrentState = State.Normal;
+        if (mTimer > 1)
+        {
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
+            mCurrentState = State.Normal;
+        }
 
         CameraPosDirection = -m_Target.forward;
         offset = m_Target.right * m_TargetOffset.x + m_Target.up * m_TargetOffset.y + m_Target.forward * m_TargetOffset.z;
@@ -205,8 +210,11 @@ public class CameraControl : ICamera
         {
             XAxisTotal = 90;
             CameraPosDirection = m_Target.up;
-            transform.position = (m_Target.position) + (CameraPosDirection * m_Distance);
-            transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, m_Target.forward);
+            var position = (m_Target.position) + (CameraPosDirection * m_Distance);
+            var rotate = Quaternion.LookRotation(-CameraPosDirection, m_Target.forward);
+
+            transform.position = Vector3.Lerp(transform.position, position, 0.3f);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
         }
         else
         {
@@ -240,9 +248,9 @@ public class CameraControl : ICamera
             Debug.DrawRay(m_Target.position, CameraPosDirection, Color.yellow);
 
             //補間あり移動
-            //transform.position = Vector3.Lerp(transform.position, next, 0.3f);
+            transform.position = Vector3.Lerp(transform.position, next, 0.3f);
             //補間なし移動
-            transform.position = next;
+            //transform.position = next;
 
             Vector3 DirUp = Vector3.Cross(transform.right, CameraPosDirection);
             //transform.localRotation = Quaternion.Slerp(transform.localRotation,
