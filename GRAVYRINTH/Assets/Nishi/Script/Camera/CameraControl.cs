@@ -278,6 +278,7 @@ public class CameraControl : ICamera
 
         if (m_Target.GetComponent<PlayerMoveManager>().GetState() != PlayerState.IRON_BAR_DANGLE)
         {
+            mUp = m_Target.up;
             XAxisTotal = m_XAngleLimit;
             mCurrentState = State.Normal;
         }
