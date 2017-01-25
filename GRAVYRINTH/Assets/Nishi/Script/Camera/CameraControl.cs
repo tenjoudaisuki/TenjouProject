@@ -168,24 +168,32 @@ public class CameraControl : ICamera
 
         if (m_Target.GetComponent<PlayerMoveManager>().GetState() == PlayerState.IRON_BAR_DANGLE)
         {
+            mCurrentState = State.None;
             XAxisTotal = 90;
             CameraPosDirection = m_Target.up;
-            transform.position = (m_Target.position) + (CameraPosDirection * m_Distance);
-            transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, m_Target.up);
-            mCurrentState = State.BraDown;
+            offset = m_Target.right * m_TargetOffset.x + m_Target.up * m_TargetOffset.y + m_Target.forward * m_TargetOffset.z;
+
+            var position = (m_Target.position + offset) + (CameraPosDirection.normalized * m_Distance); ;
+            var rotate = Quaternion.LookRotation(-CameraPosDirection, m_Target.up);
+
+            LeanTween.move(gameObject, position, 0.6f).setOnComplete(() => { mCurrentState = State.BraDown; });
+            LeanTween.rotateLocal(gameObject, rotate.eulerAngles, 0.5f);
         }
 
         if (m_Target.GetComponent<PlayerMoveManager>().GetState() == PlayerState.IRON_BAR_CLIMB)
         {
-
+            mCurrentState = State.None;
+            XAxisTotal = 0;
             offset = m_Target.right * m_TargetOffset.x + m_Target.up * m_TargetOffset.y + m_Target.forward * m_TargetOffset.z;
 
             CameraPosDirection = m_Target.forward;
             var position = (m_Target.position + offset) + (CameraPosDirection.normalized * m_Distance); ;
             var rotate = Quaternion.LookRotation(-CameraPosDirection, m_Target.up);
 
-            transform.position = Vector3.Lerp(transform.position, position, 0.3f);
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
+            LeanTween.move(gameObject, position,0.6f).setOnComplete(() => { mCurrentState = State.Crimb; });
+            LeanTween.rotateLocal(gameObject, rotate.eulerAngles, 0.5f);
+            //transform.position = Vector3.Lerp(transform.position, position, 0.3f);
+            //transform.localRotation = rotate;
         }
     }
 
@@ -290,6 +298,7 @@ public class CameraControl : ICamera
 
         if (Input.GetAxisRaw("Vertical") != 0 || Input.GetAxisRaw("Horizontal") != 0)
         {
+            XAxisTotal = 0;
             offset = m_Target.right * m_TargetOffset.x + m_Target.up * m_TargetOffset.y + m_Target.forward * m_TargetOffset.z;
 
             CameraPosDirection = m_Target.forward;

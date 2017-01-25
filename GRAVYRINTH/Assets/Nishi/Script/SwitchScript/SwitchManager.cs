@@ -10,6 +10,8 @@ public class SwitchManager : MonoBehaviour
     public GameObject mFinalDoor; 
     bool isActive;
 
+    public float mOpenTime = 5.0f;
+
     // Use this for initialization
     void Start()
     {
@@ -41,7 +43,7 @@ public class SwitchManager : MonoBehaviour
 
             GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Event);
 
-            LeanTween.rotate(mFinalDoor, new Vector3(90, 0, 0), 1.0f);
+            LeanTween.rotate(mFinalDoor, new Vector3(90, 0, 0), mOpenTime);
             gameObject.SetActive(false);
         }
     }

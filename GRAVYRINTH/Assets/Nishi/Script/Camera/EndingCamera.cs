@@ -5,13 +5,14 @@ public class EndingCamera : ICamera {
 
     public enum Phase
     {
+        None,
         Phase1,  //大砲に乗った～ガラスに近づく
         Phase2,  //ガラスに近づく～ガラスを超える
         Phase3,  //ガラスを超える～ゴールに近づく
         Phase4,  //ゴールに近付く～終わり
     }
 
-    private Phase mCurrentPhase;
+    public Phase mCurrentPhase = Phase.None;
     private GameObject mTarget;
     private Vector3 mOffset;
 
@@ -26,9 +27,12 @@ public class EndingCamera : ICamera {
 	// Use this for initialization
 	public override void  Start ()
     {
-        mCurrentPhase = Phase.Phase1;
-        mOffset = -Vector3.forward * 5;
+        mOffset = (mDisolace + -Vector3.forward) * mFirstDistance;
         mTarget = GameObject.FindGameObjectWithTag("Player");
+
+        LeanTween.move(gameObject, mTarget.transform.position + mOffset, 0.5f)
+            .setOnUpdate((float val) => { transform.LookAt(mTarget.transform); })
+            .setOnComplete(()=> { mCurrentPhase = Phase.Phase1; });
 	}
 	
 	// Update is called once per frame
@@ -49,7 +53,6 @@ public class EndingCamera : ICamera {
 
     void Phase1()
     {
-
         mOffset =  (mDisolace + -Vector3.forward) * mFirstDistance;
         if (!isfirst)
         {
