@@ -32,16 +32,21 @@ public class DoorButton : MonoBehaviour
         GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(3.0f);
         GameObject.Find("Camera").GetComponent<EventCamera>().SetTarget(mCameraPos);
 
+        LeanTween.moveLocalX(gameObject,0,0).setDelay(0.5f).setOnComplete(() => {
+            GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Event);
+        });
+
+        mButton.SetActive(false);
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
+
         GameObject.Find("Camera").GetComponent<EventCamera>().SetCompleteAction(
             () => {
-                mButton.SetActive(false);
                 LeanTween.moveLocalY(mDoor,-0.01f,1.0f).setDelay(1.0f);
                 LeanTween.alpha(mAura, 0.0f, 1.0f).setOnComplete(() => { Destroy(mAura); }).setDelay(3.0f);
                 mlight.gameObject.SetActive(true);
                 LeanTween.value(0.1f, 8.0f, 1.0f).setOnUpdate((float val) => { mlight.intensity = val; }).setDelay(5.0f);
             });
 
-        GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Event);
         isDown = true;
     }
 
