@@ -236,12 +236,14 @@ public class NormalMove : MonoBehaviour
         int layerMask = 1 << 8;
 
         //鉄棒をポールとして判定
-        if (Physics.SphereCast(forward.origin, 0.1f, forward.direction, out forwardHitInto, 0.1f, layerMask, QueryTriggerInteraction.Ignore))
+        if (Physics.BoxCast(forward.origin, Vector3.one * 0.05f, forward.direction, out forwardHitInto, tr.localRotation, 0.1f, layerMask, QueryTriggerInteraction.Ignore))
         {
             float angle = Vector3.Angle(tr.up, forwardHitInto.collider.GetComponent<IronBar>().GetBarVector());
 
             if (forwardHitInto.collider.tag == ("IronBar") && angle < 45.0f && m_IronBarHitDelay < 0.0f)
             {
+                CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
+                col.enabled = false;
                 m_MoveManager.SetState(PlayerState.IRON_BAR_CLIMB);
                 GetComponent<CrimbMove>().SetTouchIronBar(true, forwardHitInto);
             }
@@ -254,15 +256,17 @@ public class NormalMove : MonoBehaviour
 
         //鉄棒を鉄棒として判定
         if (Physics.BoxCast(down.origin, Vector3.one * 0.2f, down.direction, out downHitInto, tr.localRotation, 0.2f, layerMask, QueryTriggerInteraction.Ignore)
-            && !GetIsGroundHit()
-            && m_MoveManager.GetState() != PlayerState.IRON_BAR_DANGLE)
+            && !GetIsGroundHit())
         {
             float angle = Vector3.Angle(tr.up, downHitInto.collider.GetComponent<IronBar>().GetBarVector());
 
             if (downHitInto.collider.tag == ("IronBar") && angle >= 45.0f && m_IronBarHitDelay < 0.0f)
             {
+                CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
+                col.enabled = false;
                 m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
                 GetComponent<DangleMove>().SetTouchIronBar(true, downHitInto, "Down");
+                return;
             }
         }
 
@@ -273,18 +277,18 @@ public class NormalMove : MonoBehaviour
         Debug.DrawRay(up.origin, up.direction * 0.7f, Color.black);
 
         //鉄棒を鉄棒として判定
-        if (Physics.BoxCast(up.origin, Vector3.one * 0.1f, up.direction, out upHitInto, tr.localRotation, 0.7f, layerMask, QueryTriggerInteraction.Ignore)
-            && m_MoveManager.GetState() != PlayerState.IRON_BAR_DANGLE)
+        if (Physics.BoxCast(up.origin, Vector3.one * 0.1f, up.direction, out upHitInto, tr.localRotation, 0.7f, layerMask, QueryTriggerInteraction.Ignore))
         {
             float angle = Vector3.Angle(tr.up, upHitInto.collider.GetComponent<IronBar>().GetBarVector());
 
             if (upHitInto.collider.tag == ("IronBar") && angle >= 45.0f && m_IronBarHitDelay < 0.0f)
             {
+                CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
+                col.enabled = false;
                 m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
                 GetComponent<DangleMove>().SetTouchIronBar(true, upHitInto, "Up");
             }
         }
-
     }
 
     /// <summary>

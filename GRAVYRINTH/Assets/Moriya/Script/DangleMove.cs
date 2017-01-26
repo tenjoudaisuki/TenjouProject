@@ -47,7 +47,7 @@ public class DangleMove : MonoBehaviour
             rb.velocity = Vector3.zero;
 
             //プレイヤーの位置から回転軸までの距離　0.009はIronBarの半径
-            float distance = 0.62f + 0.009f;
+            float distance = 0.57f + 0.009f;
 
             tr.RotateAround(tr.position + tr.up * distance, tr.right, -Input.GetAxis("Vertical") * angleSpeed * Time.deltaTime);
 
@@ -87,6 +87,9 @@ public class DangleMove : MonoBehaviour
             touchIronBar = false;
 
             jumpCursor.IsHit(false);
+
+            //CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
+            //col.enabled = true;
         }
 
         //アニメーション
@@ -100,12 +103,18 @@ public class DangleMove : MonoBehaviour
     {
         if (upOrDown == "Up")
         {
-            tr.localPosition = hitInto.point + -tr.up * 0.62f;
+            StartCoroutine(DelayMethod(1, () =>
+            {
+                tr.localPosition = hitInto.point + -tr.up * 0.57f;
+            }));
 
         }
         else if (upOrDown == "Down")
         {
-            tr.localPosition = hitInto.point + -tr.up * (0.009f + 0.62f);
+            StartCoroutine(DelayMethod(1, () =>
+            {
+                tr.localPosition = hitInto.point + -tr.up * (0.009f + 0.57f - 0.13f);
+            }));
         }
 
         this.hitInto = hitInto;
@@ -150,4 +159,11 @@ public class DangleMove : MonoBehaviour
         }
         action();
     }
+
+    //void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.black;
+    //    if (hitInto.collider != null)
+    //        Gizmos.DrawWireSphere(hitInto.point, 0.2f);
+    //}
 }
