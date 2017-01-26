@@ -23,8 +23,8 @@ public class StageClearMove : MonoBehaviour
     private Vector3 m_ClearPosition;
 
     /*==外部参照変数==*/
-    
-    
+
+
     void Awake()
     {
         tr = GetComponent<Transform>();
@@ -44,6 +44,11 @@ public class StageClearMove : MonoBehaviour
         m_ClearDoorTr = GameObject.FindGameObjectWithTag("ClearDoor").transform;
         m_ClearPosition = tr.position;
         StartCoroutine(ClearMove());
+    }
+
+    public void Update()
+    {
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
     }
 
     IEnumerator ClearMove()
