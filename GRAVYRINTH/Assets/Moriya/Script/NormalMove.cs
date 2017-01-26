@@ -669,9 +669,9 @@ public class NormalMove : MonoBehaviour
             Transform hitTr = m_GroundHitInfo.hit.transform;
             //回転床と当たっているなら
             if (hitTr.tag == "SpinChild")
-            {
+            {                
                 //床の移動方向に移動
-                Vector3 movement = hitTr.parent.gameObject.GetComponent<SpinChild>().GetMovement();
+                Vector3 movement = hitTr.gameObject.GetComponent<SpinChild>().GetMovement();
                 tr.position += movement;
             }
 
