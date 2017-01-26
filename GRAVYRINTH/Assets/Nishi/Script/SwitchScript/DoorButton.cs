@@ -32,7 +32,7 @@ public class DoorButton : MonoBehaviour
         GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(3.0f);
         GameObject.Find("Camera").GetComponent<EventCamera>().SetTarget(mCameraPos);
 
-        LeanTween.moveLocalX(gameObject,0,0).setDelay(0.5f).setOnComplete(() => {
+        LeanTween.moveLocalX(gameObject,transform.position.x,0).setDelay(0.5f).setOnComplete(() => {
             GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Event);
         });
 
