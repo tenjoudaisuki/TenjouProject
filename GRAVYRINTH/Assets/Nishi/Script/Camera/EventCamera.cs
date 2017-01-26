@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EventCamera : ICamera {
+public class EventCamera : ICamera
+{
 
     Vector3 mToPosition;
     Vector3 mToRotate;
@@ -14,22 +15,44 @@ public class EventCamera : ICamera {
     System.Action mCompleteAction = () => { };
 
     // Use this for initialization
-    public override void Start ()
+    public override void Start()
     {
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
         LeanTween.move(gameObject, mToPosition, mMoveTime)
-            .setOnComplete(()=> {
+            .setOnComplete(() =>
+            {
                 mCompleteAction();
                 mCompleteAction = () => { };
                 LeanTween.move(gameObject, gameObject.transform.position, 0.0f)
                 .setDelay(mEventEndTime)
-                .setOnComplete(() => { GetComponent<CameraManager>().StateChange(State.GamePlay);
+                .setOnComplete(() =>
+                {
+                    GetComponent<CameraManager>().StateChange(State.GamePlay);
                     GetComponent<CameraManager>().CameraReset();
                 });
             });
         LeanTween.rotateLocal(gameObject, mToRotate, mMoveTime);
 
     }
+
+    public void Update()
+    {
+        var pausebles = GameObject.FindGameObjectsWithTag("Pausable");
+        foreach (GameObject pauseble in pausebles)
+        {
+            var script = pauseble.GetComponent<Pausable>();
+            if (script.pausing)
+            {
+                LeanTween.pause(gameObject);
+            }
+            else
+            {
+                LeanTween.resume(gameObject);
+            }
+        }
+    }
+
+
 
     /// <summary>
     /// 移動時間の設定

@@ -121,9 +121,6 @@ public class Pausable : MonoBehaviour
         {
             anime.enabled = false;
         }
-
-
-
     }
 
     /// <summary>

@@ -58,7 +58,7 @@ public class CrimbMove : MonoBehaviour
             rb.velocity = Vector3.zero;
 
             //プレイヤーの位置から回転軸までの距離　0.009はIronBarの半径
-            float distance = hitInto.distance + 0.009f;
+            float distance = 0.009f;
 
             tr.RotateAround(tr.position + tr.forward * distance, tr.up, -Input.GetAxis("Horizontal") * angleSpeed * Time.deltaTime);
 
@@ -66,14 +66,40 @@ public class CrimbMove : MonoBehaviour
             float moveArea = ironBar.GetComponent<IronBar>().GetMoveArea();
             Vector3 barPos = ironBar.transform.position;
 
-            barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
-            Vector3 movement = barVectorNor * -Input.GetAxis("Vertical") * -moveSpeed * Time.deltaTime;
-            tr.localPosition += movement;
-            tr.localPosition =
-                new Vector3(
-                    Mathf.Clamp(tr.localPosition.x, barPos.x - moveArea, barPos.x + moveArea),
-                    Mathf.Clamp(tr.localPosition.y, barPos.y - moveArea + 0.62f, barPos.y + moveArea),
-                    Mathf.Clamp(tr.localPosition.z, barPos.z - moveArea, barPos.z + moveArea));
+            Vector3 center = tr.localPosition + tr.up * 0.31f;
+            Ray down = new Ray(center, -tr.up);
+            Ray up = new Ray(center, tr.up);
+
+            RaycastHit upOrDownHitInto;
+            int layerMask = ~(1 << LayerMask.NameToLayer("IgnoredObj"));
+
+
+            if (Physics.Raycast(down.origin, down.direction, out upOrDownHitInto, 0.25f, layerMask, QueryTriggerInteraction.Ignore)
+                && Input.GetAxis("Vertical") < 0.1f)
+            {
+                m_MoveManager.SetState(PlayerState.NORMAL);
+                GetComponent<NormalMove>().SetIronBarHitDelay(1.0f);
+                touchIronBar = false;
+                jumpCursor.IsHit(false);
+                CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
+                col.enabled = true;
+            }
+            else if (Physics.Raycast(up.origin, up.direction, out upOrDownHitInto, 0.45f, layerMask, QueryTriggerInteraction.Ignore)
+                && Input.GetAxis("Vertical") > 0.1f)
+            {
+            }
+            else
+            {
+                barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
+                Vector3 movement = barVectorNor * -Input.GetAxis("Vertical") * -moveSpeed * Time.deltaTime;
+                tr.localPosition += movement;
+            }
+
+            //tr.localPosition =
+            //    new Vector3(
+            //        Mathf.Clamp(tr.localPosition.x, barPos.x - moveArea, barPos.x + moveArea),
+            //        Mathf.Clamp(tr.localPosition.y, barPos.y - moveArea + 0.31f, barPos.y + moveArea - 0.31f),
+            //        Mathf.Clamp(tr.localPosition.z, barPos.z - moveArea, barPos.z + moveArea));
         }
 
         if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
@@ -81,12 +107,17 @@ public class CrimbMove : MonoBehaviour
             //tr.parent = null;
             //tr.parent = GameObject.Find("Pausable").transform;
             m_MoveManager.SetState(PlayerState.NORMAL);
+            //背面斜め上方向に方向にジャンプする
+            m_MoveManager.PlayerPoleKick(Vector3.Normalize(-tr.forward + tr.up));
 
             GetComponent<NormalMove>().SetIronBarHitDelay(1.0f);
 
             touchIronBar = false;
 
             jumpCursor.IsHit(false);
+
+            CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
+            col.enabled = true;
         }
 
         //アニメーション
@@ -98,7 +129,10 @@ public class CrimbMove : MonoBehaviour
 
     public void SetTouchIronBar(bool ishit, RaycastHit hitInto)
     {
-        tr.localPosition += tr.forward * 0.2f;
+        StartCoroutine(DelayMethod(1, () =>
+        {
+            tr.localPosition += tr.forward * 0.17f;
+        }));
 
         this.hitInto = hitInto;
         touchIronBar = true;
@@ -142,4 +176,11 @@ public class CrimbMove : MonoBehaviour
         }
         action();
     }
+
+    //void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.black;
+    //    if (hitInto.collider != null)
+    //        Gizmos.DrawWireSphere(hitInto.point, 0.2f);
+    //}
 }
