@@ -22,6 +22,8 @@ public class ClearPoint : MonoBehaviour
             else
             {
                 Clear();
+                SoundManager.Instance.PlaySe("tinnitus1");
+                SoundManager.Instance.PlaySe("something_call_to_you");
             }
             other.GetComponent<NormalMove>().NormalToStageClear();
         }

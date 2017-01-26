@@ -426,6 +426,9 @@ public class NormalMove : MonoBehaviour
         //ブロック移動ボタンを押していて、かつブロックが近くにある時
         if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true)
         {
+            if (Input.GetButtonDown("Action"))
+                SoundManager.Instance.PlaySe("sword3");
+
             //アニメーション
             anm.SetBool("Block", true);
 

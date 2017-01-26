@@ -18,7 +18,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     Queue<int> seRequestQueue = new Queue<int>();
 
-    //------------------------------------------------------------------------------
     void Awake()
     {
         if (this != Instance)
@@ -54,7 +53,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         /* foreach(var ac in bgmClips ) { Debug.Log( ac.name ); } */
     }
 
-    //------------------------------------------------------------------------------
+    
     void Update()
     {
         bgmSource.mute = volume.mute;
@@ -77,7 +76,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
     }
 
-    //------------------------------------------------------------------------------
+    
     private void playSeImpl(int index)
     {
         if (0 > index || seClips.Length <= index)
@@ -96,26 +95,26 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
     }
 
-    //------------------------------------------------------------------------------
+    
     public int GetSeIndex(string name)
     {
         return seIndexes[name];
     }
 
-    //------------------------------------------------------------------------------
+    
     public int GetBgmIndex(string name)
     {
         return bgmIndexes[name];
     }
 
-    //------------------------------------------------------------------------------
+    
     public void PlayBgm(string name)
     {
         int index = bgmIndexes[name];
         PlayBgm(index);
     }
 
-    //------------------------------------------------------------------------------
+    
     public void PlayBgm(int index)
     {
         if (0 > index || bgmClips.Length <= index)
@@ -133,14 +132,14 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         bgmSource.Play();
     }
 
-    //------------------------------------------------------------------------------
+    
     public void StopBgm()
     {
         bgmSource.Stop();
         bgmSource.clip = null;
     }
 
-    //------------------------------------------------------------------------------
+    
     public void PlaySe(string name)
     {
         PlaySe(GetSeIndex(name));
@@ -148,7 +147,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     //一旦queueに溜め込んで重複を回避しているので
     //再生が1frame遅れる時がある
-    //------------------------------------------------------------------------------
     public void PlaySe(int index)
     {
         if (!seRequestQueue.Contains(index))
@@ -157,7 +155,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
     }
 
-    //------------------------------------------------------------------------------
+    
     public void StopSe()
     {
         ClearAllSeRequest();
@@ -168,7 +166,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
     }
 
-    //------------------------------------------------------------------------------
+    
     public void ClearAllSeRequest()
     {
         seRequestQueue.Clear();

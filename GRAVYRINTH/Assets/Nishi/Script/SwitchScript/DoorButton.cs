@@ -28,6 +28,8 @@ public class DoorButton : MonoBehaviour
     {
         if (other.tag != "Player" || isDown == true) return;
 
+        SoundManager.Instance.PlaySe("meka_ge_shoumei_swi01");
+
         GameObject.Find("Camera").GetComponent<EventCamera>().SetMoveTime(2.0f);
         GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(3.0f);
         GameObject.Find("Camera").GetComponent<EventCamera>().SetTarget(mCameraPos);
