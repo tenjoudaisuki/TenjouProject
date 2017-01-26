@@ -47,6 +47,10 @@ public class GameManager : MonoBehaviour
     public GameObject mPauseMenuprefab;
     private GameObject mPauseMenu;
 
+    float mTimer;
+    [SerializeField, TooltipAttribute("タイトルに戻る時間")]
+    public float mTitleBackTime = 30;
+
     public void Awake()
     {
         if (isDebug)
@@ -86,6 +90,21 @@ public class GameManager : MonoBehaviour
         if (SceneManager.GetActiveScene() != mCurrentScene && !isDebug)
         {
             SceneManager.SetActiveScene(mCurrentScene);
+        }
+
+        if(mCureentMode == GameMode.Select)
+        {
+            mTimer += Time.deltaTime;
+            if(Input.anyKeyDown)
+            {
+                mTimer = 0.0f;
+            }
+            if(mTimer >= mTitleBackTime)
+            {
+                mTimer = 0.0f;
+                SceneManager.UnloadScene("Menu");
+                GameModeChange(GameMode.Title);
+            }
         }
     }
 
