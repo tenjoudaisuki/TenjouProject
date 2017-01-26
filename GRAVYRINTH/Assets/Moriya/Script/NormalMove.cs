@@ -157,8 +157,6 @@ public class NormalMove : MonoBehaviour
         m_InitParentTr = tr.parent;
 
         m_LastSpeed = m_MoveSpeed;
-
-        AnimationInitialize();
     }
 
     void Update()
@@ -944,22 +942,4 @@ public class NormalMove : MonoBehaviour
     {
         m_IronBarHitDelay = delay;
     }
-
-    /// <summary>
-    /// アニメーション状態初期化
-    /// </summary>
-    public void AnimationInitialize()
-    {
-        anm.SetBool("Landing", false);
-        anm.SetBool("Jump", false);
-        anm.SetBool("Wall", false);
-        anm.SetBool("WallJump", false);
-        anm.SetBool("PoleHJump", false);
-        anm.SetBool("PoleVJump", false);
-        anm.SetBool("Hover", false);
-        anm.SetBool("IsTaihouRoll", false);
-        anm.SetBool("Move", false);
-    }
-
-   
 }
