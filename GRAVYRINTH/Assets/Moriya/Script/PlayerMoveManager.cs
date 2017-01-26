@@ -11,8 +11,9 @@ using System.Collections.Generic;
 public class PlayerMoveManager : MonoBehaviour
 {
     ///*==所持コンポーネント==*/
-    Transform tr;
-    CapsuleCollider cc;
+    private Transform tr;
+    private Animator anm;
+    private CapsuleCollider cc;
 
     ///*==外部設定変数==*/
     [SerializeField, TooltipAttribute("最初の状態")]
@@ -30,6 +31,7 @@ public class PlayerMoveManager : MonoBehaviour
     void Awake()
     {
         tr = GetComponent<Transform>();
+        anm = GetComponent<Animator>();
         cc = GetComponent<CapsuleCollider>();
     }
 
@@ -83,6 +85,19 @@ public class PlayerMoveManager : MonoBehaviour
         m_PlayerState = state;
 
         //特定の変更時に行う処理
+        //ＡＮＹ→ＮＯＮＥへの変更時
+        if (m_PlayerState == PlayerState.NONE)
+        {
+            //アニメーションを止める
+            AnimationInitialize();
+        }        
+        //ＡＮＹ→通常への変更時
+        if(m_PlayerState == PlayerState.NORMAL)
+        {
+            //アニメーションを止める
+            AnimationInitialize();
+        }
+
         //鉄棒→通常への変更時
         if ((m_PrevPlayerState == PlayerState.IRON_BAR_DANGLE || m_PrevPlayerState == PlayerState.IRON_BAR_CLIMB)
             && m_PlayerState == PlayerState.NORMAL)
@@ -122,7 +137,7 @@ public class PlayerMoveManager : MonoBehaviour
         {
             NotMove nm = m_Moves[PlayerState.NOT_MOVE].GetComponent<NotMove>();
             nm.SetUpFront(tr.up, tr.forward);
-            nm.AnimationInitialize();
+            AnimationInitialize();
         }
         else if (
             m_PrevPlayerState == PlayerState.NOT_MOVE
@@ -163,6 +178,22 @@ public class PlayerMoveManager : MonoBehaviour
     public PlayerState GetState()
     {
         return m_PlayerState;
+    }
+
+    /// <summary>
+    /// アニメーション状態初期化
+    /// </summary>
+    public void AnimationInitialize()
+    {
+        anm.SetBool("Landing", false);
+        anm.SetBool("Jump", false);
+        anm.SetBool("Wall", false);
+        anm.SetBool("WallJump", false);
+        anm.SetBool("PoleHJump", false);
+        anm.SetBool("PoleVJump", false);
+        anm.SetBool("Hover", false);
+        anm.SetBool("IsTaihouRoll", false);
+        anm.SetBool("Move", false);
     }
 
 }
