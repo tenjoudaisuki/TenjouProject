@@ -54,11 +54,6 @@ public class StageClearMove : MonoBehaviour
         StartCoroutine(ClearMove());
     }
 
-    public void Update()
-    {
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
-    }
-
     IEnumerator ClearMove()
     {
         float timer = 0.0f;

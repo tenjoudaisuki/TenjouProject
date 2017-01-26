@@ -11,6 +11,7 @@ public class MenuManager : MonoBehaviour
     {
         Menu,
         StageSelect,
+        Controll,
     }
 
     public MenuType menuType;
@@ -28,8 +29,10 @@ public class MenuManager : MonoBehaviour
     private RectTransform menuTextBack;
     private RectTransform startGame;
     private RectTransform selectStage;
+    private RectTransform controll;
     private RectTransform exitGame;
     private RectTransform menuBack;
+    private RectTransform menuHint;
 
     //ステージセレクトシーン用
     private RectTransform stageSelectTextBack;
@@ -41,6 +44,13 @@ public class MenuManager : MonoBehaviour
     private RectTransform rightArrow;
     private RectTransform leftArrow;
     private RectTransform stageSelectBack;
+    private RectTransform stageSelectHint;
+
+    //操作方法シーン用
+    private RectTransform controllTextBack;
+    private RectTransform sousa;
+    private RectTransform controllBack;
+    private RectTransform controllHint;
 
     //ステージセレクトの番号の画像格納用
     private Sprite[] sprites;
@@ -56,6 +66,8 @@ public class MenuManager : MonoBehaviour
 
     //メニューの項目を変更中かどうか
     private bool changingSelection = true;
+
+    private System.Action submitAction;
 
     void Start()
     {
@@ -99,6 +111,10 @@ public class MenuManager : MonoBehaviour
             case MenuType.StageSelect:
                 if (GameObject.FindGameObjectWithTag("Fade").transform.childCount == 0) StageSelectInput();
                 break;
+
+            case MenuType.Controll:
+                ControllInput();
+                break;
         }
     }
 
@@ -108,8 +124,10 @@ public class MenuManager : MonoBehaviour
         menuTextBack = GameObject.Find("MenuTextBack").GetComponent<RectTransform>();
         startGame = GameObject.Find("StartGame").GetComponent<RectTransform>();
         selectStage = GameObject.Find("SelectStage").GetComponent<RectTransform>();
+        controll = GameObject.Find("Controll").GetComponent<RectTransform>();
         exitGame = GameObject.Find("ExitGame").GetComponent<RectTransform>();
         menuBack = GameObject.Find("MenuBack").GetComponent<RectTransform>();
+        menuHint = GameObject.Find("MenuHint").GetComponent<RectTransform>();
 
         //ListにFrameの中にあるUIのRectTransform全てを追加
         rectTransforms.AddRange(GameObject.Find("MenuFrame").GetComponentsInChildren<RectTransform>());
@@ -140,6 +158,30 @@ public class MenuManager : MonoBehaviour
 
         //TextBackを現在選択されているメニューの位置へ移動
         LeanTween.move(menuTextBack, currentSelectedObject.anchoredPosition, 0.0f);
+
+        input.SetCancelAction(() =>
+        {
+            SoundManager.Instance.PlaySe("enter");
+
+            changingSelection = true;
+
+            LeanTween.scale(menuBack, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+
+            //rectTransformsにBackgroundを追加
+            rectTransforms.Add(background);
+
+            foreach (RectTransform rectTr in rectTransforms)
+            {
+                LeanTween.alpha(rectTr, 0.0f, 1.0f);
+            }
+
+            //1.1秒後にMenuシーンをアンロード
+            StartCoroutine(DelayMethod(1.1f, () =>
+            {
+                SceneManager.UnloadScene(menu);
+                GameManager.Instance.GameModeChange(GameManager.GameMode.Title);
+            }));
+        });
     }
 
     private void MenuInput()
@@ -152,7 +194,6 @@ public class MenuManager : MonoBehaviour
             //現在選択されている項目がback以外の時のみ処理
             if (EventSystem.current.currentSelectedGameObject == menuBack.gameObject) return;
             SoundManager.Instance.PlaySe("select");
-
 
             //メニューの項目を更新
             EventSystem.current.SetSelectedGameObject(
@@ -260,6 +301,16 @@ public class MenuManager : MonoBehaviour
                     changingSelection = false;
                 });
         });
+
+        if (Input.GetButtonDown("Submit"))
+        {
+            input.Submit();
+        }
+
+        if (Input.GetButtonDown("Cancel"))
+        {
+            input.Cancel();
+        }
     }
 
     private void StageSelectInitialize()
@@ -274,6 +325,7 @@ public class MenuManager : MonoBehaviour
         rightArrow = GameObject.Find("RightArrow").GetComponent<RectTransform>();
         leftArrow = GameObject.Find("LeftArrow").GetComponent<RectTransform>();
         stageSelectBack = GameObject.Find("StageSelectBack").GetComponent<RectTransform>();
+        stageSelectHint = GameObject.Find("StageSelectHint").GetComponent<RectTransform>();
 
         //ListにFrameの中にあるUIのRectTransform全てを追加
         rectTransforms.AddRange(GameObject.Find("StageSelectFrame").GetComponentsInChildren<RectTransform>());
@@ -322,11 +374,43 @@ public class MenuManager : MonoBehaviour
         //textBackの大きさと回転を設定
         LeanTween.scale(stageSelectTextBack, new Vector3(4.5f, 4.5f, 1.0f), 0.0f);
         LeanTween.rotateX(stageSelectTextBack.gameObject, 77.0f, 0.0f);
+
+        input.SetCancelAction(() =>
+        {
+            SoundManager.Instance.PlaySe("enter");
+
+            changingSelection = true;
+
+            LeanTween.scale(stageSelectBack, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+
+            foreach (RectTransform rectTr in rectTransforms)
+            {
+                LeanTween.alpha(rectTr, 0.0f, 1.0f);
+            }
+
+            StartCoroutine(DelayMethod(1.1f, () =>
+            {
+                LeanTween.scale(stageSelectBack, new Vector3(1.0f, 1.0f, 1.0f), 1.0f);
+                rectTransforms.Clear();
+                MenuInitialize();
+                menuType = MenuType.Menu;
+            }));
+        });
     }
 
     private void StageSelectInput()
     {
         if (changingSelection == true) return;
+
+        if (Input.GetButtonDown("Submit"))
+        {
+            input.Submit();
+        }
+
+        if (Input.GetButtonDown("Cancel"))
+        {
+            input.Cancel();
+        }
 
         input.UpAction(() =>
         {
@@ -536,33 +620,114 @@ public class MenuManager : MonoBehaviour
             LeanTween.alpha(rightArrow, 1.0f, 0.3f);
     }
 
+    private void ControllInitialize()
+    {
+        //UIの検索　代入
+        controllTextBack = GameObject.Find("ControllTextBack").GetComponent<RectTransform>();
+        sousa = GameObject.Find("Sousa").GetComponent<RectTransform>();
+        controllBack = GameObject.Find("ControllBack").GetComponent<RectTransform>();
+        controllHint = GameObject.Find("ControllHint").GetComponent<RectTransform>();
+
+        //ListにFrameの中にあるUIのRectTransform全てを追加
+        rectTransforms.AddRange(GameObject.Find("ControllFrame").GetComponentsInChildren<RectTransform>());
+        //ListにFrameも入ってしまっているので削除（中身を子のみにする）
+        rectTransforms.Remove(GameObject.Find("ControllFrame").GetComponent<RectTransform>());
+
+        //Listの中身のAlphaを2.0秒かけて1.0にTween
+        foreach (RectTransform rectTr in rectTransforms)
+        {
+            LeanTween.alpha(rectTr, 1.0f, 1.0f);
+        }
+
+        //0.5秒後に変更しているかどうかをfalseに
+        StartCoroutine(DelayMethod(1.1f, () =>
+        {
+            changingSelection = false;
+        }));
+
+        //初期に選択されている項目を設定
+        EventSystem.current.SetSelectedGameObject(controllBack.gameObject);
+
+        //現在選択されている項目を更新
+        currentSelectedObject =
+            EventSystem.current.currentSelectedGameObject.GetComponent<RectTransform>();
+
+        //TextBackを現在選択されているメニューの位置へ移動
+        LeanTween.move(controllTextBack, currentSelectedObject.anchoredPosition, 0.0f);
+
+        input.SetCancelAction(() =>
+        {
+            SoundManager.Instance.PlaySe("enter");
+
+            changingSelection = true;
+
+            LeanTween.scale(controllBack, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+
+            foreach (RectTransform rectTr in rectTransforms)
+            {
+                LeanTween.alpha(rectTr, 0.0f, 1.0f);
+            }
+
+            StartCoroutine(DelayMethod(1.1f, () =>
+            {
+                LeanTween.scale(controllBack, new Vector3(1.0f, 1.0f, 1.0f), 1.0f);
+                rectTransforms.Clear();
+                MenuInitialize();
+                menuType = MenuType.Menu;
+            }));
+        });
+    }
+
+    private void ControllInput()
+    {
+        //メニューの項目を変更中ならば処理しない
+        if (changingSelection == true) return;
+
+        StartCoroutine(DelayMethod(1, () =>
+        {
+            if (Input.GetButtonDown("Submit"))
+            {
+                input.Submit();
+            }
+
+            if (Input.GetButtonDown("Cancel"))
+            {
+                input.Cancel();
+            }
+        }));
+    }
+
     /// <summary>
     /// StartGameButtonを押した時の処理
     /// </summary>
     public void StartGameButtonPressed()
     {
-        SoundManager.Instance.PlaySe("enter");
-
-        LeanTween.scale(startGame, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
-
-        //rectTransformsにBackgroundを追加
-        rectTransforms.Add(background);
-
-        foreach (RectTransform rectTr in rectTransforms)
+        input.SetSubmitAction(() =>
         {
-            LeanTween.alpha(rectTr, 0.0f, 1.0f);
-        }
+            SoundManager.Instance.PlaySe("enter");
 
-        //1.1秒後にMenuシーンをアンロード
-        StartCoroutine(DelayMethod(1.1f, () =>
-        {
-            // 16/12/12 add 西--------------------------------------------------
-            GameManager.Instance.GameModeChange(GameManager.GameMode.GamePlay);
-            //------------------------------------------------------------------
-            SceneManager.UnloadScene(menu);
-            SoundManager.Instance.PlayBgm("ingame");
-        }));
+            changingSelection = true;
 
+            LeanTween.scale(startGame, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+
+            //rectTransformsにBackgroundを追加
+            rectTransforms.Add(background);
+
+            foreach (RectTransform rectTr in rectTransforms)
+            {
+                LeanTween.alpha(rectTr, 0.0f, 1.0f);
+            }
+
+            //1.1秒後にMenuシーンをアンロード
+            StartCoroutine(DelayMethod(1.1f, () =>
+            {
+                // 16/12/12 add 西--------------------------------------------------
+                GameManager.Instance.GameModeChange(GameManager.GameMode.GamePlay);
+                //------------------------------------------------------------------
+                SceneManager.UnloadScene(menu);
+                SoundManager.Instance.PlayBgm("ingame");
+            }));
+        });
     }
 
     /// <summary>
@@ -570,23 +735,56 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     public void SelectStageButtonPressed()
     {
-        SoundManager.Instance.PlaySe("enter");
-
-        LeanTween.scale(selectStage, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
-
-        foreach (RectTransform rectTr in rectTransforms)
+        input.SetSubmitAction(() =>
         {
-            LeanTween.alpha(rectTr, 0.0f, 1.0f);
-        }
+            SoundManager.Instance.PlaySe("enter");
 
-        StartCoroutine(DelayMethod(1.1f, () =>
-        {
-            LeanTween.scale(selectStage, new Vector3(1.0f, 1.0f, 1.0f), 1.0f);
             changingSelection = true;
-            rectTransforms.Clear();
-            StageSelectInitialize();
-            menuType = MenuType.StageSelect;
-        }));
+
+            LeanTween.scale(selectStage, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+
+            foreach (RectTransform rectTr in rectTransforms)
+            {
+                LeanTween.alpha(rectTr, 0.0f, 1.0f);
+            }
+
+            StartCoroutine(DelayMethod(1.1f, () =>
+            {
+                LeanTween.scale(selectStage, new Vector3(1.0f, 1.0f, 1.0f), 1.0f);
+                changingSelection = true;
+                rectTransforms.Clear();
+                StageSelectInitialize();
+                menuType = MenuType.StageSelect;
+            }));
+        });
+    }
+
+    /// <summary>
+    /// ControllButtonを押した時の処理
+    /// </summary>
+    public void ControllButtonPressed()
+    {
+        input.SetSubmitAction(() =>
+        {
+            SoundManager.Instance.PlaySe("enter");
+
+            changingSelection = true;
+
+            LeanTween.scale(controll, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+
+            foreach (RectTransform rectTr in rectTransforms)
+            {
+                LeanTween.alpha(rectTr, 0.0f, 1.0f);
+            }
+
+            StartCoroutine(DelayMethod(1.1f, () =>
+            {
+                LeanTween.scale(controll, new Vector3(1.0f, 1.0f, 1.0f), 1.0f);
+                rectTransforms.Clear();
+                ControllInitialize();
+                menuType = MenuType.Controll;
+            }));
+        });
     }
 
     /// <summary>
@@ -594,23 +792,28 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     public void ExitGameButtonPressed()
     {
-        SoundManager.Instance.PlaySe("enter");
-
-        LeanTween.scale(exitGame, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
-
-        //rectTransformsにBackgroundを追加
-        rectTransforms.Add(background);
-
-        //1.1秒後にMenuシーンをアンロード
-        foreach (RectTransform rectTr in rectTransforms)
+        input.SetSubmitAction(() =>
         {
-            LeanTween.alpha(rectTr, 0.0f, 1.0f);
-        }
+            SoundManager.Instance.PlaySe("enter");
 
-        StartCoroutine(DelayMethod(1.1f, () =>
-        {
-            Application.Quit();
-        }));
+            changingSelection = true;
+
+            LeanTween.scale(exitGame, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+
+            //rectTransformsにBackgroundを追加
+            rectTransforms.Add(background);
+
+            //1.1秒後にMenuシーンをアンロード
+            foreach (RectTransform rectTr in rectTransforms)
+            {
+                LeanTween.alpha(rectTr, 0.0f, 1.0f);
+            }
+
+            StartCoroutine(DelayMethod(1.1f, () =>
+            {
+                Application.Quit();
+            }));
+        });
     }
 
     /// <summary>
@@ -618,24 +821,29 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     public void MenuBackButtonPressed()
     {
-        SoundManager.Instance.PlaySe("enter");
-
-        LeanTween.scale(menuBack, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
-
-        //rectTransformsにBackgroundを追加
-        rectTransforms.Add(background);
-
-        foreach (RectTransform rectTr in rectTransforms)
+        input.SetSubmitAction(() =>
         {
-            LeanTween.alpha(rectTr, 0.0f, 1.0f);
-        }
+            SoundManager.Instance.PlaySe("enter");
 
-        //1.1秒後にMenuシーンをアンロード
-        StartCoroutine(DelayMethod(1.1f, () =>
-        {
-            SceneManager.UnloadScene(menu);
-            GameManager.Instance.GameModeChange(GameManager.GameMode.Title);
-        }));
+            changingSelection = true;
+
+            LeanTween.scale(menuBack, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+
+            //rectTransformsにBackgroundを追加
+            rectTransforms.Add(background);
+
+            foreach (RectTransform rectTr in rectTransforms)
+            {
+                LeanTween.alpha(rectTr, 0.0f, 1.0f);
+            }
+
+            //1.1秒後にMenuシーンをアンロード
+            StartCoroutine(DelayMethod(1.1f, () =>
+            {
+                SceneManager.UnloadScene(menu);
+                GameManager.Instance.GameModeChange(GameManager.GameMode.Title);
+            }));
+        });
     }
 
     /// <summary>
@@ -643,28 +851,33 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     public void StageSubmitButtonPressed()
     {
-        SoundManager.Instance.PlaySe("enter");
-
-        //LeanTween.scale(stage, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
-        //LeanTween.scale(numbar, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
-
-        //rectTransformsにBackgroundを追加
-        rectTransforms.Add(background);
-
-        foreach (RectTransform rectTr in rectTransforms)
+        input.SetSubmitAction(() =>
         {
-            LeanTween.alpha(rectTr, 0.0f, 1.0f);
-        }
+            SoundManager.Instance.PlaySe("enter");
 
-        //16/12/13 add　西　ゲームを開始する
-        GameManager.Instance.GameModeChange(GameManager.GameMode.GamePlay);
+            changingSelection = true;
 
-        //1.1秒後にMenuシーンをアンロード
-        StartCoroutine(DelayMethod(1.1f, () =>
-        {
-            SceneManager.UnloadScene(menu);
-            SoundManager.Instance.PlayBgm("ingame");
-        }));
+            //LeanTween.scale(stage, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+            //LeanTween.scale(numbar, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+
+            //rectTransformsにBackgroundを追加
+            rectTransforms.Add(background);
+
+            foreach (RectTransform rectTr in rectTransforms)
+            {
+                LeanTween.alpha(rectTr, 0.0f, 1.0f);
+            }
+
+            //16/12/13 add　西　ゲームを開始する
+            GameManager.Instance.GameModeChange(GameManager.GameMode.GamePlay);
+
+            //1.1秒後にMenuシーンをアンロード
+            StartCoroutine(DelayMethod(1.1f, () =>
+            {
+                SceneManager.UnloadScene(menu);
+                SoundManager.Instance.PlayBgm("ingame");
+            }));
+        });
     }
 
     /// <summary>
@@ -672,23 +885,55 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     public void SelectBackButtonPressed()
     {
-        SoundManager.Instance.PlaySe("enter");
-
-        LeanTween.scale(stageSelectBack, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
-
-        foreach (RectTransform rectTr in rectTransforms)
+        input.SetSubmitAction(() =>
         {
-            LeanTween.alpha(rectTr, 0.0f, 1.0f);
-        }
+            SoundManager.Instance.PlaySe("enter");
 
-        StartCoroutine(DelayMethod(1.1f, () =>
-        {
-            LeanTween.scale(stageSelectBack, new Vector3(1.0f, 1.0f, 1.0f), 1.0f);
             changingSelection = true;
-            rectTransforms.Clear();
-            MenuInitialize();
-            menuType = MenuType.Menu;
-        }));
+
+            LeanTween.scale(stageSelectBack, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+
+            foreach (RectTransform rectTr in rectTransforms)
+            {
+                LeanTween.alpha(rectTr, 0.0f, 1.0f);
+            }
+
+            StartCoroutine(DelayMethod(1.1f, () =>
+            {
+                LeanTween.scale(stageSelectBack, new Vector3(1.0f, 1.0f, 1.0f), 1.0f);
+                rectTransforms.Clear();
+                MenuInitialize();
+                menuType = MenuType.Menu;
+            }));
+        });
+    }
+
+    /// <summary>
+    /// 操作説明画面のBackButtonを押した時の処理
+    /// </summary>
+    public void ControllBackButtonPressed()
+    {
+        input.SetSubmitAction(() =>
+        {
+            SoundManager.Instance.PlaySe("enter");
+
+            changingSelection = true;
+
+            LeanTween.scale(controllBack, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+
+            foreach (RectTransform rectTr in rectTransforms)
+            {
+                LeanTween.alpha(rectTr, 0.0f, 1.0f);
+            }
+
+            StartCoroutine(DelayMethod(1.1f, () =>
+            {
+                LeanTween.scale(controllBack, new Vector3(1.0f, 1.0f, 1.0f), 1.0f);
+                rectTransforms.Clear();
+                MenuInitialize();
+                menuType = MenuType.Menu;
+            }));
+        });
     }
 
     /// <summary>
