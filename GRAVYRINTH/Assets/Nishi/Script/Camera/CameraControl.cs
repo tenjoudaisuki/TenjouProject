@@ -57,7 +57,7 @@ public class CameraControl : ICamera
 
     private float mTimer = 0.0f;
 
-    private Vector3 mUp;
+    public Vector3 mUp;
 
     public override void Start()
     {

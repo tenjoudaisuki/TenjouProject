@@ -11,6 +11,7 @@ public class StageClearMove : MonoBehaviour
 {
     /*==所持コンポーネント==*/
     private Transform tr;
+    private Rigidbody rb;
 
     /*==外部設定変数==*/
     [SerializeField, Tooltip("移動にかける時間")]
@@ -23,17 +24,24 @@ public class StageClearMove : MonoBehaviour
     private Vector3 m_ClearPosition;
 
     /*==外部参照変数==*/
-    
-    
+
+
     void Awake()
     {
         tr = GetComponent<Transform>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void Start()
     {
         //オブジェクト取得
         //m_ClearDoorTr = GameObject.FindGameObjectWithTag("ClearDoor").transform;
+    }
+
+    void Update()
+    {
+        //rigidbodyによる移動を制限
+        rb.velocity = Vector3.zero;
     }
 
     /// <summary>

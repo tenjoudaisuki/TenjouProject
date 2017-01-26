@@ -157,8 +157,6 @@ public class NormalMove : MonoBehaviour
         m_InitParentTr = tr.parent;
 
         m_LastSpeed = m_MoveSpeed;
-
-        AnimationInitialize();
     }
 
     void Update()
@@ -428,6 +426,9 @@ public class NormalMove : MonoBehaviour
         //ブロック移動ボタンを押していて、かつブロックが近くにある時
         if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true)
         {
+            if (Input.GetButtonDown("Action"))
+                SoundManager.Instance.PlaySe("sword3");
+
             //アニメーション
             anm.SetBool("Block", true);
 
@@ -948,22 +949,4 @@ public class NormalMove : MonoBehaviour
     {
         m_IronBarHitDelay = delay;
     }
-
-    /// <summary>
-    /// アニメーション状態初期化
-    /// </summary>
-    public void AnimationInitialize()
-    {
-        anm.SetBool("Landing", false);
-        anm.SetBool("Jump", false);
-        anm.SetBool("Wall", false);
-        anm.SetBool("WallJump", false);
-        anm.SetBool("PoleHJump", false);
-        anm.SetBool("PoleVJump", false);
-        anm.SetBool("Hover", false);
-        anm.SetBool("IsTaihouRoll", false);
-        anm.SetBool("Move", false);
-    }
-
-   
 }

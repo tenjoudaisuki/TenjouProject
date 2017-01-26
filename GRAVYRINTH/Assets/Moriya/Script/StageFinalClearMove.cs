@@ -138,6 +138,7 @@ public class StageFinalClearMove : MonoBehaviour
     IEnumerator Shot()
     {
         float timer = 0.0f;
+        SoundManager.Instance.PlaySe("small_explosion1");
         while (true)
         {
             //時間経過で移動

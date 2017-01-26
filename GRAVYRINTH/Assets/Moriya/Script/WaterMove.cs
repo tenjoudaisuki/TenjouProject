@@ -1,6 +1,7 @@
 ﻿/**==========================================================================*/
 /**
  * 水面の移動、水面関係の制御はここで行う
+ * カメラやプレイヤーが水に埋まっているときの処理もここで行う
  * 作成者：守屋   作成日：16/11/25
 /**==========================================================================*/
 using UnityEngine;
@@ -19,6 +20,9 @@ public class WaterMove : MonoBehaviour
     private float m_Timer;
     //子オブジェクトのWaterBack
     private GameObject m_WaterBack;
+
+    private bool m_IsCameraInWaterPrev = false;
+    private bool m_IsCameraInWater = false;
 
     [SerializeField, Tooltip("移動速度最大値")]
     private float m_SpeedMax = 0.02f;
@@ -74,8 +78,13 @@ public class WaterMove : MonoBehaviour
         if (m_Image == null) return;
         m_Color = m_Image.color;
         //水中にカメラが入っているかを判定
-        if(IsCameraInWater())
+        m_IsCameraInWaterPrev = m_IsCameraInWater;
+        m_IsCameraInWater = IsCameraInWater();
+        if (m_IsCameraInWater)
         {
+            //最初のフレームだけSEを再生
+            if (!m_IsCameraInWaterPrev)
+                SoundManager.Instance.PlaySe("diving1");
             m_Timer += Time.deltaTime;
             m_Color.a = Mathf.Lerp(0.0f, m_ImageAlpaMax, m_Timer / m_ImageAlphaMaxTime);
             mr.enabled = false;
@@ -84,6 +93,9 @@ public class WaterMove : MonoBehaviour
         }
         else
         {
+            //最初のフレームだけSEを再生
+            if (m_IsCameraInWaterPrev)
+                SoundManager.Instance.PlaySe("summer_beach1");
             m_Timer = 0.0f;
             m_Color.a = 0.0f;
             mr.enabled = true;
