@@ -85,8 +85,6 @@ public class NormalMove : MonoBehaviour
     private float m_InputAngleY = 0.0f;
     //ヒットしているブロック（動かすブロック）
     private Block m_CollisionBlock;
-    //  アニメーション用変数
-    private float m_WallJumpTimer;
     //操作不能か？
     private bool m_DisableInput = false;
 
@@ -95,10 +93,6 @@ public class NormalMove : MonoBehaviour
     RayHitInfo m_WallHitInfoFront, m_WallHitInfoLeft, m_WallHitInfoRight;
     //壁の法線方向
     Vector3 m_WallNormal;
-    //壁キックできるか？
-    bool m_IsWallKick;
-    //壁に触っているか？
-    bool m_IsWallTouch;
 
     //最初の親トランスフォーム
     private Transform m_InitParentTr;
@@ -113,18 +107,17 @@ public class NormalMove : MonoBehaviour
     //親の回転
     private Quaternion m_ParentRotation;
 
-    // 01/17アニメーション
-    private float m_HoverTimer;
-
-    //壁衝突前の速度
-    private float m_SaveSpeed;
     //実際の移動速度
     private float m_LastSpeed;
 
     //連続で鉄棒に当たらないようにするための待ち時間
     private float m_IronBarHitDelay = 0.0f;
 
-    private float count = 0.0f;
+    //アニメーション用
+    //*-壁キック
+    private bool m_IsWall;
+    //*-ブロック
+    private float m_Block;
 
     /*==外部参照変数==*/
 
@@ -161,8 +154,6 @@ public class NormalMove : MonoBehaviour
 
     void Update()
     {
-        count += Time.deltaTime;
-
         //地面との判定処理
         Ground();
 
@@ -183,12 +174,18 @@ public class NormalMove : MonoBehaviour
 
         //重力をセット
         m_GravityDir.SetDirection(GetDown());
+
+        //アニメーション
+        anm.SetBool("IsWall", m_IsWall);
     }
 
     void FixedUpdate()
     {
         //重力で下方向に移動する
         Gravity();
+
+        //アニメーション
+        anm.SetFloat("Jump_Velo", Vector3.Dot(tr.up, rb.velocity));
     }
 
     void LateUpdate()
@@ -244,6 +241,9 @@ public class NormalMove : MonoBehaviour
                 col.enabled = false;
                 m_MoveManager.SetState(PlayerState.IRON_BAR_CLIMB);
                 GetComponent<CrimbMove>().SetTouchIronBar(true, forwardHitInto);
+
+                //アニメーション
+                anm.SetTrigger("PoleV");
             }
         }
 
@@ -264,6 +264,10 @@ public class NormalMove : MonoBehaviour
                 col.enabled = false;
                 m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
                 GetComponent<DangleMove>().SetTouchIronBar(true, downHitInto, "Down");
+
+                //アニメーション
+                anm.SetTrigger("PoleH");
+
                 return;
             }
         }
@@ -285,6 +289,9 @@ public class NormalMove : MonoBehaviour
                 col.enabled = false;
                 m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
                 GetComponent<DangleMove>().SetTouchIronBar(true, upHitInto, "Up");
+
+                //アニメーション
+                anm.SetTrigger("PoleH");
             }
         }
     }
@@ -303,15 +310,19 @@ public class NormalMove : MonoBehaviour
         //壁に触れているか？
         if ((180 - m_WallKickAbleAngle / 2 < wallAngle && wallAngle < 180 + m_WallKickAbleAngle / 2))
         {
-            //アニメーション
-            anm.SetBool("Wall", true);
-            anm.SetBool("WallJump", false);
-
             //落下中なら
             if (Vector3.Dot(tr.up, rb.velocity) < 0)
             {
                 rb.velocity = Vector3.zero;
                 rb.AddForce(GetDown() * 10);
+
+                if (!m_IsWall)
+                {
+                    //アニメーション
+                    anm.SetTrigger("Wall");
+
+                    m_IsWall = true;
+                }
             }
                
             //壁キックボタンを押したとき
@@ -331,8 +342,7 @@ public class NormalMove : MonoBehaviour
                 m_InputAngleY += 180;
 
                 //アニメーション
-                anm.SetBool("Wall", false);
-                anm.SetBool("WallJump", true);
+                anm.SetTrigger("Wall_Jump");
 
                 //操作不能時間計測開始
                 StartCoroutine(WallKickInputDisable());
@@ -347,15 +357,7 @@ public class NormalMove : MonoBehaviour
         }
         else
         {
-            anm.SetBool("Wall", false);
-            if (!anm.GetBool("Wall"))
-            {
-                m_WallJumpTimer += 1 * Time.deltaTime;
-                //アニメーションの設定
-                anm.SetFloat("WallJumpTimer", m_WallJumpTimer);
-            }
-            else
-                m_WallJumpTimer = 0;
+            m_IsWall = false;
         }
     }
 
@@ -371,17 +373,14 @@ public class NormalMove : MonoBehaviour
         if (m_GroundHitInfo.isHit){
             OnGround();
         }
-        //地面と当たっていないなら
-        else{
-            //アニメーション
-            m_HoverTimer += Time.deltaTime;
-            if (m_HoverTimer > 0.2f)
-                anm.SetBool("Hover", true);
-        }
-
+        
         //着地した瞬間の処理
         if (m_IsGroundHitTrigger){
             OnGroundTrigger(camerafoward);
+
+            //アニメーション
+            anm.SetTrigger("Landing");
+            m_IsWall = false;
         }
 
         //移動方向入力
@@ -449,16 +448,6 @@ public class NormalMove : MonoBehaviour
             Quaternion rotateBlock = Quaternion.LookRotation(m_Front, m_Up);
             tr.localRotation = Quaternion.Slerp(transform.localRotation, rotateBlock, m_RotateLerpValue);
             //tr.localRotation = rotateBlock;
-
-            //アニメーション
-            if (m_MoveVelocity == Vector3.zero)
-                anm.SetBool("BlockMove", false);
-            else
-                anm.SetBool("BlockMove", true);
-
-            anm.SetFloat("Block_x", m_MoveVelocity.x * m_Front.x);
-            anm.SetFloat("Block_y", m_MoveVelocity.y * m_Front.y);
-            anm.SetFloat("Block_z", m_MoveVelocity.z * m_Front.z);
         }
         //通常時
         else
@@ -473,6 +462,13 @@ public class NormalMove : MonoBehaviour
             //アニメーション
             anm.SetBool("Block", false);
         }
+        //アニメーション
+        if (m_MoveVelocity != Vector3.zero)
+        {
+            anm.SetFloat("Block_Velo", Vector3.Dot(m_Front, m_MoveVelocity));
+        }
+        else
+            anm.SetFloat("Block_Velo", 0);
 
         //ジャンプ処理
         Jump();
@@ -484,15 +480,11 @@ public class NormalMove : MonoBehaviour
 
         //アニメーション
         anm.SetBool("Move", inputVec.magnitude > 0.0f);
-        anm.SetFloat("Jump_x", rb.velocity.x * tr.up.x);
-        anm.SetFloat("Jump_y", rb.velocity.y * tr.up.y);
-        anm.SetFloat("Jump_z", rb.velocity.z * tr.up.z);
-        anm.SetBool("PoleH", false);
-        anm.SetBool("PoleV", false);
+        //anm.SetFloat("Jump_Velo", Vector3.Dot(tr.up, rb.velocity));
     }
 
     /// <summary>
-    /// 崖つかまり
+    /// 崖のぼり(実装できてない＞＜)
     /// </summary>
     private void WallHold()
     {
@@ -592,7 +584,7 @@ public class NormalMove : MonoBehaviour
         if (m_GroundHitInfo.isHit && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
             //アニメーション
-            anm.SetBool("Jump", true);
+            anm.SetTrigger("Jump");
 
             //力を加えてジャンプ
             rb.velocity = Vector3.zero;//いったんリセット
@@ -618,8 +610,6 @@ public class NormalMove : MonoBehaviour
         if (!m_GroundHitInfo.isHit && m_WallHoldTimer == 0)
         {
             rb.AddForce(GetDown() * m_GravityPower);
-            //アニメーション
-            anm.SetBool("Landing", false);
         }
         else
         {
@@ -632,18 +622,6 @@ public class NormalMove : MonoBehaviour
     /// </summary>
     private void OnGroundTrigger(Vector3 cameraFoward)
     {
-        // 01/17アニメーション
-        anm.SetBool("Landing", true);
-        anm.SetBool("Jump", false);
-        anm.SetBool("Wall", false);
-        anm.SetBool("WallJump", false);
-        anm.SetBool("PoleHJump", false);
-        anm.SetBool("PoleVJump", false);
-        anm.SetBool("Hover", false);
-
-        // アニメーション用の変数初期化
-        m_IsWallTouch = false;
-        m_WallJumpTimer = 0;
         //外積をスティックの角度で回転させて前ベクトルを計算
         m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * cameraFoward;
         //操作可能にする
@@ -715,8 +693,6 @@ public class NormalMove : MonoBehaviour
             //ちょっと押し返して壁にめり込まないようにする
             tr.position += n * m_OnWallPushBack;
         }
-
-        m_HoverTimer = 0;
     }
 
     /// <summary>

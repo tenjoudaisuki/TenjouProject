@@ -50,9 +50,6 @@ public class CrimbMove : MonoBehaviour
         //    }
         //}
 
-        //アニメーション
-        anm.SetBool("PoleV", true);
-
         if (touchIronBar == true)
         {
             rb.velocity = Vector3.zero;
@@ -100,6 +97,16 @@ public class CrimbMove : MonoBehaviour
             //        Mathf.Clamp(tr.localPosition.x, barPos.x - moveArea, barPos.x + moveArea),
             //        Mathf.Clamp(tr.localPosition.y, barPos.y - moveArea + 0.31f, barPos.y + moveArea - 0.31f),
             //        Mathf.Clamp(tr.localPosition.z, barPos.z - moveArea, barPos.z + moveArea));
+
+            //アニメーション
+            if (Vector3.Dot(tr.up, barVectorNor * -Input.GetAxis("Vertical") * -moveSpeed * Time.deltaTime) > 0)
+            {
+                anm.SetFloat("Pole", 1);
+            }
+            else if (Vector3.Dot(tr.up, barVectorNor * -Input.GetAxis("Vertical") * -moveSpeed * Time.deltaTime) < 0)
+            {
+                anm.SetFloat("Pole", -1);
+            }
         }
 
         if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
@@ -118,13 +125,16 @@ public class CrimbMove : MonoBehaviour
 
             CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
             col.enabled = true;
+
+            //アニメーション
+            anm.SetTrigger("Pole_Jump");
         }
 
         //アニメーション
         if (Input.GetAxis("Vertical") != 0)
-            anm.SetBool("PoleVMove", true);
+            anm.SetBool("Pole_Move", true);
         else
-            anm.SetBool("PoleVMove", false);
+            anm.SetBool("Pole_Move", false);
     }
 
     public void SetTouchIronBar(bool ishit, RaycastHit hitInto)

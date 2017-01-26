@@ -39,9 +39,6 @@ public class DangleMove : MonoBehaviour
 
     void Update()
     {
-        //アニメーション
-        anm.SetBool("PoleH", true);
-
         if (touchIronBar == true)
         {
             rb.velocity = Vector3.zero;
@@ -65,6 +62,16 @@ public class DangleMove : MonoBehaviour
                     Mathf.Clamp(tr.localPosition.z, barPos.z - moveArea, barPos.z + moveArea));
 
             Debug.DrawRay(tr.position, forward * 5.0f);
+
+            //アニメーション
+            if (Vector3.Dot(tr.right, movement) > 0)
+            {
+                anm.SetFloat("Pole", 1);
+            }
+            else if (Vector3.Dot(tr.right, movement) < 0)
+            {
+                anm.SetFloat("Pole", -1);
+            }
         }
 
         if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
@@ -90,13 +97,16 @@ public class DangleMove : MonoBehaviour
 
             //CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
             //col.enabled = true;
+
+            //アニメーション
+            anm.SetTrigger("Pole_Jump");
         }
 
         //アニメーション
         if (Input.GetAxis("Horizontal") != 0)
-            anm.SetBool("PoleHMove", true);
+            anm.SetBool("Pole_Move", true);
         else
-            anm.SetBool("PoleHMove", false);
+            anm.SetBool("Pole_Move", false);
     }
 
     public void SetTouchIronBar(bool ishit, RaycastHit hitInto, string upOrDown)
