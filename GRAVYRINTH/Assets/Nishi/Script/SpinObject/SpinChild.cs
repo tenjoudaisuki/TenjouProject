@@ -41,4 +41,12 @@ public class SpinChild : MonoBehaviour {
     {
         return m_Movement;
     }
+
+    /// <summary>
+    /// m_OffsetLengthを取得する
+    /// </summary>
+    public float GetOffsetLength()
+    {
+        return m_OffsetLength;
+    }
 }
