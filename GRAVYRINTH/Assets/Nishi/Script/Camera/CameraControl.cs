@@ -190,10 +190,12 @@ public class CameraControl : ICamera
             var position = (m_Target.position + offset) + (CameraPosDirection.normalized * m_Distance); ;
             var rotate = Quaternion.LookRotation(-CameraPosDirection, m_Target.up);
 
-            LeanTween.move(gameObject, position,0.6f).setOnComplete(() => { mCurrentState = State.Crimb; });
-            LeanTween.rotateLocal(gameObject, rotate.eulerAngles, 0.5f);
-            //transform.position = Vector3.Lerp(transform.position, position, 0.3f);
-            //transform.localRotation = rotate;
+            var from = transform.localRotation;
+            LeanTween.move(gameObject, position, 0.6f).setOnComplete(() => { mCurrentState = State.Crimb; });
+
+            LeanTween.value(0, 1, 0.5f).setOnUpdate((float vel) => {
+                transform.localRotation = Quaternion.Slerp(from, rotate, vel);
+            });
         }
     }
 
@@ -289,6 +291,7 @@ public class CameraControl : ICamera
             mUp = m_Target.up;
             XAxisTotal = m_XAngleLimit;
             mCurrentState = State.Normal;
+            
         }
 
     }

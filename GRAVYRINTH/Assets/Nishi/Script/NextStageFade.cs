@@ -57,6 +57,7 @@ public class NextStageFade : MonoBehaviour {
             {
                 GameManager.Instance.Reset();
                 mState = FadeMode.FadeOut;
+                Time.timeScale = 1.0f;
             }
             if (!isLoad)
             {
@@ -73,7 +74,6 @@ public class NextStageFade : MonoBehaviour {
         mImage.color = mColor;
         if (mColor.a <= 0)
         {
-            Time.timeScale = 1.0f;
             Destroy(gameObject);
         }
     }
