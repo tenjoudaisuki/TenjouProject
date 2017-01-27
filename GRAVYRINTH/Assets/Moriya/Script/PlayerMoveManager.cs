@@ -185,13 +185,6 @@ public class PlayerMoveManager : MonoBehaviour
     /// </summary>
     public void AnimationInitialize()
     {
-        anm.SetBool("Landing", false);
-        anm.SetBool("Jump", false);
-        anm.SetBool("Wall", false);
-        anm.SetBool("WallJump", false);
-        anm.SetBool("PoleHJump", false);
-        anm.SetBool("PoleVJump", false);
-        anm.SetBool("Hover", false);
         anm.SetBool("IsTaihouRoll", false);
         anm.SetBool("Move", false);
     }

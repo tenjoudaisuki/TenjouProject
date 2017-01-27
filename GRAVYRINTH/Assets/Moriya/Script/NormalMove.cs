@@ -484,58 +484,58 @@ public class NormalMove : MonoBehaviour
     }
 
     /// <summary>
-    /// 崖のぼり(実装できてない＞＜)
+    /// 崖のぼり(実装難しいかも)
     /// </summary>
     private void WallHold()
     {
-        Vector3 rayPos1 = tr.position + tr.up * m_Height;
-        Vector3 rayPos2 = tr.position + tr.up * m_Height * 3 / 4;
-        Ray ray1 = new Ray(rayPos1, tr.forward);
-        Ray ray2 = new Ray(rayPos2, tr.forward);
+        //Vector3 rayPos1 = tr.position + tr.up * m_Height;
+        //Vector3 rayPos2 = tr.position + tr.up * m_Height * 3 / 4;
+        //Ray ray1 = new Ray(rayPos1, tr.forward);
+        //Ray ray2 = new Ray(rayPos2, tr.forward);
 
-        RaycastHit hit_hed, hit_neck;
-        RayHitInfo m_WallHitHead, m_WallHitNeck;
+        //RaycastHit hit_hed, hit_neck;
+        //RayHitInfo m_WallHitHead, m_WallHitNeck;
 
-        //レイヤー決定
-        int layermask = ~((1 << LayerMask.NameToLayer("IgnoredObj")) + (1 << LayerMask.NameToLayer("WallHold")));
-        m_WallHitHead.isHit = Physics.Raycast(ray1, out hit_hed, 0.3f, layermask);
-        m_WallHitNeck.isHit = Physics.Raycast(ray2, out hit_neck, 0.3f, layermask);
+        ////レイヤー決定
+        //int layermask = ~((1 << LayerMask.NameToLayer("IgnoredObj")) + (1 << LayerMask.NameToLayer("WallHold")));
+        //m_WallHitHead.isHit = Physics.Raycast(ray1, out hit_hed, 0.3f, layermask);
+        //m_WallHitNeck.isHit = Physics.Raycast(ray2, out hit_neck, 0.3f, layermask);
 
-        m_WallHitHead.hit = hit_hed;
-        m_WallHitNeck.hit = hit_neck;
+        //m_WallHitHead.hit = hit_hed;
+        //m_WallHitNeck.hit = hit_neck;
 
-        //レイをデバッグ表示
-        Debug.DrawRay(rayPos1, tr.forward, Color.red, 1, false);
-        Debug.DrawRay(rayPos2, tr.forward, Color.red, 1, false);
+        ////レイをデバッグ表示
+        //Debug.DrawRay(rayPos1, tr.forward, Color.red, 1, false);
+        //Debug.DrawRay(rayPos2, tr.forward, Color.red, 1, false);
 
-        //壁のぼり開始フラグ
-        if (m_WallHoldFlag)
-        {
-            m_WallHoldTimer += Time.deltaTime;
-        }
-        //壁のぼりが始まったら
-        if (m_WallHoldTimer > 0.1f)
-        {
-            tr.position += (m_Height * 1.2f * tr.up * Time.deltaTime) + (0.5f * tr.forward * Time.deltaTime);
+        ////壁のぼり開始フラグ
+        //if (m_WallHoldFlag)
+        //{
+        //    m_WallHoldTimer += Time.deltaTime;
+        //}
+        ////壁のぼりが始まったら
+        //if (m_WallHoldTimer > 0.1f)
+        //{
+        //    tr.position += (m_Height * 1.2f * tr.up * Time.deltaTime) + (0.5f * tr.forward * Time.deltaTime);
 
-            //アニメーション
-            if (anm.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash("Base Layer.Idle"))
-            {
-                anm.SetBool("ClambLarge", false);
-                m_WallHoldFlag = false;
-                m_WallHoldTimer = 0;
-            }
-            else
-                anm.SetBool("ClambLarge", true);
-        }
-        if (!m_WallHitHead.isHit && m_WallHitNeck.isHit)
-        {
-            m_WallHoldFlag = true;
-        }
-        else
-        {
-            //m_WallHoldFlag = false;
-        }
+        //    //アニメーション
+        //    if (anm.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash("Base Layer.Idle"))
+        //    {
+        //        anm.SetBool("ClambLarge", false);
+        //        m_WallHoldFlag = false;
+        //        m_WallHoldTimer = 0;
+        //    }
+        //    else
+        //        anm.SetBool("ClambLarge", true);
+        //}
+        //if (!m_WallHitHead.isHit && m_WallHitNeck.isHit)
+        //{
+        //    m_WallHoldFlag = true;
+        //}
+        //else
+        //{
+        //    //m_WallHoldFlag = false;
+        //}
     }
 
 
