@@ -3,8 +3,11 @@ using System.Collections;
 
 public class WallBreak : MonoBehaviour {
 
+    public GameObject mEndRoll;
+
     public void Break()
     {
+        Instantiate(mEndRoll);
         SoundManager.Instance.PlaySe("sei_ge_garasu_ware01");
         var walls = transform.GetComponentsInChildren<Rigidbody>();
         foreach(var wall in walls)
