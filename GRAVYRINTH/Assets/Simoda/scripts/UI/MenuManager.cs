@@ -67,8 +67,6 @@ public class MenuManager : MonoBehaviour
     //メニューの項目を変更中かどうか
     private bool changingSelection = true;
 
-    private System.Action submitAction;
-
     void Start()
     {
         //Menuシーン（自身のシーン）を検索
@@ -189,6 +187,16 @@ public class MenuManager : MonoBehaviour
         //メニューの項目を変更中ならば処理しない
         if (changingSelection == true) return;
 
+        if (Input.GetButtonDown("Submit"))
+        {
+            input.Submit();
+        }
+
+        if (Input.GetButtonDown("Cancel"))
+        {
+            input.Cancel();
+        }
+
         input.UpAction(() =>
         {
             //現在選択されている項目がback以外の時のみ処理
@@ -301,16 +309,6 @@ public class MenuManager : MonoBehaviour
                     changingSelection = false;
                 });
         });
-
-        if (Input.GetButtonDown("Submit"))
-        {
-            input.Submit();
-        }
-
-        if (Input.GetButtonDown("Cancel"))
-        {
-            input.Cancel();
-        }
     }
 
     private void StageSelectInitialize()
@@ -751,7 +749,6 @@ public class MenuManager : MonoBehaviour
             StartCoroutine(DelayMethod(1.1f, () =>
             {
                 LeanTween.scale(selectStage, new Vector3(1.0f, 1.0f, 1.0f), 1.0f);
-                changingSelection = true;
                 rectTransforms.Clear();
                 StageSelectInitialize();
                 menuType = MenuType.StageSelect;
@@ -846,6 +843,7 @@ public class MenuManager : MonoBehaviour
         });
     }
 
+
     /// <summary>
     /// StageSubmitButtonを押した時の処理
     /// </summary>
@@ -907,6 +905,7 @@ public class MenuManager : MonoBehaviour
             }));
         });
     }
+
 
     /// <summary>
     /// 操作説明画面のBackButtonを押した時の処理
