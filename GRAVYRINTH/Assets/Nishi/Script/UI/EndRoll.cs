@@ -16,13 +16,19 @@ public class EndRoll : MonoBehaviour {
     private int mIndex;
     [SerializeField, TooltipAttribute("エンドロールが開始する時間")]
     public float mDelay;
+    [SerializeField, TooltipAttribute("フェードインの時間 スロー中なので小さくして")]
+    public float mFadeInTime = 0.3f;
+    [SerializeField, TooltipAttribute("フェードアウトの時間　スロー中なので小さくして")]
+    public float mFadeOutTime = 0.3f;
+    [SerializeField, TooltipAttribute("文字が生きている時間　スロー中なので小さくして")]
+    public float mAliveTime = 0.8f;
 
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start ()
     {
         mIndex = 0;
-        Image back = transform.GetChild(0).GetComponent<Image>();
+        Image back = transform.GetChild(0).GetChild(0).GetComponent<Image>();
         LeanTween.alpha(back.rectTransform, 1.0f, mDelay).setOnComplete(() =>
             {
                 TextCreate();
@@ -32,7 +38,7 @@ public class EndRoll : MonoBehaviour {
 
     void TextCreate()
     {
-        GameObject textObj = (GameObject)Instantiate(mTexts[mIndex], transform, false);
+        GameObject textObj = (GameObject)Instantiate(mTexts[mIndex], transform.GetChild(0), false);
         mCurrentImage = textObj.GetComponent<Image>();
         TextEffect();
     }
@@ -40,19 +46,17 @@ public class EndRoll : MonoBehaviour {
     //エンドロール処理
     void TextEffect()
     {
-        if (mIndex % 2 == 0)
-        {
-            mCurrentImage.fillOrigin = 3;
-        }
-        LeanTween.value(0.0f, 1.0f, 5.0f).setOnUpdate((float val) => 
-        {
-            mCurrentImage.fillAmount = val;
-        }
-        ).setOnComplete(()=>
+        LeanTween.alpha(mCurrentImage.rectTransform, 1.0f, mFadeInTime)
+        .setOnComplete(()=>
         {
             mIndex++;
-            Destroy(mCurrentImage.gameObject);
-            if(mIndex < mTexts.Length) TextCreate();
+            LeanTween.alpha(mCurrentImage.rectTransform, 0.0f, mFadeOutTime)
+            .setOnComplete(() => 
+            {
+                Destroy(mCurrentImage.gameObject);
+                if (mIndex < mTexts.Length) TextCreate();
+            }
+            ).setDelay(mAliveTime);
         }
         );
     }
