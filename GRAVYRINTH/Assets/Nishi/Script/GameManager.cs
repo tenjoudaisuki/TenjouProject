@@ -120,6 +120,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void GameModeChangTitleEx()
+    {
+        mCureentMode = GameMode.Title;
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NONE);
+        if (!SceneManager.GetSceneByName(mTitleSceneName).isLoaded)
+        {
+            GameManager.Instance.SetNextSceneName(mTitleSceneName);
+            GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance(()=> { SceneManager.LoadScene("Title", LoadSceneMode.Additive); });
+        }
+    }
+
     void TitleMode()
     {
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NONE);
