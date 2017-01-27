@@ -13,7 +13,7 @@ public class NextStageFade : MonoBehaviour {
 
     Image mImage;
     public float mSpeed;
-    public System.Action mAction = ()=>{ };
+    public System.Action mAction = ()=>{};
     Color mColor;
 
     public string mNextScene;
@@ -21,9 +21,14 @@ public class NextStageFade : MonoBehaviour {
     FadeMode mState;
     bool isLoad;
 
+    public bool mLastMode = false;
+    public GameObject mlastmessage;
+    public GameObject mCurrentMessage;
+
 	// Use this for initialization
 	void Start ()
     {
+        mCurrentMessage = null;
         isLoad = false;
         mState = FadeMode.FadeIn;
         mImage = GetComponent<Image>();
@@ -55,9 +60,30 @@ public class NextStageFade : MonoBehaviour {
         {
             if (isLoad && GameManager.Instance.isSceneload())
             {
-                GameManager.Instance.Reset();
-                mState = FadeMode.FadeOut;
+                if (mLastMode)
+                {
+                    if(!mCurrentMessage)
+                    {
+                        mCurrentMessage = (GameObject)Instantiate(mlastmessage,GameObject.Find("FadeCanvas").transform,false);
+                        LeanTween.alpha(mCurrentMessage.GetComponent<Image>().rectTransform, 1.0f, 1.0f);
+                    }
+                    else if(Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
+                    {
+                        LeanTween.alpha(mCurrentMessage.GetComponent<Image>().rectTransform, 0.0f, 1.0f).setOnComplete(()=>
+                        {
+                            mLastMode = false;
+                        }
+                        );
+                    }
+                }
+                else
+                {
+                    GameManager.Instance.Reset();
+                    mState = FadeMode.FadeOut;
+                }
+
                 Time.timeScale = 1.0f;
+                mColor.a = 1;
             }
             if (!isLoad)
             {
@@ -74,7 +100,10 @@ public class NextStageFade : MonoBehaviour {
         mImage.color = mColor;
         if (mColor.a <= 0)
         {
+            mAction();
+            mAction = () => { };
             Destroy(gameObject);
+            Destroy(mCurrentMessage);
         }
     }
 }
