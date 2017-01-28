@@ -866,6 +866,11 @@ public class MenuManager : MonoBehaviour
                 LeanTween.alpha(rectTr, 0.0f, 1.0f);
             }
 
+            //選択したステージがfinalだったらblindを生成する
+            if(mStageNameList.Length - 1 == stageNumber)
+            {
+                GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().BlindInstance();
+            }
             //16/12/13 add　西　ゲームを開始する
             GameManager.Instance.GameModeChange(GameManager.GameMode.GamePlay);
 

@@ -8,6 +8,10 @@ public class FadeFactory : MonoBehaviour
     /// フェードプレハブ
     /// </summary>
     public GameObject mFadePrefab;
+    /// <summary>
+    /// ステージfのブラインド用のプレハブ
+    /// </summary>
+    public GameObject mBlindPrefab;
 
     public bool mlast = false;
 
@@ -53,6 +57,11 @@ public class FadeFactory : MonoBehaviour
         mFadePrefab.GetComponent<NextStageFade>().mSpeed = speed;
         GameObject fadeobj = (GameObject)Instantiate(mFadePrefab, transform, false);
         fadeobj.GetComponent<NextStageFade>().mLastMode = false;
+    }
+
+    public void BlindInstance()
+    {
+        GameObject fadeobj = (GameObject)Instantiate(mBlindPrefab, transform, false);
     }
 
     public void FadeColorChange(Color color)
