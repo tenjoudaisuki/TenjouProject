@@ -100,6 +100,7 @@ public class NextStageFade : MonoBehaviour {
         mImage.color = mColor;
         if (mColor.a <= 0)
         {
+            GameManager.Instance.SetPausePossible(true);
             mAction();
             mAction = () => { };
             Destroy(gameObject);

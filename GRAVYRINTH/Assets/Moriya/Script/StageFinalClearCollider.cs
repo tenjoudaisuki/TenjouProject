@@ -253,6 +253,7 @@ public class StageFinalClearCollider : MonoBehaviour
         if (coll.tag == "Player")
         {
             isTrigger = true;
+            GameManager.Instance.SetPausePossible(false);
             coll.gameObject.GetComponent<PlayerMoveManager>().SetState(PlayerState.STAGE_FINAL_CLEAR);
             GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Ending);
         }

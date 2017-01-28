@@ -47,12 +47,18 @@ public class GameManager : MonoBehaviour
     public GameObject mPauseMenuprefab;
     private GameObject mPauseMenu;
 
+    /// <summary>
+    /// ポースが可能であるか？
+    /// </summary>
+    private bool mPausePossible;
+
     float mTimer;
     [SerializeField, TooltipAttribute("タイトルに戻る時間")]
     public float mTitleBackTime = 30;
 
     public void Awake()
     {
+        mPausePossible = true;
         if (isDebug)
         {
             mCureentMode = GameMode.GamePlay;
@@ -81,7 +87,8 @@ public class GameManager : MonoBehaviour
     {
         if (mCureentMode == GameMode.GamePlay)
         {
-            if (Input.GetKeyDown(KeyCode.H) || Input.GetButtonDown("PS4_Options"))
+            //ポーズボタンが押されかつポーズ可能状態であること
+            if ((Input.GetKeyDown(KeyCode.H) || Input.GetButtonDown("PS4_Options")) && mPausePossible)
             {
                 Pause();
             }
@@ -245,5 +252,10 @@ public class GameManager : MonoBehaviour
     {
         GameManager.Instance.SetNextSceneName(mCurrentScene.name);
         GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance();
+    }
+
+    public void SetPausePossible(bool isPossible)
+    {
+        mPausePossible = isPossible;
     }
 }

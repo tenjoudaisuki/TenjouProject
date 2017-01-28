@@ -18,6 +18,7 @@ public class EventCamera : ICamera
     public override void Start()
     {
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
+        GameManager.Instance.SetPausePossible(false);
         LeanTween.move(gameObject, mToPosition, mMoveTime)
             .setOnComplete(() =>
             {
@@ -29,30 +30,12 @@ public class EventCamera : ICamera
                 {
                     GetComponent<CameraManager>().StateChange(State.GamePlay);
                     GetComponent<CameraManager>().CameraReset();
+                    GameManager.Instance.SetPausePossible(true);
                 });
             });
         LeanTween.rotateLocal(gameObject, mToRotate, mMoveTime);
 
     }
-
-    public void Update()
-    {
-        var pausebles = GameObject.FindGameObjectsWithTag("Pausable");
-        foreach (GameObject pauseble in pausebles)
-        {
-            var script = pauseble.GetComponent<Pausable>();
-            if (script.pausing)
-            {
-                LeanTween.pause(gameObject);
-            }
-            else
-            {
-                LeanTween.resume(gameObject);
-            }
-        }
-    }
-
-
 
     /// <summary>
     /// 移動時間の設定
