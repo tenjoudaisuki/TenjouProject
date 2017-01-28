@@ -70,16 +70,26 @@ public class CannonBlock : MonoBehaviour
                 tr.rotation = Quaternion.Euler(Vector3.zero);
                 isSet = true;
                 managar.IsSetTrue();
-                blockBlue.active = false;
-                blockRed.active = true;
-                taihouActived.active = true;
-                taihouDesactived.active = false;
+                blockBlue.SetActive(false);
+                blockRed.SetActive(true);
+                taihouActived.SetActive(true);
+                taihouDesactived.SetActive(false);
             }
         }
     }
 
     void Update()
     {
+        if (managar.GetIsSetAll() == true)
+        {
+            Destroy(blockCursor);
+            blockBlue.SetActive(false);
+            blockRed.SetActive(true);
+            taihouActived.SetActive(true);
+            taihouDesactived.SetActive(false);
+            return;
+        }
+
         if (Input.GetButtonUp("Action"))
         {
             player.GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
@@ -126,10 +136,10 @@ public class CannonBlock : MonoBehaviour
                 tr.rotation = Quaternion.Euler(Vector3.zero);
                 isSet = true;
                 managar.IsSetTrue();
-                blockBlue.active = false;
-                blockRed.active = true;
-                taihouActived.active = true;
-                taihouDesactived.active = false;
+                blockBlue.SetActive(false);
+                blockRed.SetActive(true);
+                taihouActived.SetActive(true);
+                taihouDesactived.SetActive(false);
                 SoundManager.Instance.PlaySe("hell_bell");
             }
         }
@@ -145,10 +155,10 @@ public class CannonBlock : MonoBehaviour
             isSet = false;
             managar.IsSetFalse();
             ignoreTime = 0.0f;
-            blockBlue.active = true;
-            blockRed.active = false;
-            taihouActived.active = false;
-            taihouDesactived.active = true;
+            blockBlue.SetActive(true);
+            blockRed.SetActive(false);
+            taihouActived.SetActive(false);
+            taihouDesactived.SetActive(true);
             StartCoroutine(DelayMethod(1.0f, () =>
             {
                 isSetIgnore = false;

@@ -77,7 +77,7 @@ public class StageFinalClearMove : MonoBehaviour
     IEnumerator SettingMove()
     {
         //ホバーアニメーション開始
-        anm.SetBool("Hover", true);
+        anm.SetBool("Ending_Hover", true);
         float timer = 0.0f;
         while (true)
         {
@@ -113,7 +113,7 @@ public class StageFinalClearMove : MonoBehaviour
     {
         float speed = 0.0f;
         //丸まりアニメーション開始
-        anm.SetBool("Hover", false);
+        anm.SetBool("Ending_Hover", false);
         anm.SetBool("IsTaihouRoll", true);
         while (true)
         {

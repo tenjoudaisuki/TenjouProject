@@ -30,6 +30,11 @@ public class JumpCursorDraw : MonoBehaviour
 
     void Update()
     {
+        if (GameObject.FindGameObjectWithTag("Fade").transform.childCount != 0)
+        {
+            isHit = false;
+        }
+
         if (isHit == true)
             JumpCursorControl();
         else

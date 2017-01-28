@@ -12,7 +12,7 @@ public class Block : MonoBehaviour
     private Vector3 moveDirection;
     private float pushDistance;
     private float offsetY = 0.4f;
-    private Light blueLight;
+    private Light blockLight;
     private float pushDistancePlus;
     private float distanceToWallPlus;
     private float distanceToWallDivide;
@@ -20,6 +20,8 @@ public class Block : MonoBehaviour
 
     public Vector3 moveVec;
     public bool isPush;
+    public string colorBlockName = "blockblue";
+    public string colorLightName = "Point light blockblue";
 
     void Start()
     {
@@ -39,8 +41,8 @@ public class Block : MonoBehaviour
         distanceToWallPlus = GameObject.Find("BlockManager").GetComponent<BlockManager>().GetDistanceToWallPlus();
         distanceToWallDivide = GameObject.Find("BlockManager").GetComponent<BlockManager>().GetDistanceToWallDivide();
 
-        blueLight = tr.FindChild("blockblue").transform.FindChild("Point light blockblue").GetComponent<Light>();
-        blueLight.intensity = 2;
+        blockLight = tr.FindChild(colorBlockName).transform.FindChild(colorLightName).GetComponent<Light>();
+        blockLight.intensity = 2;
     }
 
     void Update()
@@ -54,7 +56,7 @@ public class Block : MonoBehaviour
         if (Input.GetButtonUp("Action"))
         {
             //ライトの明るさを変更
-            blueLight.intensity = 2;
+            blockLight.intensity = 2;
         }
 
         if (player.GetComponent<NormalMove>().GetIsGroundHit() == false) return;
@@ -256,7 +258,7 @@ public class Block : MonoBehaviour
         if (dotInt != 0) return;
 
         //ライトの明るさを変更
-        blueLight.intensity = 8;
+        blockLight.intensity = 8;
 
         //位置を移動
         tr.position += moveVec * Time.deltaTime;

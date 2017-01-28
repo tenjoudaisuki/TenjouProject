@@ -6,6 +6,7 @@ public class CrimbMove : MonoBehaviour
     public bool touchIronBar = false;
     public float moveSpeed = 1.0f;
     public float angleSpeed = 90.0f;
+    public float poleDownTime = 0.5f;
 
     private Transform tr;
     private Rigidbody rb;
@@ -15,6 +16,7 @@ public class CrimbMove : MonoBehaviour
     private Vector3 barVectorNor;
     private GameObject ironBar;
     private JumpCursorDraw jumpCursor;
+    private float poleDownTimeCount;
 
     //プレイヤーの状態管理クラス
     private PlayerMoveManager m_MoveManager;
@@ -57,7 +59,7 @@ public class CrimbMove : MonoBehaviour
             //プレイヤーの位置から回転軸までの距離　0.009はIronBarの半径
             float distance = 0.009f;
 
-            tr.RotateAround(tr.position + tr.forward * distance, tr.up, -Input.GetAxis("Horizontal") * angleSpeed * Time.deltaTime);
+            tr.RotateAround(tr.position + tr.forward * distance, tr.up, Input.GetAxis("Horizontal") * angleSpeed * Time.deltaTime);
 
 
             float moveArea = ironBar.GetComponent<IronBar>().GetMoveArea();
@@ -74,19 +76,27 @@ public class CrimbMove : MonoBehaviour
             if (Physics.Raycast(down.origin, down.direction, out upOrDownHitInto, 0.25f, layerMask, QueryTriggerInteraction.Ignore)
                 && Input.GetAxis("Vertical") < 0.1f)
             {
-                m_MoveManager.SetState(PlayerState.NORMAL);
-                GetComponent<NormalMove>().SetIronBarHitDelay(1.0f);
-                touchIronBar = false;
-                jumpCursor.IsHit(false);
-                CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
-                col.enabled = true;
+                poleDownTimeCount += Time.deltaTime;
+
+                if (poleDownTimeCount > poleDownTime)
+                {
+                    m_MoveManager.SetState(PlayerState.NORMAL);
+                    GetComponent<NormalMove>().SetIronBarHitDelay(1.0f);
+                    touchIronBar = false;
+                    jumpCursor.IsHit(false);
+                    CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
+                    col.enabled = true;
+                }
             }
             else if (Physics.Raycast(up.origin, up.direction, out upOrDownHitInto, 0.45f, layerMask, QueryTriggerInteraction.Ignore)
                 && Input.GetAxis("Vertical") > 0.1f)
             {
+                poleDownTimeCount = 0.0f;
             }
             else
             {
+                poleDownTimeCount = 0.0f;
+
                 barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
                 Vector3 movement = barVectorNor * -Input.GetAxis("Vertical") * -moveSpeed * Time.deltaTime;
                 tr.localPosition += movement;
@@ -111,6 +121,8 @@ public class CrimbMove : MonoBehaviour
 
         if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
+            poleDownTimeCount = 0.0f;
+
             //tr.parent = null;
             //tr.parent = GameObject.Find("Pausable").transform;
             m_MoveManager.SetState(PlayerState.NORMAL);
@@ -123,8 +135,8 @@ public class CrimbMove : MonoBehaviour
 
             jumpCursor.IsHit(false);
 
-            CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
-            col.enabled = true;
+            //CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
+            //col.enabled = true;
 
             //アニメーション
             anm.SetTrigger("Pole_Jump");
