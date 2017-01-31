@@ -1,0 +1,61 @@
+☆は実装済み
+（ＬＯＯＰ）はループさせるタイプのＳＥ、通常のＳＥとは異なる実装方法にする
+
+BGM:
+title.mp3　タイトル画面でループ再生
+stage0-1.wav　メニューからスタートで一回再生、ステージセレクトで選択した場合も一回再生
+stage0-2.wav　stage0.m3がおわったらループ再生、違うステージに移ったらフェイドアウト
+stage1.mp3　ステージ１～４はループ再生、次のステージもしくはステージ選択で選んだステージが１～４だったら継続、それ以外のステージに移ったらフェイドアウト、ループの際、音楽が終わってからではなく、2:26秒あたりで次のをかぶせて再生
+stagef1.wav　最終ステージに移動したら一回再生、ステージセレクトで選択した場合も一回再生
+stagef2.wav　stagef1.wavが終わったらループ再生、finaldoorswitchに触れたらループ解除
+stagef3.wav　stagef3.wavが終わったら一回再生
+stagef4.wav　大砲がある部屋に入ったらループ再生、大砲が出来上がったらフェイドアウト
+stagef5.wav　stagef4.wavが終わる2秒前に一回再生
+stagef6.wav　stagef5.wavが終わったらループ再生、f_wallを過ぎたらループ解除
+stagef7.wav　stagef6.wavが終わったら一回再生
+
+
+
+SE:（音量と、どこまで聞こえるか設定できるとうれしい）
+※鳴り続ける効果音、ループ系効果音は後ろに（ＬＯＯＰ）をつけた。
+　これらは個別に実装する必要あり。実装と同時に音量の調整等詳細な設定を順次可能にしていく。
+※単発系効果音は何もつけていない。すべて実装済み。
+　個別の音量調整が現状できないので、最悪リソースそのものの音量を調整する形をとってもらうかも。
+
+
+＝＝ループ系効果音＝＝
+☆haevy_rain_loop　水が出る所に近い時（ＬＯＯＰ）
+→３Ｄサウンドを実装。
+　Moriya>Prefab>WaterFountainSoundというプレハブをwatertubeオブジェクト子として追加するだけでとりあえず鳴る。
+　仮実装としてステージ１だけは追加しておいた。
+　細かい設定はWaterFountainSoundのAudioSourceコンポーネントで可能。
+
+☆brook_in_a_cave.mp3　水面に近い時（ＬＯＯＰ）
+→仕様が特殊なため３Ｄサウンドではない。
+　NewWaterに追加、WaterMove.csで音量設定可能
+
+☆horror_zone1.mp3　白いゴールに近い時（ＬＯＯＰ）
+☆horror_zone2.mp3　黒いゴールに近い時（ＬＯＯＰ）
+→３Ｄサウンドを実装。
+　haevy_rain_loopのやつと実装方法は一緒。
+　Moriya>Prefab>GoalSoundというプレハブをゴールのオブジェクトの子に。
+　仮実装としてステージ１の黒ゴールだけは追加しておいた。
+　AudioClipに鳴らしたい効果音を設定すればhoror_zone1とhorror_zone2の切り替え可能。
+
+draft.mp3　stagef の細い廊下を歩いている間（ＬＯＯＰ）
+
+gaining_weight.mp3　最終ステージでスイッチ押してからfinaldoorのスイッチ沈むまでの間、大砲のブロック動かしてる間にrumbling_of_the_earth.mp3と合わせて、大砲完成してから変形し終わるまでの間、回転するオブジェクトが回転してる間（ＬＯＯＰ）
+
+rumbling_of_the_earth.mp3　finaldoorが開いてる間、finaldoorのスイッチが沈んでる間、大砲の階段一つ一つが沈んでる間、ブロックを動かしてる間（ＬＯＯＰ）
+
+＝＝単発系効果音＝＝
+☆diving1.mp3　水に潜った時
+☆summer_beach1.wav　水から出た時
+☆hell_bell.wav　大砲のブロックが赤くなるたび
+☆tinnitus1.mp3　最終ステージ以外のゴールに触れた時
+☆something_call_to_you.wav　最終ステージ以外のゴールに触れた時
+☆cannon1.mp3　finaldoorrが開ききった時、大砲の階段一つ一つが沈みきった時
+☆meka_ge_shoumei_swi01.mp3　スイッチを押した時
+☆small_explosion1.mp3 大砲からプレイヤーが発射される時
+☆sei_ge_garasu_ware01.mp3　f_wall が割れる時
+☆sword3.mp3 ブロックを掴んだ時
