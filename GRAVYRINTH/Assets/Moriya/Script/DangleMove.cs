@@ -113,7 +113,12 @@ public class DangleMove : MonoBehaviour
     {
         if (upOrDown == "Up")
         {
-            StartCoroutine(DelayMethod(1, () =>
+            //StartCoroutine(DelayMethod(1, () =>
+            //{
+            //    tr.localPosition = hitInto.point + -tr.up * 0.57f;
+            //}));
+
+            StartCoroutine(DelayMethod(2, () =>
             {
                 tr.localPosition = hitInto.point + -tr.up * 0.57f;
             }));
@@ -121,9 +126,14 @@ public class DangleMove : MonoBehaviour
         }
         else if (upOrDown == "Down")
         {
-            StartCoroutine(DelayMethod(1, () =>
+            //StartCoroutine(DelayMethod(1, () =>
+            //{
+            //    tr.localPosition = hitInto.point + -tr.up * (0.009f + 0.57f);
+            //}));
+
+            StartCoroutine(DelayMethod(2, () =>
             {
-                tr.localPosition = hitInto.point + -tr.up * (0.009f + 0.57f - 0.13f);
+                tr.localPosition = hitInto.point + -tr.up * (0.009f + 0.57f + 0.05f);
             }));
         }
 
@@ -135,7 +145,14 @@ public class DangleMove : MonoBehaviour
         jumpCursor.IsHit(true);
 
         //tr.parent = ironBar.transform;
-        StartCoroutine(DelayMethod(1, () =>
+        //StartCoroutine(DelayMethod(1, () =>
+        //{
+        //    forward = Vector3.Cross(tr.up, ironBar.GetComponent<IronBar>().GetIronBarVector());
+        //    Quaternion rotate = Quaternion.LookRotation(-forward, tr.up);
+        //    tr.localRotation = rotate;
+        //}));
+
+        StartCoroutine(DelayMethod(2, () =>
         {
             forward = Vector3.Cross(tr.up, ironBar.GetComponent<IronBar>().GetIronBarVector());
             Quaternion rotate = Quaternion.LookRotation(-forward, tr.up);

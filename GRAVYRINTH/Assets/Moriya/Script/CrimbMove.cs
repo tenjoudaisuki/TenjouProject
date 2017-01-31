@@ -151,9 +151,10 @@ public class CrimbMove : MonoBehaviour
 
     public void SetTouchIronBar(bool ishit, RaycastHit hitInto)
     {
-        StartCoroutine(DelayMethod(1, () =>
+        StartCoroutine(DelayMethod(4, () =>
         {
-            tr.localPosition += tr.forward * 0.17f;
+            tr.localPosition += tr.forward * (0.17f + hitInto.distance / 2.0f);
+            print(hitInto.distance);
         }));
 
         this.hitInto = hitInto;
@@ -165,11 +166,26 @@ public class CrimbMove : MonoBehaviour
 
         jumpCursor.IsHit(true);
 
-        StartCoroutine(DelayMethod(1, () =>
+        StartCoroutine(DelayMethod(2, () =>
+        {
+            Vector3 a = tr.position - ironBar.transform.position;
+            Vector3 b = hitInto.point - tr.position;
+            float c = Vector3.Dot(a, b.normalized);
+
+            Quaternion rotate = Quaternion.LookRotation(-b * c, ironBar.GetComponent<IronBar>().GetBarVector());
+            tr.localRotation = rotate;
+        }));
+
+        StartCoroutine(DelayMethod(3, () =>
         {
             Quaternion rotate = Quaternion.LookRotation(tr.forward, ironBar.GetComponent<IronBar>().GetBarVector());
             tr.localRotation = rotate;
+            float ang = Vector3.Angle(tr.up, ironBar.GetComponent<IronBar>().GetBarVector());
+            print(ang);
+
+            tr.localRotation *= Quaternion.Euler(ang, 0, 0);
         }));
+
     }
 
     /// <summary>

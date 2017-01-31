@@ -101,7 +101,7 @@ public class NormalMove : MonoBehaviour
     private float m_WallHoldTimer;
     //壁のぼり判定フラグ
     private bool m_WallHoldFlag;
-    
+
     //親と接触中か？
     private bool m_IsOnSpinParent = false;
     //親の回転
@@ -231,7 +231,7 @@ public class NormalMove : MonoBehaviour
         int layerMask = 1 << 8;
 
         //鉄棒をポールとして判定
-        if (Physics.BoxCast(forward.origin, Vector3.one * 0.05f, forward.direction, out forwardHitInto, tr.localRotation, 0.1f, layerMask, QueryTriggerInteraction.Ignore))
+        if (Physics.BoxCast(forward.origin, Vector3.one * 0.1f, forward.direction, out forwardHitInto, tr.localRotation, 0.1f, layerMask, QueryTriggerInteraction.Ignore))
         {
             float angle = Vector3.Angle(tr.up, forwardHitInto.collider.GetComponent<IronBar>().GetBarVector());
 
@@ -324,7 +324,7 @@ public class NormalMove : MonoBehaviour
                     m_IsWall = true;
                 }
             }
-               
+
             //壁キックボタンを押したとき
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump"))
             {
@@ -370,12 +370,14 @@ public class NormalMove : MonoBehaviour
         Vector3 camerafoward = -Vector3.Cross(m_Up, m_Camera.right);
 
         //地面と当たっていたら
-        if (m_GroundHitInfo.isHit){
+        if (m_GroundHitInfo.isHit)
+        {
             OnGround();
         }
-        
+
         //着地した瞬間の処理
-        if (m_IsGroundHitTrigger){
+        if (m_IsGroundHitTrigger)
+        {
             OnGroundTrigger(camerafoward);
 
             //アニメーション
@@ -406,9 +408,9 @@ public class NormalMove : MonoBehaviour
             m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * camerafoward;
 
             //SpinParentに乗っているときの前方向計算処理
-            if(m_IsOnSpinParent)
+            if (m_IsOnSpinParent)
             {
- 
+
             }
         }
 
@@ -435,9 +437,40 @@ public class NormalMove : MonoBehaviour
             //ブロックが押せない状態なら実行しない
             if (m_CollisionBlock.isPush == false) return;
 
+            //print(Vector3.Angle(tr.right, m_Camera.right));
+            float angle = Vector3.Angle(tr.right, m_Camera.right);
+            float input = -inputVec.y;
+
+            BlockArrow blockArrow = GameObject.Find("BlockArrow").GetComponent<BlockArrow>();
+
+            if (angle <= 45.0f)
+            {
+                input = -inputVec.y;
+                blockArrow.SetInfo(true, "Vertical");
+            }
+            else if (angle >= 135.0f)
+            {
+                input = inputVec.y;
+                blockArrow.SetInfo(true, "Vertical");
+            }
+            else
+            {
+                angle = Vector3.Angle(tr.forward, m_Camera.right);
+                if (angle <= 45.0f)
+                {
+                    input = -inputVec.x;
+                    blockArrow.SetInfo(true, "Horizontal");
+                }
+                else if (angle >= 135.0f)
+                {
+                    input = inputVec.x;
+                    blockArrow.SetInfo(true, "Horizontal");
+                }
+            }
+
             //ブロックの向きから移動方向を計算
             Vector3 moveDirection = m_CollisionBlock.GetBlockMoveDirection();
-            m_MoveVelocity = (moveDirection * -inputVec.y) * m_LastSpeed;
+            m_MoveVelocity = (moveDirection * input) * m_LastSpeed;
             //ブロックを移動させる
             m_CollisionBlock.SetMoveVector(m_MoveVelocity);
 
@@ -452,6 +485,8 @@ public class NormalMove : MonoBehaviour
         //通常時
         else
         {
+            BlockArrow blockArrow = GameObject.Find("BlockArrow").GetComponent<BlockArrow>();
+            blockArrow.SetInfo(false, "Horizontal");
             //向きを変更
             m_Front.Normalize();
             m_Up.Normalize();
@@ -647,7 +682,7 @@ public class NormalMove : MonoBehaviour
             Transform hitTr = m_GroundHitInfo.hit.transform;
             //回転床と当たっているなら
             if (hitTr.tag == "SpinChild")
-            {                
+            {
                 //床の移動方向に移動
                 Vector3 movement = hitTr.gameObject.GetComponent<SpinChild>().GetMovement();
                 tr.position += movement;

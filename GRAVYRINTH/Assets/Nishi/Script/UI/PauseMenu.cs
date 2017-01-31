@@ -166,7 +166,7 @@ public class PauseMenu : MonoBehaviour
 
             changingSelection = true;
 
-            LeanTween.scale(returnToGame, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
+            LeanTween.scale(menuBack, new Vector3(1.5f, 1.5f, 1.0f), 1.0f);
 
             //rectTransformsにBackgroundを追加
             rectTransforms.Add(background);

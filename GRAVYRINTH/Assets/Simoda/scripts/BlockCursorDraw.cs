@@ -62,7 +62,8 @@ public class BlockCursorDraw : MonoBehaviour
         if (currentDistance <= targetBlock.GetComponent<Block>().GetPushDistance()
             && player.GetComponent<NormalMove>().GetIsGroundHit()
             && Vector3.Angle(player.up, targetBlock.GetComponent<Block>().GetPlayerDirection().normal) >= 89.0f
-            && Vector3.Angle(player.up, targetBlock.GetComponent<Block>().GetPlayerDirection().normal) <= 91.0f)
+            && Vector3.Angle(player.up, targetBlock.GetComponent<Block>().GetPlayerDirection().normal) <= 91.0f
+            && !Input.GetButton("Action"))
         {
             //表示をする
             cursorRenderer.enabled = true;
