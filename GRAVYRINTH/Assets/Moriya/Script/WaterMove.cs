@@ -12,7 +12,7 @@ public class WaterMove : MonoBehaviour
 {
     Transform tr;
     MeshRenderer mr;
-
+    AudioSource se;
 
     private Plane m_Plane;
     private Image m_Image;
@@ -36,12 +36,17 @@ public class WaterMove : MonoBehaviour
     private float m_ImageAlpaMax = 0.5f;
     [SerializeField, Tooltip("水面裏の描画を行うか？")]
     private bool m_IsWaterBackDraw = true;
+    [SerializeField, Tooltip("水面の効果音の音量")]
+    private float m_SurfaceSEVolume = 1.0f;
+    [SerializeField, Tooltip("水面の効果音が聞こえる限界の距離　距離がこの値に近くなる（水面から遠ざかる）ほど聞こえなくなる")]
+    private float m_SurfaceSEMaxDistance = 4.0f;
 
 
     void Awake()
     {
         tr = GetComponent<Transform>();
         mr = GetComponent<MeshRenderer>();
+        se = GetComponent<AudioSource>();
     }
 
     void Start()
@@ -74,7 +79,11 @@ public class WaterMove : MonoBehaviour
 
         m_Plane = new Plane(tr.up, m_Length);
 
+        //カメラから水面までの距離に応じて音量を変更
+        se.volume = m_SurfaceSEVolume - DistanceCameraToWater() / m_SurfaceSEMaxDistance;
 
+
+        //キャンバスに描画するかを判定　画像描画用オブジェクトが無い場合は実行しない
         if (m_Image == null) return;
         m_Color = m_Image.color;
         //水中にカメラが入っているかを判定
@@ -125,5 +134,13 @@ public class WaterMove : MonoBehaviour
     public bool IsCameraInWater()
     {
         return m_Plane.SameSide(tr.position - tr.up, Camera.main.transform.position);
+    }
+
+    /// <summary>
+    /// カメラと水面の距離
+    /// </summary>
+    public float DistanceCameraToWater()
+    {
+        return m_Plane.GetDistanceToPoint(Camera.main.transform.position);
     }
 }
