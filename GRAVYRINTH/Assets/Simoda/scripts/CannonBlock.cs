@@ -17,6 +17,7 @@ public class CannonBlock : MonoBehaviour
     private bool isSet = false;
     private bool isSetIgnore = false;
     private float ignoreTime = 0.0f;
+    private bool pushDecision = false;
 
     private GameObject blockBlue;
     private Light blueLight;
@@ -175,11 +176,13 @@ public class CannonBlock : MonoBehaviour
         Ray ray = new Ray(tr.position, -GetPlayerDirection().normal);
         Debug.DrawRay(ray.origin, ray.direction * distanceToWall, Color.black);
 
+        float input = InputAxisDirection();
+
         //[IgnoredObj]レイヤー以外と判定させる
         int layermask = ~(1 << 10);
         if (Physics.Raycast(ray, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
         {
-            if (Input.GetAxis("Vertical") > 0.1f)
+            if (pushDecision)
             {
                 return;
             }
@@ -201,13 +204,15 @@ public class CannonBlock : MonoBehaviour
         player.GetComponent<PlayerMoveManager>().SetState(PlayerState.CANNON_BLOCK);
         player.GetComponent<CannonBlockMove>().SetCannonBlockObject(gameObject);
 
+        print(Vector3.Angle(tr.right, Camera.main.transform.right));
+
         //rotateCenterを軸に回転
-        player.RotateAround(rotateCenter.position, Vector3.forward, (InputAxisVerticalDirection() * angle) * Time.deltaTime);
-        tr.RotateAround(rotateCenter.position, Vector3.forward, (InputAxisVerticalDirection() * angle) * Time.deltaTime);
+        player.RotateAround(rotateCenter.position, Vector3.forward, (input * angle) * Time.deltaTime);
+        tr.RotateAround(rotateCenter.position, Vector3.forward, (input * angle) * Time.deltaTime);
 
         // 01/17アニメーション
         anm.SetBool("Block", true);
-        anm_value = InputAxisVerticalDirection();
+        anm_value = InputAxisDirection();
         if (anm_value == 0)
         {
             anm.SetBool("BlockMove", false);
@@ -318,15 +323,72 @@ public class CannonBlock : MonoBehaviour
     /// プレイヤーが左右どちらにいるかでinputの方向を変える
     /// </summary>
     /// <returns></returns>
-    private float InputAxisVerticalDirection()
+    private float InputAxisDirection()
     {
+        float angle = Vector3.Angle(tr.right, Camera.main.transform.right);
+        BlockArrow blockArrow = GameObject.Find("BlockArrow").GetComponent<BlockArrow>();
+
         if (tr.right == GetPlayerDirection().normal)
         {
-            return Input.GetAxis("Vertical");
+            if (angle <= 45.0f)
+            {
+                blockArrow.SetInfo(true, "Horizontal");
+                pushDecision = -Input.GetAxis("Horizontal") > 0.1f;
+                return -Input.GetAxis("Horizontal");
+            }
+            else if (angle >= 135.0f)
+            {
+                blockArrow.SetInfo(true, "Horizontal");
+                pushDecision = -Input.GetAxis("Horizontal") < -0.1f;
+                return Input.GetAxis("Horizontal");
+            }
+            else
+            {
+                angle = Vector3.Angle(tr.forward, Camera.main.transform.right);
+                if (angle <= 45.0f)
+                {
+                    blockArrow.SetInfo(true, "Vertical");
+                    pushDecision = -Input.GetAxis("Vertical") > 0.1f;
+                    return -Input.GetAxis("Vertical");
+                }
+                else if (angle >= 135.0f)
+                {
+                    blockArrow.SetInfo(true, "Vertical");
+                    pushDecision = -Input.GetAxis("Vertical") < -0.1f;
+                    return Input.GetAxis("Vertical");
+                }
+            }
         }
         else if (-tr.right == GetPlayerDirection().normal)
         {
-            return -Input.GetAxis("Vertical");
+            if (angle <= 45.0f)
+            {
+                blockArrow.SetInfo(true, "Horizontal");
+                pushDecision = -Input.GetAxis("Horizontal") < -0.1f;
+                return -Input.GetAxis("Horizontal");
+            }
+            else if (angle >= 135.0f)
+            {
+                blockArrow.SetInfo(true, "Horizontal");
+                pushDecision = -Input.GetAxis("Horizontal") > 0.1f;
+                return Input.GetAxis("Horizontal");
+            }
+            else
+            {
+                angle = Vector3.Angle(tr.forward, Camera.main.transform.right);
+                if (angle <= 45.0f)
+                {
+                    blockArrow.SetInfo(true, "Vertical");
+                    pushDecision = -Input.GetAxis("Vertical") < -0.1f;
+                    return -Input.GetAxis("Vertical");
+                }
+                else if (angle >= 135.0f)
+                {
+                    blockArrow.SetInfo(true, "Vertical");
+                    pushDecision = -Input.GetAxis("Vertical") > 0.1f;
+                    return Input.GetAxis("Vertical");
+                }
+            }
         }
 
         return 0.0f;

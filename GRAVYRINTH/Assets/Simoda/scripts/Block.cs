@@ -16,6 +16,7 @@ public class Block : MonoBehaviour
     private float pushDistancePlus;
     private float distanceToWallPlus;
     private float distanceToWallDivide;
+    private bool pushDecision = false;
 
 
     public Vector3 moveVec;
@@ -163,7 +164,7 @@ public class Block : MonoBehaviour
         //new Vector3(xDistance, yDistance, zDistance) / 14.0f
         if (Physics.BoxCast(tr.position, new Vector3(xDistance, yDistance, zDistance), -GetPlayerDirection().normal, out hitInto, tr.rotation, distanceToWall / distanceToWallDivide, layermask, QueryTriggerInteraction.Ignore))
         {
-            if (Input.GetAxis("Vertical") > 0.1f)
+            if (pushDecision)
             {
                 return;
             }
@@ -171,7 +172,7 @@ public class Block : MonoBehaviour
 
         if (Physics.BoxCast(tr.position, new Vector3(xDistance, yDistance, zDistance), GetPlayerDirection().normal, out hitInto, tr.rotation, distanceToWall / distanceToWallDivide, layermask, QueryTriggerInteraction.Ignore))
         {
-            if (Input.GetAxis("Vertical") < -0.1f)
+            if (!pushDecision)
             {
                 return;
             }
@@ -359,6 +360,11 @@ public class Block : MonoBehaviour
     public void SetMoveVector(Vector3 vector)
     {
         moveVec = vector;
+    }
+
+    public void SetPushDecision(bool pushDecision)
+    {
+        this.pushDecision = pushDecision;
     }
 
     /// <summary>
