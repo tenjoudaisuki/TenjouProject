@@ -20,7 +20,7 @@ public class BlockArrow : MonoBehaviour
         backArrowStart = transform.FindChild("BackStart").gameObject;
         forwardArrow = transform.FindChild("Forward").gameObject;
         backArrow = transform.FindChild("Back").gameObject;
-        SetArrowsActive(true);
+        SetArrowsActive(false);
     }
 
     void Update()

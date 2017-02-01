@@ -150,7 +150,7 @@ public class CannonBlock : MonoBehaviour
             ignoreTime += Time.deltaTime;
         }
 
-        if (Mathf.Abs(Input.GetAxis("Vertical")) >= 0.1f && isSet == true && ignoreTime >= 1.0f && Input.GetButton("Action") && currentDistance <= pushDistance)
+        if (Mathf.Abs(InputAxisDirection()) >= 0.1f && isSet == true && ignoreTime >= 1.0f && Input.GetButton("Action") && currentDistance <= pushDistance)
         {
             isSetIgnore = true;
             isSet = false;
@@ -176,10 +176,11 @@ public class CannonBlock : MonoBehaviour
         Ray ray = new Ray(tr.position, -GetPlayerDirection().normal);
         Debug.DrawRay(ray.origin, ray.direction * distanceToWall, Color.black);
 
-        float input = InputAxisDirection();
+
+        PushDecitionSetUp();
 
         //[IgnoredObj]レイヤー以外と判定させる
-        int layermask = ~(1 << 10);
+        int layermask = 1 << 11;
         if (Physics.Raycast(ray, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
         {
             if (pushDecision)
@@ -204,11 +205,9 @@ public class CannonBlock : MonoBehaviour
         player.GetComponent<PlayerMoveManager>().SetState(PlayerState.CANNON_BLOCK);
         player.GetComponent<CannonBlockMove>().SetCannonBlockObject(gameObject);
 
-        print(Vector3.Angle(tr.right, Camera.main.transform.right));
-
         //rotateCenterを軸に回転
-        player.RotateAround(rotateCenter.position, Vector3.forward, (input * angle) * Time.deltaTime);
-        tr.RotateAround(rotateCenter.position, Vector3.forward, (input * angle) * Time.deltaTime);
+        player.RotateAround(rotateCenter.position, Vector3.forward, (InputAxisDirection() * angle) * Time.deltaTime);
+        tr.RotateAround(rotateCenter.position, Vector3.forward, (InputAxisDirection() * angle) * Time.deltaTime);
 
         // 01/17アニメーション
         anm.SetBool("Block", true);
@@ -333,13 +332,11 @@ public class CannonBlock : MonoBehaviour
             if (angle <= 45.0f)
             {
                 blockArrow.SetInfo(true, "Horizontal");
-                pushDecision = -Input.GetAxis("Horizontal") > 0.1f;
                 return -Input.GetAxis("Horizontal");
             }
             else if (angle >= 135.0f)
             {
                 blockArrow.SetInfo(true, "Horizontal");
-                pushDecision = -Input.GetAxis("Horizontal") < -0.1f;
                 return Input.GetAxis("Horizontal");
             }
             else
@@ -348,13 +345,11 @@ public class CannonBlock : MonoBehaviour
                 if (angle <= 45.0f)
                 {
                     blockArrow.SetInfo(true, "Vertical");
-                    pushDecision = -Input.GetAxis("Vertical") > 0.1f;
                     return -Input.GetAxis("Vertical");
                 }
                 else if (angle >= 135.0f)
                 {
                     blockArrow.SetInfo(true, "Vertical");
-                    pushDecision = -Input.GetAxis("Vertical") < -0.1f;
                     return Input.GetAxis("Vertical");
                 }
             }
@@ -364,13 +359,11 @@ public class CannonBlock : MonoBehaviour
             if (angle <= 45.0f)
             {
                 blockArrow.SetInfo(true, "Horizontal");
-                pushDecision = -Input.GetAxis("Horizontal") < -0.1f;
                 return -Input.GetAxis("Horizontal");
             }
             else if (angle >= 135.0f)
             {
                 blockArrow.SetInfo(true, "Horizontal");
-                pushDecision = -Input.GetAxis("Horizontal") > 0.1f;
                 return Input.GetAxis("Horizontal");
             }
             else
@@ -379,19 +372,70 @@ public class CannonBlock : MonoBehaviour
                 if (angle <= 45.0f)
                 {
                     blockArrow.SetInfo(true, "Vertical");
-                    pushDecision = -Input.GetAxis("Vertical") < -0.1f;
                     return -Input.GetAxis("Vertical");
                 }
                 else if (angle >= 135.0f)
                 {
                     blockArrow.SetInfo(true, "Vertical");
-                    pushDecision = -Input.GetAxis("Vertical") > 0.1f;
                     return Input.GetAxis("Vertical");
                 }
             }
         }
 
         return 0.0f;
+    }
+
+    private void PushDecitionSetUp()
+    {
+        float angle = Vector3.Angle(tr.right, Camera.main.transform.right);
+        BlockArrow blockArrow = GameObject.Find("BlockArrow").GetComponent<BlockArrow>();
+
+        if (tr.right == GetPlayerDirection().normal)
+        {
+            if (angle <= 45.0f)
+            {
+                pushDecision = -Input.GetAxis("Horizontal") > 0.1f;
+            }
+            else if (angle >= 135.0f)
+            {
+                pushDecision = -Input.GetAxis("Horizontal") < -0.1f;
+            }
+            else
+            {
+                angle = Vector3.Angle(tr.forward, Camera.main.transform.right);
+                if (angle <= 45.0f)
+                {
+                    pushDecision = -Input.GetAxis("Vertical") > 0.1f;
+                }
+                else if (angle >= 135.0f)
+                {
+                    pushDecision = -Input.GetAxis("Vertical") < -0.1f;
+                }
+            }
+        }
+        else if (-tr.right == GetPlayerDirection().normal)
+        {
+            if (angle <= 45.0f)
+            {
+                pushDecision = -Input.GetAxis("Horizontal") < -0.1f;
+            }
+            else if (angle >= 135.0f)
+            {
+                pushDecision = -Input.GetAxis("Horizontal") > 0.1f;
+            }
+            else
+            {
+                angle = Vector3.Angle(tr.forward, Camera.main.transform.right);
+                if (angle <= 45.0f)
+                {
+                    pushDecision = -Input.GetAxis("Vertical") < -0.1f;
+                }
+                else if (angle >= 135.0f)
+                {
+                    pushDecision = -Input.GetAxis("Vertical") > 0.1f;
+                }
+            }
+        }
     }
 
     public bool GetIsSet()

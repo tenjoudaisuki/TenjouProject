@@ -80,12 +80,12 @@ public class CrimbMove : MonoBehaviour
 
                 if (poleDownTimeCount > poleDownTime)
                 {
-                    m_MoveManager.SetState(PlayerState.NORMAL);
                     GetComponent<NormalMove>().SetIronBarHitDelay(1.0f);
                     touchIronBar = false;
                     jumpCursor.IsHit(false);
                     CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
                     col.enabled = true;
+                    m_MoveManager.SetState(PlayerState.NORMAL);
                 }
             }
             else if (Physics.Raycast(up.origin, up.direction, out upOrDownHitInto, 0.45f, layerMask, QueryTriggerInteraction.Ignore)
@@ -125,7 +125,6 @@ public class CrimbMove : MonoBehaviour
 
             //tr.parent = null;
             //tr.parent = GameObject.Find("Pausable").transform;
-            m_MoveManager.SetState(PlayerState.NORMAL);
             //背面斜め上方向に方向にジャンプする
             m_MoveManager.PlayerPoleKick(Vector3.Normalize(-tr.forward + tr.up));
 
@@ -140,6 +139,8 @@ public class CrimbMove : MonoBehaviour
 
             //アニメーション
             anm.SetTrigger("Pole_Jump");
+
+            m_MoveManager.SetState(PlayerState.NORMAL);
         }
 
         //アニメーション

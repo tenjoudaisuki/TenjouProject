@@ -81,9 +81,9 @@ public class DangleMove : MonoBehaviour
             //touchIronBar = false;
 
             m_GravityDir.SetDirection(-tr.up);
-            m_MoveManager.SetState(PlayerState.NORMAL);
             //プレイヤーの向きを更新する
-            m_MoveManager.SetPlayerUpFront(tr.up, Vector3.Cross(tr.up, Camera.main.transform.right));
+            //m_MoveManager.SetPlayerUpFront(tr.up, Vector3.Cross(tr.up, Camera.main.transform.right));
+            m_MoveManager.SetPlayerUpFront(tr.up, tr.forward);
             //rb.AddForce(-tr.up * 200.0f);
 
             //カメラの視点をプレイヤーにする
@@ -100,6 +100,7 @@ public class DangleMove : MonoBehaviour
 
             //アニメーション
             anm.SetTrigger("Pole_Jump");
+            m_MoveManager.SetState(PlayerState.NORMAL);
         }
 
         //アニメーション
