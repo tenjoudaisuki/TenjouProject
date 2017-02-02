@@ -153,6 +153,13 @@ public class StageFinalClearMove : MonoBehaviour
                 timer / m_FlyEndTime);
             //回転
             tr.rotation *= Quaternion.AngleAxis(m_SpinMaxSpeed * Time.deltaTime, Vector3.right);
+
+            if (timer > m_FlyEndTime)
+            {
+                StopMove();
+                yield break;
+            }
+
             yield return null;
         }
     }
