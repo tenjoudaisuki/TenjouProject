@@ -59,6 +59,8 @@ public class NormalMove : MonoBehaviour
     public float m_OnWallPushBack = 0.1f;
     [SerializeField, TooltipAttribute("プレイヤーを入力方向へ向ける速さ　補完値")]
     public float m_RotateLerpValue = 0.3f;
+    [SerializeField, TooltipAttribute("ブロックを掴んでいる状態のときの後ろ方向のレイの長さ")]
+    public float m_BlockMoveBackwardRayLength = 0.5f;
     [SerializeField, TooltipAttribute("崖登りを行うか（デバッグ用）")]
     public bool m_IsWallHold = false;
 
@@ -344,6 +346,8 @@ public class NormalMove : MonoBehaviour
                 //アニメーション
                 anm.SetTrigger("Wall_Jump");
 
+                //最終的な移動量の計算コルーチン実行
+                StartCoroutine(LastSpeedCalc());
                 //操作不能時間計測開始
                 StartCoroutine(WallKickInputDisable());
             }
@@ -468,9 +472,27 @@ public class NormalMove : MonoBehaviour
                 }
             }
 
+            //後ろに壁があるなら移動させない
+            float stopspeed = 1.0f;
+            //後ろ方向への移動入力があるなら実行
+            if (input >= 0)
+            {
+                //自身の後ろレイを飛ばして壁との判定
+                Ray ray_back = new Ray(tr.position + tr.forward * 0.2f, -tr.forward);
+                RaycastHit hit;
+                bool ishit;
+                //指定レイヤー以外と判定させる
+                int layermask = ~(1 << 10 | 1 << LayerMask.NameToLayer("IronBar"));
+                ishit = Physics.Raycast(ray_back, out hit, m_BlockMoveBackwardRayLength, layermask, QueryTriggerInteraction.Ignore);
+                
+                if (ishit) stopspeed = 0.0f;
+            }
+            
+
+
             //ブロックの向きから移動方向を計算
             Vector3 moveDirection = m_CollisionBlock.GetBlockMoveDirection();
-            m_MoveVelocity = (moveDirection * input) * m_LastSpeed;
+            m_MoveVelocity = (moveDirection * input) * m_LastSpeed * stopspeed;
             //ブロックを移動させる
             m_CollisionBlock.SetMoveVector(m_MoveVelocity);
 
@@ -914,6 +936,8 @@ public class NormalMove : MonoBehaviour
         rb.AddForce(v * m_PoleJumpPower);
         m_InputAngleY += 180;
         StartCoroutine(DangleToNormalColliderOff());
+        //最終的な移動量の計算コルーチン実行
+        StartCoroutine(LastSpeedCalc());
     }
 
     /// <summary>
@@ -953,6 +977,8 @@ public class NormalMove : MonoBehaviour
     public void DangleToNormal()
     {
         StartCoroutine(DangleToNormalColliderOff());
+        //最終的な移動量の計算コルーチン実行
+        StartCoroutine(LastSpeedCalc());
     }
 
     //連続で鉄棒に当たらないための時間を設定
