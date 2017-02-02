@@ -17,6 +17,7 @@ public class NormalMove : MonoBehaviour
     private Rigidbody rb;
     private Animator anm;
     private CapsuleCollider cc;
+    private AudioSource se;
     //プレイヤーの状態管理クラス
     private PlayerMoveManager m_MoveManager;
 
@@ -44,25 +45,29 @@ public class NormalMove : MonoBehaviour
     [SerializeField, TooltipAttribute("ポールからジャンプするときの強さ")]
     private float m_PoleJumpPower = 140.0f;
     [SerializeField, TooltipAttribute("壁キックの強さ")]
-    public float m_WallKickPower = 200.0f;
+    private float m_WallKickPower = 200.0f;
     [SerializeField, TooltipAttribute("壁キックの高さ（上方向へ向かう量、0だと真横、1だと斜め45度）")]
-    public float m_WallKickHeight = 1.5f;
+    private float m_WallKickHeight = 1.5f;
     [SerializeField, TooltipAttribute("壁衝突時　壁キック可能な壁とみなす角度")]
-    public float m_WallKickAbleAngle = 80.0f;
+    private float m_WallKickAbleAngle = 80.0f;
     [SerializeField, TooltipAttribute("壁キック後の操作不能時間")]
-    public float m_DisableInputTime = 0.2f;
+    private float m_DisableInputTime = 0.2f;
     [SerializeField, TooltipAttribute("ジャンプ後、通常移動速度からジャンプ中の移動速度に変更するまでにかかる時間")]
-    public float m_ToJumpMoveSpeedTime = 0.5f;
+    private float m_ToJumpMoveSpeedTime = 0.5f;
     [SerializeField, TooltipAttribute("ぶら下がりをスペースキーで解除時、当たり判定を消滅させる時間")]
-    public float m_DangleColliderOffTime = 0.6f;
+    private float m_DangleColliderOffTime = 0.6f;
     [SerializeField, TooltipAttribute("壁に着地したとき、押し返す量")]
-    public float m_OnWallPushBack = 0.1f;
+    private float m_OnWallPushBack = 0.1f;
     [SerializeField, TooltipAttribute("プレイヤーを入力方向へ向ける速さ　補完値")]
-    public float m_RotateLerpValue = 0.3f;
+    private float m_RotateLerpValue = 0.3f;
     [SerializeField, TooltipAttribute("ブロックを掴んでいる状態のときの後ろ方向のレイの長さ")]
-    public float m_BlockMoveBackwardRayLength = 0.5f;
+    private float m_BlockMoveBackwardRayLength = 0.5f;
+    [SerializeField, TooltipAttribute("歩きのSE")]
+    private AudioClip m_WalkSE;
+    [SerializeField, TooltipAttribute("壁ずりのSE")]
+    private AudioClip m_WallSEClip;
     [SerializeField, TooltipAttribute("崖登りを行うか（デバッグ用）")]
-    public bool m_IsWallHold = false;
+    private bool m_IsWallHold = false;
 
     /*==内部設定変数==*/
     //重力の方向を所持するクラス。プレイヤー以外で重力を扱う場合こちらのクラスを使用してください。
@@ -130,6 +135,7 @@ public class NormalMove : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         anm = GetComponent<Animator>();
         cc = GetComponent<CapsuleCollider>();
+        se = GetComponent<AudioSource>();
         m_MoveManager = GetComponent<PlayerMoveManager>();
     }
 
@@ -156,6 +162,8 @@ public class NormalMove : MonoBehaviour
 
     void Update()
     {
+        se.volume = 0.0f;
+
         //地面との判定処理
         Ground();
 
@@ -179,6 +187,16 @@ public class NormalMove : MonoBehaviour
 
         //アニメーション
         anm.SetBool("IsWall", m_IsWall);
+        //歩きのSEの音量
+        if (m_GroundHitInfo.isHit && m_MoveVelocity.magnitude > 0.0f)
+        {
+            if (se.clip == m_WallSEClip)
+            {
+                se.clip = m_WalkSE;
+                se.Play();
+            }
+            se.volume = 1.0f;
+        }
     }
 
     void FixedUpdate()
@@ -312,6 +330,7 @@ public class NormalMove : MonoBehaviour
         //壁に触れているか？
         if ((180 - m_WallKickAbleAngle / 2 < wallAngle && wallAngle < 180 + m_WallKickAbleAngle / 2))
         {
+
             //落下中なら
             if (Vector3.Dot(tr.up, rb.velocity) < 0)
             {
@@ -324,12 +343,17 @@ public class NormalMove : MonoBehaviour
                     anm.SetTrigger("Wall");
 
                     m_IsWall = true;
+                    se.clip = m_WallSEClip;
+                    se.Play();
                 }
+                se.volume = 1.0f;
             }
 
             //壁キックボタンを押したとき
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump"))
             {
+                SoundManager.Instance.PlaySe("jump");
+
                 //壁キックする方向
                 Vector3 dir = tr.up * m_WallKickHeight + m_WallNormal;
                 dir.Normalize();
@@ -432,7 +456,7 @@ public class NormalMove : MonoBehaviour
         if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true)
         {
             if (Input.GetButtonDown("Action"))
-                SoundManager.Instance.PlaySe("sword3");
+                SoundManager.Instance.PlaySe("block");
 
             //アニメーション
             anm.SetBool("Block", true);
@@ -488,11 +512,9 @@ public class NormalMove : MonoBehaviour
                 //指定レイヤー以外と判定させる
                 int layermask = ~(1 << 10 | 1 << LayerMask.NameToLayer("IronBar"));
                 ishit = Physics.Raycast(ray_back, out hit, m_BlockMoveBackwardRayLength, layermask, QueryTriggerInteraction.Ignore);
-                
+
                 if (ishit) stopspeed = 0.0f;
             }
-            
-
 
             //ブロックの向きから移動方向を計算
             Vector3 moveDirection = m_CollisionBlock.GetBlockMoveDirection();
@@ -644,6 +666,7 @@ public class NormalMove : MonoBehaviour
         //地面にいるときのジャンプ始動処理
         if (m_GroundHitInfo.isHit && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
+            SoundManager.Instance.PlaySe("jump");
             //アニメーション
             anm.SetTrigger("Jump");
 
@@ -683,6 +706,7 @@ public class NormalMove : MonoBehaviour
     /// </summary>
     private void OnGroundTrigger(Vector3 cameraFoward)
     {
+        SoundManager.Instance.PlaySe("land");
         //外積をスティックの角度で回転させて前ベクトルを計算
         m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * cameraFoward;
         //操作可能にする
@@ -880,11 +904,6 @@ public class NormalMove : MonoBehaviour
         col.enabled = true;
         yield break;
     }
-
-
-
-
-
 
 
     /**==============================================================================================*/

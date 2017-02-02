@@ -142,7 +142,7 @@ public class CannonBlock : MonoBehaviour
                 blockRed.SetActive(true);
                 taihouActived.SetActive(true);
                 taihouDesactived.SetActive(false);
-                SoundManager.Instance.PlaySe("hell_bell");
+                SoundManager.Instance.PlaySe("bell");
             }
         }
 

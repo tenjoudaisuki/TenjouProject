@@ -109,7 +109,7 @@ public class StageFinalClearCollider : MonoBehaviour
             //2段目
             StartCoroutine(DelayMethod(stairPullDownTime, () =>
             {
-                SoundManager.Instance.PlaySe("cannon1");
+                SoundManager.Instance.PlaySe("doom");
                 GameObject stairUp2 = m_StairUp.transform.FindChild("object2 (1)").gameObject;
                 LeanTween.move(stairUp2, new Vector3(stairUp2.transform.position.x, stairUp1Y, stairUp2.transform.position.z), stairPullDownTime);
 
@@ -123,7 +123,7 @@ public class StageFinalClearCollider : MonoBehaviour
             //3段目
             StartCoroutine(DelayMethod(stairPullDownTime * 2.0f, () =>
             {
-                SoundManager.Instance.PlaySe("cannon1");
+                SoundManager.Instance.PlaySe("doom");
                 
                 GameObject stairUp3 = m_StairUp.transform.FindChild("object2 (2)").gameObject;
                 LeanTween.move(stairUp3, new Vector3(stairUp3.transform.position.x, stairUp1Y, stairUp3.transform.position.z), stairPullDownTime);
@@ -138,7 +138,7 @@ public class StageFinalClearCollider : MonoBehaviour
             //4段目
             StartCoroutine(DelayMethod(stairPullDownTime * 3.0f, () =>
             {
-                SoundManager.Instance.PlaySe("cannon1");
+                SoundManager.Instance.PlaySe("doom");
                 GameObject stairUp4 = m_StairUp.transform.FindChild("object2 (3)").gameObject;
                 LeanTween.move(stairUp4, new Vector3(stairUp4.transform.position.x, stairUp1Y, stairUp4.transform.position.z), stairPullDownTime);
 
@@ -152,7 +152,7 @@ public class StageFinalClearCollider : MonoBehaviour
             //5段目
             StartCoroutine(DelayMethod(stairPullDownTime * 4.0f, () =>
             {
-                SoundManager.Instance.PlaySe("cannon1");
+                SoundManager.Instance.PlaySe("doom");
                 GameObject stairUp5 = m_StairUp.transform.FindChild("object2 (4)").gameObject;
                 LeanTween.move(stairUp5, new Vector3(stairUp5.transform.position.x, stairUp1Y, stairUp5.transform.position.z), stairPullDownTime);
 
@@ -166,7 +166,7 @@ public class StageFinalClearCollider : MonoBehaviour
             //6段目
             StartCoroutine(DelayMethod(stairPullDownTime * 5.0f, () =>
             {
-                SoundManager.Instance.PlaySe("cannon1");
+                SoundManager.Instance.PlaySe("doom");
                 GameObject stairUp6 = m_StairUp.transform.FindChild("object2 (5)").gameObject;
                 LeanTween.move(stairUp6, new Vector3(stairUp6.transform.position.x, stairUp1Y, stairUp6.transform.position.z), stairPullDownTime);
 
@@ -180,7 +180,7 @@ public class StageFinalClearCollider : MonoBehaviour
 
             StartCoroutine(DelayMethod(stairPullDownTime * 6.0f, () =>
               {
-                  SoundManager.Instance.PlaySe("cannon1");
+                  SoundManager.Instance.PlaySe("doom");
                   //大砲を傾ける
                   LeanTween.rotate(m_Taihou, new Vector3(taihouAngle, 0, 0), taihouAngleTime)
                         .setEase(LeanTweenType.easeInOutBack)

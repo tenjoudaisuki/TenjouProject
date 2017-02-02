@@ -93,7 +93,7 @@ public class WaterMove : MonoBehaviour
         {
             //最初のフレームだけSEを再生
             if (!m_IsCameraInWaterPrev)
-                SoundManager.Instance.PlaySe("diving1");
+                SoundManager.Instance.PlaySe("dive");
             m_Timer += Time.deltaTime;
             m_Color.a = Mathf.Lerp(0.0f, m_ImageAlpaMax, m_Timer / m_ImageAlphaMaxTime);
             mr.enabled = false;
@@ -104,7 +104,7 @@ public class WaterMove : MonoBehaviour
         {
             //最初のフレームだけSEを再生
             if (m_IsCameraInWaterPrev)
-                SoundManager.Instance.PlaySe("summer_beach1");
+                SoundManager.Instance.PlaySe("undive");
             m_Timer = 0.0f;
             m_Color.a = 0.0f;
             mr.enabled = true;
