@@ -61,7 +61,8 @@ public class CannonBlock : MonoBehaviour
         rotateCenter = tr.FindChild("f_taihoucolone").transform;
 
         blueLight = blockBlue.transform.FindChild("Point light blockblue").GetComponent<Light>();
-        blueLight.intensity = 2;
+        blueLight.intensity = 8;
+        blueLight.range = 1;
 
         if (Vector3.Distance(tr.position, cannonSetPoint.position) < 0.1f && isSet == false)
         {
@@ -96,7 +97,7 @@ public class CannonBlock : MonoBehaviour
             player.GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
             //ライトの明るさを変更
             if (blockRed.active == false)
-                blueLight.intensity = 2;
+                blueLight.range = 1;
         }
 
         //offsetを求める
@@ -179,8 +180,8 @@ public class CannonBlock : MonoBehaviour
 
         PushDecitionSetUp();
 
-        //[IgnoredObj]レイヤー以外と判定させる
-        int layermask = 1 << 11;
+        //[StopWall]レイヤーのみと判定させる
+        int layermask = 1 << 12;
         if (Physics.Raycast(ray, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
         {
             if (pushDecision)
@@ -200,7 +201,7 @@ public class CannonBlock : MonoBehaviour
         //if (dotInt != 0) return;
 
         //ライトの明るさを変更
-        blueLight.intensity = 8;
+        blueLight.range = 2;
 
         player.GetComponent<PlayerMoveManager>().SetState(PlayerState.CANNON_BLOCK);
         player.GetComponent<CannonBlockMove>().SetCannonBlockObject(gameObject);
