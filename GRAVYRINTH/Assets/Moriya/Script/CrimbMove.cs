@@ -62,8 +62,8 @@ public class CrimbMove : MonoBehaviour
             tr.RotateAround(tr.position + tr.forward * distance, tr.up, Input.GetAxis("Horizontal") * angleSpeed * Time.deltaTime);
 
 
-            float moveArea = ironBar.GetComponent<IronBar>().GetMoveArea();
-            Vector3 barPos = ironBar.transform.position;
+            //float moveArea = ironBar.GetComponent<IronBar>().GetMoveArea();
+            //Vector3 barPos = ironBar.transform.position;
 
             Vector3 center = tr.localPosition + tr.up * 0.31f;
             Ray down = new Ray(center, -tr.up);
@@ -72,21 +72,20 @@ public class CrimbMove : MonoBehaviour
             RaycastHit upOrDownHitInto;
             int layerMask = ~(1 << LayerMask.NameToLayer("IgnoredObj"));
 
-
             if (Physics.Raycast(down.origin, down.direction, out upOrDownHitInto, 0.25f, layerMask, QueryTriggerInteraction.Ignore)
-                && Input.GetAxis("Vertical") < 0.1f)
+                && Input.GetAxis("Vertical") < -0.1f)
             {
                 poleDownTimeCount += Time.deltaTime;
 
-                if (poleDownTimeCount > poleDownTime)
-                {
-                    GetComponent<NormalMove>().SetIronBarHitDelay(1.0f);
-                    touchIronBar = false;
-                    jumpCursor.IsHit(false);
-                    CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
-                    col.enabled = true;
-                    m_MoveManager.SetState(PlayerState.NORMAL);
-                }
+                //if (poleDownTimeCount > poleDownTime)
+                //{
+                //    GetComponent<NormalMove>().SetIronBarHitDelay(1.0f);
+                //    touchIronBar = false;
+                //    jumpCursor.IsHit(false);
+                //    CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
+                //    col.enabled = true;
+                //    m_MoveManager.SetState(PlayerState.NORMAL);
+                //}
             }
             else if (Physics.Raycast(up.origin, up.direction, out upOrDownHitInto, 0.45f, layerMask, QueryTriggerInteraction.Ignore)
                 && Input.GetAxis("Vertical") > 0.1f)
@@ -152,14 +151,16 @@ public class CrimbMove : MonoBehaviour
 
     public void SetTouchIronBar(bool ishit, RaycastHit hitInto)
     {
-        StartCoroutine(DelayMethod(4, () =>
+        rb.velocity = Vector3.zero;
+
+        StartCoroutine(DelayMethod(6, () =>
         {
             tr.localPosition += tr.forward * (0.17f + hitInto.distance / 2.0f);
             print(hitInto.distance);
         }));
 
         this.hitInto = hitInto;
-        touchIronBar = true;
+        //touchIronBar = true;
 
         ironBar = hitInto.collider.gameObject;
 
@@ -187,6 +188,30 @@ public class CrimbMove : MonoBehaviour
             tr.localRotation *= Quaternion.Euler(ang, 0, 0);
         }));
 
+        Vector3 head = tr.localPosition + tr.up * 0.52f + -tr.forward * 0.2f;
+        Ray headRay = new Ray(head, tr.forward);
+        Debug.DrawRay(headRay.origin, headRay.direction * 5.0f);
+
+        StartCoroutine(DelayMethod(5, () =>
+        {
+            if (!Physics.SphereCast(headRay, 0.1f, 0.3f, 1 << 8, QueryTriggerInteraction.Ignore))
+            {
+                Quaternion rotate = Quaternion.LookRotation(tr.forward, ironBar.GetComponent<IronBar>().GetBarVector());
+                tr.localRotation = rotate;
+                float ang = Vector3.Angle(tr.up, ironBar.GetComponent<IronBar>().GetBarVector());
+                print(ang);
+
+                tr.localRotation *= Quaternion.Euler(-ang, 0, 0);
+            }
+            else
+            {
+            }
+        }));
+
+        StartCoroutine(DelayMethod(7, () =>
+        {
+            touchIronBar = true;
+        }));
     }
 
     /// <summary>

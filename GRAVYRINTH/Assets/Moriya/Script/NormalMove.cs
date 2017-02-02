@@ -447,11 +447,13 @@ public class NormalMove : MonoBehaviour
             {
                 input = -inputVec.y;
                 blockArrow.SetInfo(true, "Vertical");
+                m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Vertical") < -0.1f);
             }
             else if (angle >= 135.0f)
             {
                 input = inputVec.y;
                 blockArrow.SetInfo(true, "Vertical");
+                m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Vertical") > 0.1f);
             }
             else
             {
@@ -460,11 +462,13 @@ public class NormalMove : MonoBehaviour
                 {
                     input = -inputVec.x;
                     blockArrow.SetInfo(true, "Horizontal");
+                    m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Horizontal") < -0.1f);
                 }
                 else if (angle >= 135.0f)
                 {
                     input = inputVec.x;
                     blockArrow.SetInfo(true, "Horizontal");
+                    m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Horizontal") > 0.1f);
                 }
             }
 
