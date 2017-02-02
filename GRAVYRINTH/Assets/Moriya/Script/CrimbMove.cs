@@ -10,6 +10,7 @@ public class CrimbMove : MonoBehaviour
 
     private Transform tr;
     private Rigidbody rb;
+    private AudioSource se;
     private GravityDirection m_GravityDir;
     //private GameObject ironBarTouchPoint;
     private RaycastHit hitInto;
@@ -28,6 +29,7 @@ public class CrimbMove : MonoBehaviour
     {
         tr = gameObject.transform;
         rb = gameObject.GetComponent<Rigidbody>();
+        se = GetComponent<AudioSource>();
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
         //ironBarTouchPoint = GameObject.Find("IronBarTouchPoint");
         jumpCursor = GameObject.Find("JumpCursor").GetComponent<JumpCursorDraw>();
@@ -107,19 +109,23 @@ public class CrimbMove : MonoBehaviour
             //        Mathf.Clamp(tr.localPosition.y, barPos.y - moveArea + 0.31f, barPos.y + moveArea - 0.31f),
             //        Mathf.Clamp(tr.localPosition.z, barPos.z - moveArea, barPos.z + moveArea));
 
-            //アニメーション
             if (Vector3.Dot(tr.up, barVectorNor * -Input.GetAxis("Vertical") * -moveSpeed * Time.deltaTime) > 0)
             {
+                se.volume = 1.0f;
                 anm.SetFloat("Pole", 1);
             }
             else if (Vector3.Dot(tr.up, barVectorNor * -Input.GetAxis("Vertical") * -moveSpeed * Time.deltaTime) < 0)
             {
+                se.volume = 1.0f;
                 anm.SetFloat("Pole", -1);
             }
+            else
+                se.volume = 0.0f;
         }
 
         if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
+            SoundManager.Instance.PlaySe("jump");
             poleDownTimeCount = 0.0f;
 
             //tr.parent = null;

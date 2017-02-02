@@ -15,41 +15,41 @@ stagef7.wav　stagef6.wavが終わったら一回再生
 
 SE:
 
-walk.wav　歩き、鉄棒縦横移動
+☆walk.wav　歩き、鉄棒縦横移動
 
-jump.mp3　ジャンプ、壁キック、鉄棒キック
+☆jump.mp3　ジャンプ、壁キック、鉄棒キック
 
-land.mp3　着地
+☆land.mp3　着地
 
-wall.mp3　壁ずり中
+☆wall.mp3　壁ずり中
 
 back.wav　backの時、return to ○○の時、ステージセレクトで最左で左選択した時、最右で右選択した時
 
-enter.wav　決定
+☆enter.wav　決定
 
-select.wav　選択切り替え
+☆select.wav　選択切り替え
 
-foutain.mp3　水が出る所に近い時
+☆foutain.mp3　水が出る所に近い時
 
-water.mp3　水面に近い時（water の回転速度が早いときほど音量が増えてほしい）
+☆water.mp3　水面に近い時（water の回転速度が早いときほど音量が増えてほしい）
 
-dive.mp3　水に潜った時
+☆dive.mp3　水に潜った時
 
-undive.wav　水から出た時
+☆undive.wav　水から出た時
 
 rumble.mp3　finaldoorが開いてる間、finaldoorのスイッチが沈んでる間、大砲の階段一つ一つが沈んでる間、大砲が傾いてる間、ブロックを動かしてる間
 
 wind.mp3　stagef の細い廊下を歩いている間
 
-bell.wav　大砲のブロックが赤くなるたび
+☆bell.wav　大砲のブロックが赤くなるたび
 
-holewhite.mp3　白いゴールに近い時
+☆holewhite.mp3　白いゴールに近い時
 
-holeblack.mp3　黒いゴールに近い時
+☆holeblack.mp3　黒いゴールに近い時
 
-goal1.wav　最終ステージ以外のゴールに触れた時
+☆goal1.wav　最終ステージ以外のゴールに触れた時
 
-goal2.wav　最終ステージ以外のゴールに触れた時
+☆goal2.wav　最終ステージ以外のゴールに触れた時
 
 trick.mp3　最終ステージでスイッチ押してからfinaldoorのスイッチ沈むまでの間、大砲のブロック動かしてる間にrumble.mp3と合わせて、大砲完成してから変形し終わるまでの間、回転するオブジェクトが回転してる間
 
@@ -59,8 +59,8 @@ switch.mp3　スイッチを押した時
 
 charge.wav　大砲に吸い込まれてから発射されるまで
 
-canon.mp3　大砲からプレイヤーが発射される時
+☆canon.mp3　大砲からプレイヤーが発射される時
 
-break.wav　f_wall が割れる時
+☆break.wav　f_wall が割れる時
 
-block.mp3 ブロックを掴んだ時
+☆block.mp3 ブロックを掴んだ時
