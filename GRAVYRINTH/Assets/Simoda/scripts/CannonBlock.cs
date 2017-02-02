@@ -182,7 +182,7 @@ public class CannonBlock : MonoBehaviour
 
         //[StopWall]レイヤーのみと判定させる
         int layermask = 1 << 12;
-        if (Physics.Raycast(ray, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ray, out hitInto, distanceToWall, layermask))
         {
             if (pushDecision)
             {
