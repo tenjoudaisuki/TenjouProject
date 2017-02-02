@@ -61,7 +61,8 @@ public class TitleManager : MonoBehaviour
 
     void Update()
     {
-        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Submit")) && isSubmit == false)
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Submit")) && isSubmit == false
+            && GameObject.FindGameObjectWithTag("Fade").transform.childCount == 0)
         {
             if (isSkip == true)
             {

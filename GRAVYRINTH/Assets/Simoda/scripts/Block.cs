@@ -43,7 +43,8 @@ public class Block : MonoBehaviour
         distanceToWallDivide = GameObject.Find("BlockManager").GetComponent<BlockManager>().GetDistanceToWallDivide();
 
         blockLight = tr.FindChild(colorBlockName).transform.FindChild(colorLightName).GetComponent<Light>();
-        blockLight.intensity = 2;
+        blockLight.intensity = 8;
+        blockLight.range = 1;
     }
 
     void Update()
@@ -57,7 +58,7 @@ public class Block : MonoBehaviour
         if (Input.GetButtonUp("Action"))
         {
             //ライトの明るさを変更
-            blockLight.intensity = 2;
+            blockLight.range = 1;
         }
 
         if (player.GetComponent<NormalMove>().GetIsGroundHit() == false) return;
@@ -259,7 +260,7 @@ public class Block : MonoBehaviour
         if (dotInt != 0) return;
 
         //ライトの明るさを変更
-        blockLight.intensity = 8;
+        blockLight.range = 2;
 
         //位置を移動
         tr.position += moveVec * Time.deltaTime;
