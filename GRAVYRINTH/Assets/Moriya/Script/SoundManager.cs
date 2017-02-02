@@ -172,4 +172,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         seRequestQueue.Clear();
     }
 
+
+    public AudioClip GetSEClip(string name)
+    {
+        return seClips[GetSeIndex(name)];
+    }
 }

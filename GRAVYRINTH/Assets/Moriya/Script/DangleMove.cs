@@ -9,6 +9,7 @@ public class DangleMove : MonoBehaviour
 
     private Transform tr;
     private Rigidbody rb;
+    private AudioSource se;
     private GravityDirection m_GravityDir;
     //private GameObject ironBarTouchPoint;
     private RaycastHit hitInto;
@@ -29,6 +30,7 @@ public class DangleMove : MonoBehaviour
     {
         tr = gameObject.transform;
         rb = gameObject.GetComponent<Rigidbody>();
+        se = GetComponent<AudioSource>();
         m_GravityDir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>();
         //ironBarTouchPoint = GameObject.Find("IronBarTouchPoint");
         jumpCursor = GameObject.Find("JumpCursor").GetComponent<JumpCursorDraw>();
@@ -125,11 +127,16 @@ public class DangleMove : MonoBehaviour
             m_MoveManager.SetState(PlayerState.NORMAL);
         }
 
-        //アニメーション
         if (Input.GetAxis("Horizontal") != 0)
+        {
             anm.SetBool("Pole_Move", true);
+            se.volume = 1.0f;
+        }
         else
+        {
             anm.SetBool("Pole_Move", false);
+            se.volume = 0.0f;
+        }
     }
 
     public void SetTouchIronBar(bool ishit, RaycastHit hitInto, string upOrDown)

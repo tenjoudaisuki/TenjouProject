@@ -8,7 +8,7 @@ public class WallBreak : MonoBehaviour {
     public void Break()
     {
         Instantiate(mEndRoll);
-        SoundManager.Instance.PlaySe("sei_ge_garasu_ware01");
+        SoundManager.Instance.PlaySe("break");
         var walls = transform.GetComponentsInChildren<Rigidbody>();
         foreach(var wall in walls)
         {
