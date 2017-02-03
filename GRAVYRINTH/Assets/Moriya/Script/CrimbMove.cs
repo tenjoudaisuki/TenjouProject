@@ -7,6 +7,7 @@ public class CrimbMove : MonoBehaviour
     public float moveSpeed = 1.0f;
     public float angleSpeed = 90.0f;
     public float poleDownTime = 0.5f;
+    public float ironBarHitDelay = 0.5f;
 
     private Transform tr;
     private Rigidbody rb;
@@ -72,35 +73,50 @@ public class CrimbMove : MonoBehaviour
             Ray up = new Ray(center, tr.up);
 
             RaycastHit upOrDownHitInto;
-            int layerMask = ~(1 << LayerMask.NameToLayer("IgnoredObj"));
+            int layerMask = ~(1 << LayerMask.NameToLayer("IgnoredObj") | 1 << LayerMask.NameToLayer("IronBar"));
+
+
+            if (Physics.Raycast(up.origin, up.direction, out upOrDownHitInto, 0.45f, layerMask, QueryTriggerInteraction.Ignore))
+            {
+                //上に障害物があった場合自動で上る処理を止める
+                poleDownTimeCount += poleDownTime + 1.0f;
+            }
 
             if (Physics.Raycast(down.origin, down.direction, out upOrDownHitInto, 0.25f, layerMask, QueryTriggerInteraction.Ignore)
                 && Input.GetAxis("Vertical") < -0.1f)
             {
-                poleDownTimeCount += Time.deltaTime;
-
-                //if (poleDownTimeCount > poleDownTime)
-                //{
-                //    GetComponent<NormalMove>().SetIronBarHitDelay(1.0f);
-                //    touchIronBar = false;
-                //    jumpCursor.IsHit(false);
-                //    CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
-                //    col.enabled = true;
-                //    m_MoveManager.SetState(PlayerState.NORMAL);
-                //}
+                //地面まで降りたら鉄棒を離す
+                if (poleDownTimeCount > poleDownTime)
+                {
+                    GetComponent<NormalMove>().SetIronBarHitDelay(ironBarHitDelay);
+                    touchIronBar = false;
+                    jumpCursor.IsHit(false);
+                    CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
+                    col.enabled = true;
+                    m_MoveManager.SetState(PlayerState.NORMAL);
+                }
             }
             else if (Physics.Raycast(up.origin, up.direction, out upOrDownHitInto, 0.45f, layerMask, QueryTriggerInteraction.Ignore)
                 && Input.GetAxis("Vertical") > 0.1f)
             {
-                poleDownTimeCount = 0.0f;
             }
             else
             {
-                poleDownTimeCount = 0.0f;
-
-                barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
-                Vector3 movement = barVectorNor * -Input.GetAxis("Vertical") * -moveSpeed * Time.deltaTime;
-                tr.localPosition += movement;
+                if (poleDownTimeCount > poleDownTime)
+                {
+                    //操作で鉄棒を登る処理
+                    barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
+                    Vector3 movement = barVectorNor * -Input.GetAxis("Vertical") * -moveSpeed * Time.deltaTime;
+                    tr.localPosition += movement;
+                }
+                else
+                {
+                    //自動で鉄棒を登る処理
+                    poleDownTimeCount += Time.deltaTime;
+                    barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
+                    Vector3 movement = barVectorNor * -1.0f * -moveSpeed * Time.deltaTime;
+                    tr.localPosition += movement;
+                }
             }
 
             //tr.localPosition =
@@ -133,7 +149,7 @@ public class CrimbMove : MonoBehaviour
             //背面斜め上方向に方向にジャンプする
             m_MoveManager.PlayerPoleKick(Vector3.Normalize(-tr.forward + tr.up));
 
-            GetComponent<NormalMove>().SetIronBarHitDelay(1.0f);
+            GetComponent<NormalMove>().SetIronBarHitDelay(ironBarHitDelay);
 
             touchIronBar = false;
 
