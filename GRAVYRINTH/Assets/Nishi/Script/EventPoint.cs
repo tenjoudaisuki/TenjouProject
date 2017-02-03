@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿
+
+using UnityEngine;
 using System.Collections;
 
 public class EventPoint : MonoBehaviour
@@ -25,6 +27,10 @@ public class EventPoint : MonoBehaviour
     /// </summary>
     public bool isActive;
     /// <summary>
+    /// イベントが起動したことがあるか
+    /// </summary>
+    public bool isSwitch;
+    /// <summary>
     /// タイマー
     /// </summary>
     float mTimer;
@@ -43,8 +49,11 @@ public class EventPoint : MonoBehaviour
     /// </summary>
     public GameObject mGoalPos;
 
+    public float mEventEndTime = 2.0f;
+
     public void Start()
     {
+        isSwitch = false;
     }
 
     public void Update()
@@ -57,6 +66,8 @@ public class EventPoint : MonoBehaviour
                 if (isCheckEnd)
                 {
                     GameObject.Find("Camera").GetComponent<EventCamera>().SetMoveTime(mMoveTime);
+                    GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(mEventEndTime);
+
                     GameObject.Find("Camera").GetComponent<EventCamera>().SetTarget(mCameraPoint);
                     GameObject.Find("Camera").GetComponent<EventCamera>().SetTetubou(mSecondPos);
                     GameObject.Find("Camera").GetComponent<EventCamera>().SetGoal(mGoalPos);
@@ -66,12 +77,15 @@ public class EventPoint : MonoBehaviour
                 else
                 {
                     GameObject.Find("Camera").GetComponent<EventCamera>().SetMoveTime(mMoveTime);
+                    GameObject.Find("Camera").GetComponent<EventCamera>().SetTetubou(mSecondPos);
+                    GameObject.Find("Camera").GetComponent<EventCamera>().SetGoal(mGoalPos);
                     GameObject.Find("Camera").GetComponent<EventCamera>().SetBotton(true);
                     GameObject.Find("Camera").GetComponent<EventCamera>().SetTarget(mCameraPoint);
 
                     GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Event);
                 }
                 isActive = false;
+                isSwitch = true;
                 //UIを表示
                 Instantiate(DrawUI);
             }
@@ -79,12 +93,21 @@ public class EventPoint : MonoBehaviour
         }
     }
 
+    public void Active()
+    {
+        if(!mNextCheckPoint.isSwitch) mNextCheckPoint.isActive = true;
+    }
+
     public void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
             isActive = false;
-            if(mNextCheckPoint)mNextCheckPoint.isActive = true;
+            isSwitch = true;
+            if (mNextCheckPoint)
+            {
+                Active();
+            }
         }
     }
 }
