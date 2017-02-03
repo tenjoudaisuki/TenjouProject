@@ -326,7 +326,7 @@ public class CannonBlock : MonoBehaviour
     private float InputAxisDirection()
     {
         float angle = Vector3.Angle(tr.right, Camera.main.transform.right);
-        BlockArrow blockArrow = GameObject.Find("BlockArrow").GetComponent<BlockArrow>();
+        BlockArrow blockArrow = GameObject.FindGameObjectWithTag("BlockArrow").GetComponent<BlockArrow>();
 
         if (tr.right == GetPlayerDirection().normal)
         {
@@ -389,7 +389,7 @@ public class CannonBlock : MonoBehaviour
     private void PushDecitionSetUp()
     {
         float angle = Vector3.Angle(tr.right, Camera.main.transform.right);
-        BlockArrow blockArrow = GameObject.Find("BlockArrow").GetComponent<BlockArrow>();
+        BlockArrow blockArrow = GameObject.FindGameObjectWithTag("BlockArrow").GetComponent<BlockArrow>();
 
         if (tr.right == GetPlayerDirection().normal)
         {

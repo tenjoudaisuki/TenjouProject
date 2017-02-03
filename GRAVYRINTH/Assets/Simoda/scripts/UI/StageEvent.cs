@@ -77,6 +77,7 @@ public class StageEvent : MonoBehaviour
 
                     StartCoroutine(DelayMethod(1.1f, () =>
                     {
+                        Destroy(gameObject);
                     }));
                 });
                 break;
@@ -131,7 +132,7 @@ public class StageEvent : MonoBehaviour
                 //メニューの項目を変更中ならば処理しない
                 if (changingSelection == true) return;
 
-                if (Input.GetButtonDown("Submit"))
+                if (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
                 {
                     input.Submit();
                 }
@@ -141,7 +142,7 @@ public class StageEvent : MonoBehaviour
                 //メニューの項目を変更中ならば処理しない
                 if (changingSelection == true) return;
 
-                if (Input.GetButtonDown("Submit"))
+                if (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
                 {
                     input.Submit();
                     if (textNumbar < texts.Count - 1)
@@ -184,6 +185,11 @@ public class StageEvent : MonoBehaviour
                             {
                                 LeanTween.alpha(rectTr, 0.0f, 1.0f);
                             }
+
+                            StartCoroutine(DelayMethod(1.1f, () =>
+                            {
+                                Destroy(gameObject);
+                            }));
                         });
                     }
                 }
