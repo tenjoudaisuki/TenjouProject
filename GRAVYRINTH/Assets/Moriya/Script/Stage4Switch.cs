@@ -32,7 +32,7 @@ public class Stage4Switch : MonoBehaviour
 
     }
 
-    public void OnTriggerStay(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         if (other.tag != "Player" || m_IsDown == true) return;
         SoundManager.Instance.PlaySe("switch");
