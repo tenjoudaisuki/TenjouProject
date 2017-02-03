@@ -72,6 +72,10 @@ public class CannonBlockMove : MonoBehaviour
             //上方向を当たった平面の法線方向に変更
             m_Up = m_GroundHitInfo.hit.normal.normalized;
         }
+        else
+        {
+            tr.GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
+        }
 
 
 

@@ -19,6 +19,7 @@ public class CannonBlock : MonoBehaviour
     private float ignoreTime = 0.0f;
     private bool pushDecision = false;
     private bool normalMoveChange = false;
+    private bool playerGroundHit;
 
     private GameObject blockBlue;
     private Light blueLight;
@@ -93,17 +94,12 @@ public class CannonBlock : MonoBehaviour
             return;
         }
 
-        if (normalMoveChange == true)
+        if (Input.GetButtonUp("Action"))
         {
             player.GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
             //ライトの明るさを変更
             if (blockRed.active == false)
                 blueLight.range = 1;
-        }
-
-        if (Input.GetButtonUp("Action"))
-        {
-            normalMoveChange = true;
         }
 
         //offsetを求める
@@ -198,12 +194,6 @@ public class CannonBlock : MonoBehaviour
 
         if (!Input.GetButton("Action") || isPush == false)
         {
-            return;
-        }
-
-        if (!player.GetComponent<NormalMove>().GetIsGroundHit())
-        {
-            normalMoveChange = true;
             return;
         }
 
@@ -457,6 +447,11 @@ public class CannonBlock : MonoBehaviour
     public bool GetIsSet()
     {
         return isSet;
+    }
+
+    public void SetGroundHit(bool hit)
+    {
+        playerGroundHit = hit;
     }
 
     /// <summary>
