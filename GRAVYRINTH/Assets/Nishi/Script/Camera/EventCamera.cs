@@ -49,14 +49,14 @@ public class EventCamera : ICamera
                 {
                     if (mTetubou)
                     {
-                        mTetubou = null;
                         LeanTween.move(gameObject, gameObject.transform.position, 0.0f)
                         .setDelay(mEventEndTime)
                         .setOnComplete(() =>
                         {
-                            SetTarget(mGoalPos);
+                            SetTarget(mTetubou);
                             SetBotton(true);
                             Start();
+                            mTetubou = null;
                             return;
                         });
                     }
@@ -89,15 +89,31 @@ public class EventCamera : ICamera
             mButtonEventEnd = false;
             mButtonMode = false;
 
-            //ダミー　ディレイをかける
-            LeanTween.move(gameObject, gameObject.transform.position, 0.0f)
-            .setDelay(mEventEndTime)
-            .setOnComplete(() =>
-                    {
-                        GetComponent<CameraManager>().StateChange(State.GamePlay);
-                        GetComponent<CameraManager>().CameraReset();
-                        GameManager.Instance.SetPausePossible(true);
-                    });
+            //ゴールPositionがあれば
+            if (mGoalPos)
+            {
+                //ダミー　ディレイをかける
+                LeanTween.move(gameObject, gameObject.transform.position, 0.0f)
+                        .setOnComplete(() =>
+                        {
+                            SetTarget(mGoalPos);
+                            SetBotton(true);
+                            Start();
+                            mGoalPos = null;
+                            return;
+                        });
+            }
+            else
+            {
+                LeanTween.move(gameObject, gameObject.transform.position, 0.0f)
+                .setDelay(mEventEndTime)
+                .setOnComplete(() =>
+                        {
+                            GetComponent<CameraManager>().StateChange(State.GamePlay);
+                            GetComponent<CameraManager>().CameraReset();
+                            GameManager.Instance.SetPausePossible(true);
+                        });
+            }
         }
     }
 
