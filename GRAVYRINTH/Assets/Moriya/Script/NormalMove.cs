@@ -63,7 +63,7 @@ public class NormalMove : MonoBehaviour
     [SerializeField, TooltipAttribute("ブロックを掴んでいる状態のときの後ろ方向のレイの長さ")]
     private float m_BlockMoveBackwardRayLength = 0.5f;
     [SerializeField, TooltipAttribute("歩きのSE")]
-    private AudioClip m_WalkSE;
+    private AudioClip m_WalkMoveSEClip;
     [SerializeField, TooltipAttribute("壁ずりのSE")]
     private AudioClip m_WallSEClip;
     [SerializeField, TooltipAttribute("崖登りを行うか（デバッグ用）")]
@@ -192,7 +192,7 @@ public class NormalMove : MonoBehaviour
         {
             if (se.clip == m_WallSEClip)
             {
-                se.clip = m_WalkSE;
+                se.clip = m_WalkMoveSEClip;
                 se.Play();
             }
             se.volume = 1.0f;
@@ -905,6 +905,24 @@ public class NormalMove : MonoBehaviour
         yield break;
     }
 
+    /// <summary>
+    /// イベント時の操作不能コルーチン
+    /// </summary>
+    IEnumerator EventInputDisable()
+    {
+        //操作不能にする
+        m_DisableInput = true;
+        while (true)
+        {
+            //ボタン入力で操作可能にする
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("PS4_Circle"))
+            {
+                m_DisableInput = false;
+                yield break;
+            }
+            yield return null;
+        }
+    }
 
     /**==============================================================================================*/
     /** 外部から使用する
@@ -1008,5 +1026,13 @@ public class NormalMove : MonoBehaviour
     public void SetIronBarHitDelay(float delay)
     {
         m_IronBarHitDelay = delay;
+    }
+
+    /// <summary>
+    /// イベント時の操作不能コルーチンを開始
+    /// </summary>
+    public void StartEventInputDisable()
+    {
+        StartCoroutine(EventInputDisable());
     }
 }
