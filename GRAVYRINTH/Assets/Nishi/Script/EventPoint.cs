@@ -29,7 +29,7 @@ public class EventPoint : MonoBehaviour
     /// <summary>
     /// イベントが起動したことがあるか
     /// </summary>
-    public bool isSwitch;
+    private bool isSwitch;
     /// <summary>
     /// タイマー
     /// </summary>

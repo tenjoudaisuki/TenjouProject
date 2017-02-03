@@ -13,6 +13,10 @@ public class EventCamera : ICamera
     float timer;
 
     System.Action mCompleteAction = () => { };
+    /// <summary>
+    /// ボタンが押せる状態になったら起動させるaction
+    /// </summary>
+    System.Action mButtonActiveCompleateAction = () => { };
 
     /// <summary>
     /// ボタンでイベントを終了するように
@@ -75,6 +79,8 @@ public class EventCamera : ICamera
                 }
                 else
                 {
+                    var eventUi = GameObject.FindObjectOfType<StageEvent>();
+                    if(eventUi)eventUi.ChangeEnd();
                     mButtonEventEnd = true;
                 }
             });
@@ -88,6 +94,10 @@ public class EventCamera : ICamera
         {
             mButtonEventEnd = false;
             mButtonMode = false;
+
+            //アクションを起動
+            mButtonActiveCompleateAction();
+            mButtonActiveCompleateAction = () => { };
 
             //ゴールPositionがあれば
             if (mGoalPos)
@@ -202,5 +212,10 @@ public class EventCamera : ICamera
     public void SetCompleteAction(System.Action action)
     {
         mCompleteAction = action;
+    }
+
+    public void SetmButtonActiveCompleateAction(System.Action action)
+    {
+        mButtonActiveCompleateAction = action;
     }
 }

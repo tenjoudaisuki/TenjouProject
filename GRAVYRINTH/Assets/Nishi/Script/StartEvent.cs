@@ -24,9 +24,7 @@ public class StartEvent : MonoBehaviour
         {
             StartCoroutine(DelayMethod(mWaitTime , () =>
              {
-                 GameObject.Find("Camera").GetComponent<EventCamera>().SetCompleteAction(
-                     () => { mNextPoint.isActive = true; }
-                     );
+                 GameObject.Find("Camera").GetComponent<EventCamera>().SetmButtonActiveCompleateAction(() => { mNextPoint.isActive = true; });
                  GameObject.Find("Camera").GetComponent<EventCamera>().SetMoveTime(1.0f);
                  GameObject.Find("Camera").GetComponent<EventCamera>().SetBotton(true);
                  GameObject.Find("Camera").GetComponent<EventCamera>().SetTarget(mCameraPoint);
