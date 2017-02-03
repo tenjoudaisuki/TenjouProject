@@ -390,8 +390,13 @@ public class MenuManager : MonoBehaviour
             {
                 LeanTween.scale(stageSelectBack, new Vector3(1.0f, 1.0f, 1.0f), 1.0f);
                 rectTransforms.Clear();
-                MenuInitialize();
-                menuType = MenuType.Menu;
+                GameManager.Instance.SetNextSceneName(mStageNameList[0]);
+                GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance(Color.white, 1.0f);
+                StartCoroutine(DelayMethod(1.1f, () =>
+                {
+                    MenuInitialize();
+                    menuType = MenuType.Menu;
+                }));
             }));
         });
     }
@@ -905,8 +910,13 @@ public class MenuManager : MonoBehaviour
             {
                 LeanTween.scale(stageSelectBack, new Vector3(1.0f, 1.0f, 1.0f), 1.0f);
                 rectTransforms.Clear();
-                MenuInitialize();
-                menuType = MenuType.Menu;
+                GameManager.Instance.SetNextSceneName(mStageNameList[0]);
+                GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance(Color.white, 1.0f);
+                StartCoroutine(DelayMethod(1.1f, () =>
+                {
+                    MenuInitialize();
+                    menuType = MenuType.Menu;
+                }));
             }));
         });
     }
