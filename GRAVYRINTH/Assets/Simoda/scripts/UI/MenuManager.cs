@@ -187,12 +187,12 @@ public class MenuManager : MonoBehaviour
         //メニューの項目を変更中ならば処理しない
         if (changingSelection == true) return;
 
-        if (Input.GetButtonDown("Submit"))
+        if (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
         {
             input.Submit();
         }
 
-        if (Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("PS4_Cross") || Input.GetKeyDown(KeyCode.Backspace))
         {
             input.Cancel();
         }
@@ -400,12 +400,12 @@ public class MenuManager : MonoBehaviour
     {
         if (changingSelection == true) return;
 
-        if (Input.GetButtonDown("Submit"))
+        if (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
         {
             input.Submit();
         }
 
-        if (Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("PS4_Cross") || Input.GetKeyDown(KeyCode.Backspace))
         {
             input.Cancel();
         }
@@ -683,12 +683,12 @@ public class MenuManager : MonoBehaviour
 
         StartCoroutine(DelayMethod(1, () =>
         {
-            if (Input.GetButtonDown("Submit"))
+            if (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
             {
                 input.Submit();
             }
 
-            if (Input.GetButtonDown("Cancel"))
+            if (Input.GetButtonDown("PS4_Cross") || Input.GetKeyDown(KeyCode.Backspace))
             {
                 input.Cancel();
             }
@@ -867,7 +867,7 @@ public class MenuManager : MonoBehaviour
             }
 
             //選択したステージがfinalだったらblindを生成する
-            if(mStageNameList.Length - 1 == stageNumber)
+            if (mStageNameList.Length - 1 == stageNumber)
             {
                 GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().BlindInstance();
             }
