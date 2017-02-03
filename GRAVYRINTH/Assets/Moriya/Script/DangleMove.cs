@@ -6,6 +6,7 @@ public class DangleMove : MonoBehaviour
     public bool touchIronBar = false;
     public float moveSpeed = 1.0f;
     public float angleSpeed = 90.0f;
+    public float ironBarHitDelay = 0.5f;
 
     private Transform tr;
     private Rigidbody rb;
@@ -62,7 +63,7 @@ public class DangleMove : MonoBehaviour
             Debug.DrawRay(head, tr.up * 5.0f);
 
             RaycastHit rightOrLeftHitInto;
-            int layerMask = ~(1 << LayerMask.NameToLayer("IgnoredObj"));
+            int layerMask = ~(1 << LayerMask.NameToLayer("IgnoredObj") | 1 << LayerMask.NameToLayer("IronBar"));
 
             if (Physics.Raycast(right.origin, right.direction, out rightOrLeftHitInto, 0.3f, layerMask, QueryTriggerInteraction.Ignore)
                 && Input.GetAxis("Horizontal") > 0.1f)
@@ -113,7 +114,7 @@ public class DangleMove : MonoBehaviour
             //カメラの視点をプレイヤーにする
             GameObject.Find("Camera").GetComponent<CameraControl>().SetTarget(gameObject);
 
-            GetComponent<NormalMove>().SetIronBarHitDelay(1.0f);
+            GetComponent<NormalMove>().SetIronBarHitDelay(ironBarHitDelay);
 
             touchIronBar = false;
 
