@@ -77,6 +77,7 @@ public class StageEvent : MonoBehaviour
 
                     StartCoroutine(DelayMethod(1.1f, () =>
                     {
+                        Destroy(gameObject);
                     }));
                 });
                 break;
@@ -184,6 +185,11 @@ public class StageEvent : MonoBehaviour
                             {
                                 LeanTween.alpha(rectTr, 0.0f, 1.0f);
                             }
+
+                            StartCoroutine(DelayMethod(1.1f, () =>
+                            {
+                                Destroy(gameObject);
+                            }));
                         });
                     }
                 }

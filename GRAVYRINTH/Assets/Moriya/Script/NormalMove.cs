@@ -469,7 +469,7 @@ public class NormalMove : MonoBehaviour
             float angle = Vector3.Angle(tr.right, m_Camera.right);
             float input = -inputVec.y;
 
-            BlockArrow blockArrow = GameObject.Find("BlockArrow").GetComponent<BlockArrow>();
+            BlockArrow blockArrow = GameObject.FindGameObjectWithTag("BlockArrow").GetComponent<BlockArrow>();
 
             if (angle <= 45.0f)
             {
@@ -533,7 +533,7 @@ public class NormalMove : MonoBehaviour
         //通常時
         else
         {
-            BlockArrow blockArrow = GameObject.Find("BlockArrow").GetComponent<BlockArrow>();
+            BlockArrow blockArrow = GameObject.FindGameObjectWithTag("BlockArrow").GetComponent<BlockArrow>();
             blockArrow.SetInfo(false, "Horizontal");
             //向きを変更
             m_Front.Normalize();
