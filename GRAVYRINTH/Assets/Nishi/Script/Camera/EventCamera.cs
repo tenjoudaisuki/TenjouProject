@@ -14,28 +14,94 @@ public class EventCamera : ICamera
 
     System.Action mCompleteAction = () => { };
 
+    /// <summary>
+    /// ボタンでイベントを終了するように
+    /// </summary>
+    bool mButtonMode;
+    /// <summary>
+    /// ボタンが押されてイベントが終了d出来る合図
+    /// </summary>
+    bool mButtonEventEnd;
+
+    /// <summary>
+    /// 鉄棒用カメラ
+    /// </summary>
+    GameObject mTetubou;
+    /// <summary>
+    /// ゴールをみる用
+    /// </summary>
+    GameObject mGoalPos;
+
     // Use this for initialization
     public override void Start()
     {
+        mButtonEventEnd = false;
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
         GameManager.Instance.SetPausePossible(false);
+
         LeanTween.move(gameObject, mToPosition, mMoveTime)
             .setOnComplete(() =>
             {
                 mCompleteAction();
                 mCompleteAction = () => { };
-                LeanTween.move(gameObject, gameObject.transform.position, 0.0f)
-                .setDelay(mEventEndTime)
-                .setOnComplete(() =>
+                //ボタンで終了しなければ
+                if (!mButtonMode)
                 {
-                    GetComponent<CameraManager>().StateChange(State.GamePlay);
-                    GetComponent<CameraManager>().CameraReset();
-                    GameManager.Instance.SetPausePossible(true);
-                });
+                    if (mTetubou)
+                    {
+                        mTetubou = null;
+                        LeanTween.move(gameObject, gameObject.transform.position, 0.0f)
+                        .setDelay(mEventEndTime)
+                        .setOnComplete(() =>
+                        {
+                            SetTarget(mGoalPos);
+                            SetBotton(true);
+                            Start();
+                            return;
+                        });
+                    }
+                    else
+                    {
+                        //ダミー
+                        LeanTween.move(gameObject, gameObject.transform.position, 0.0f)
+                        .setDelay(mEventEndTime)
+                        .setOnComplete(() =>
+                        {
+                            GetComponent<CameraManager>().StateChange(State.GamePlay);
+                            GetComponent<CameraManager>().CameraReset();
+                            GameManager.Instance.SetPausePossible(true);
+                        });
+                    }
+                }
+                else
+                {
+                    mButtonEventEnd = true;
+                }
             });
-        LeanTween.rotateLocal(gameObject, mToRotate, mMoveTime);
 
+        LeanTween.rotateLocal(gameObject, mToRotate, mMoveTime);
     }
+
+    public void Update()
+    {
+        if (mButtonMode && mButtonEventEnd && (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return)) )
+        {
+            mButtonEventEnd = false;
+            mButtonMode = false;
+
+            //ダミー　ディレイをかける
+            LeanTween.move(gameObject, gameObject.transform.position, 0.0f)
+            .setDelay(mEventEndTime)
+            .setOnComplete(() =>
+                    {
+                        GetComponent<CameraManager>().StateChange(State.GamePlay);
+                        GetComponent<CameraManager>().CameraReset();
+                        GameManager.Instance.SetPausePossible(true);
+                    });
+        }
+    }
+
+
 
     /// <summary>
     /// 移動時間の設定
@@ -81,6 +147,25 @@ public class EventCamera : ICamera
     public void SetRotate(Vector3 rotate)
     {
         mToRotate = rotate;
+    }
+
+    /// <summary>
+    /// buttonでイベントを終了する
+    /// </summary>
+    /// <param name="rotate"></param>
+    public void SetBotton(bool isCheck)
+    {
+        mButtonMode = isCheck;
+    }
+
+    public void SetTetubou(GameObject tetubou)
+    {
+        mTetubou = tetubou;
+    }
+
+    public void SetGoal(GameObject Goal)
+    {
+        mGoalPos = Goal;
     }
 
     /// <summary>
