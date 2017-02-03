@@ -6,7 +6,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class CannonBlockMove : MonoBehaviour 
+public class CannonBlockMove : MonoBehaviour
 {
     /*==所持コンポーネント==*/
     private Transform tr;
@@ -34,16 +34,16 @@ public class CannonBlockMove : MonoBehaviour
     //掴んでいるブロック
     private GameObject m_CannonBlock;
 
-	void Start()
+    void Start()
     {
         //コンポーネント取得
         tr = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
         anm = GetComponent<Animator>();
         m_MoveManager = GetComponent<PlayerMoveManager>();
-	}
-	
-	void Update()
+    }
+
+    void Update()
     {
         // 01/17アニメーション
         anm.SetBool("Block", true);
@@ -76,8 +76,9 @@ public class CannonBlockMove : MonoBehaviour
 
 
         //前
-        m_Front = m_CannonBlock.transform.position - (tr.position + tr.up * m_BlockHeight);
-        m_Front.Normalize();
+        //m_Front = m_CannonBlock.transform.position - (tr.position + tr.up * m_BlockHeight);
+        //m_Front.Normalize();
+        m_Front = -m_CannonBlock.GetComponent<CannonBlock>().GetPlayerDirection().normal;
         //回転
         Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
         tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, 0.3f);
