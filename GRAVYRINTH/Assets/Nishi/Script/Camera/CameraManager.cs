@@ -9,7 +9,8 @@ public enum State
     GamePlay,
     Clear,
     Event,
-    Ending
+    Ending,
+    Stage1Event
 }
 
 public class CameraManager : MonoBehaviour
@@ -27,26 +28,6 @@ public class CameraManager : MonoBehaviour
 
     public void Update()
     {
-        //if(Input.GetButtonDown("PS4_Square"))
-        //{
-        //    Debug.Log("しかく");
-        //}
-        //if (Input.GetButtonDown("PS4_Cross"))
-        //{
-        //    Debug.Log("ばつ");
-        //}
-        //if (Input.GetButtonDown("PS4_Circle"))
-        //{
-        //    Debug.Log("まる");
-        //}
-        //if (Input.GetButtonDown("PS4_Triangle"))
-        //{
-        //    Debug.Log("さんかく");
-        //}
-        //if (Input.GetButtonDown("PS4_R3"))
-        //{
-        //    Debug.Log("R3");
-        //}
     }
 
     public void StateChange(State state)
@@ -61,6 +42,7 @@ public class CameraManager : MonoBehaviour
             case State.Clear: ScriptChange(GetComponent<ClearCamera>()); break;
             case State.Ending: ScriptChange(GetComponent<EndingCamera>()); break;
             case State.Event: ScriptChange(GetComponent<EventCamera>()); break;
+            case State.Stage1Event: ScriptChange(GetComponent<Stage1EventCamera>()); break;
         }
         mCurrentState = state;
     }
