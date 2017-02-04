@@ -46,7 +46,7 @@ public class Stage4SwitchManager : MonoBehaviour
             //スイッチのどれかが押されていたらブロックが動くコルーチン実行
             for (int i = 0; i < m_Switchs.Length; i++)
             {
-                if (m_Switchs[i].GetComponent<Stage4Switch>().GetIsnDown())
+                if (m_Switchs[i].GetComponent<Stage4Switch>().GetIsDown())
                 {
                     //コルーチン実行
                     for (int j = 0; j < m_SpinObjects.Length; j++)
