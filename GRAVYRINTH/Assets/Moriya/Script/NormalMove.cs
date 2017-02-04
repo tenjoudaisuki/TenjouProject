@@ -120,6 +120,9 @@ public class NormalMove : MonoBehaviour
     //連続で鉄棒に当たらないようにするための待ち時間
     private float m_IronBarHitDelay = 0.0f;
 
+    //ジャンプ中に速度を遅くするコルーチン
+    private Coroutine m_LastSpeedCoroutine;
+
     //アニメーション用
     //*-壁キック
     private bool m_IsWall;
@@ -158,6 +161,9 @@ public class NormalMove : MonoBehaviour
         m_InitParentTr = tr.parent;
 
         m_LastSpeed = m_MoveSpeed;
+
+        //null参照回避のため一度動かす
+        m_LastSpeedCoroutine = StartCoroutine(LastSpeedCalc());
     }
 
     void Update()
@@ -264,6 +270,7 @@ public class NormalMove : MonoBehaviour
 
                 //アニメーション
                 anm.SetTrigger("PoleV");
+                StopCoroutine(m_LastSpeedCoroutine);
             }
         }
 
@@ -287,6 +294,7 @@ public class NormalMove : MonoBehaviour
 
                 //アニメーション
                 anm.SetTrigger("PoleH");
+                StopCoroutine(m_LastSpeedCoroutine);
 
                 return;
             }
@@ -312,6 +320,8 @@ public class NormalMove : MonoBehaviour
 
                 //アニメーション
                 anm.SetTrigger("PoleH");
+                StopCoroutine(m_LastSpeedCoroutine);
+
             }
         }
     }
@@ -371,7 +381,7 @@ public class NormalMove : MonoBehaviour
                 anm.SetTrigger("Wall_Jump");
 
                 //最終的な移動量の計算コルーチン実行
-                StartCoroutine(LastSpeedCalc());
+                m_LastSpeedCoroutine = StartCoroutine(LastSpeedCalc());
                 //操作不能時間計測開始
                 StartCoroutine(WallKickInputDisable());
             }
@@ -679,7 +689,7 @@ public class NormalMove : MonoBehaviour
             m_GroundHitInfo.isHit = false;
 
             //最終的な移動量の計算コルーチン実行
-            StartCoroutine(LastSpeedCalc());
+            m_LastSpeedCoroutine = StartCoroutine(LastSpeedCalc());
             //ジャンプ後の地面との判定を行わない時間計測コルーチン実行
             StartCoroutine(CheckGroundOffTime());
         }
@@ -878,12 +888,14 @@ public class NormalMove : MonoBehaviour
         {
             timer += Time.deltaTime;
             m_LastSpeed = Mathf.Lerp(m_MoveSpeed, m_JumpMoveSpeed, timer / m_ToJumpMoveSpeedTime);
-
             if (m_GroundHitInfo.isHit)
             {
                 m_LastSpeed = m_MoveSpeed;
-                yield break;
+                if (m_LastSpeedCoroutine != null)
+                    StopCoroutine(m_LastSpeedCoroutine);
             }
+
+           
             yield return null;
         }
     }
@@ -978,7 +990,7 @@ public class NormalMove : MonoBehaviour
         m_InputAngleY += 180;
         StartCoroutine(DangleToNormalColliderOff());
         //最終的な移動量の計算コルーチン実行
-        StartCoroutine(LastSpeedCalc());
+        m_LastSpeedCoroutine = StartCoroutine(LastSpeedCalc());
     }
 
     /// <summary>
@@ -1019,7 +1031,9 @@ public class NormalMove : MonoBehaviour
     {
         StartCoroutine(DangleToNormalColliderOff());
         //最終的な移動量の計算コルーチン実行
-        StartCoroutine(LastSpeedCalc());
+        print("called statrcoroutine");
+        StopCoroutine(m_LastSpeedCoroutine);
+        m_LastSpeedCoroutine = StartCoroutine(LastSpeedCalc());
     }
 
     //連続で鉄棒に当たらないための時間を設定

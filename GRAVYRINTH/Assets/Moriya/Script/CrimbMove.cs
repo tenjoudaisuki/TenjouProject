@@ -147,7 +147,7 @@ public class CrimbMove : MonoBehaviour
             //tr.parent = null;
             //tr.parent = GameObject.Find("Pausable").transform;
             //背面斜め上方向に方向にジャンプする
-            m_MoveManager.PlayerPoleKick(Vector3.Normalize(-tr.forward + tr.up));
+            //m_MoveManager.PlayerPoleKick(Vector3.Normalize(-tr.forward + tr.up));
 
             GetComponent<NormalMove>().SetIronBarHitDelay(ironBarHitDelay);
 
