@@ -83,6 +83,7 @@ public class PlayerMoveManager : MonoBehaviour
     {
         m_PrevPlayerState = m_PlayerState;
         m_PlayerState = state;
+        Action(m_PlayerState);
 
         //特定の変更時に行う処理
         //ＡＮＹ→ＮＯＮＥへの変更時
@@ -163,11 +164,10 @@ public class PlayerMoveManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 鉄棒よじ登り状態からジャンプして背面に飛ばせる
+    /// 鉄棒よじ登り状態からジャンプ
     /// </summary>
     public void PlayerPoleKick(Vector3 v)
     {
-        Action(m_PlayerState);
         m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().StartPoleKick(v);
     }
 
