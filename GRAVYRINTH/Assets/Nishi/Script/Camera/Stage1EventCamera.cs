@@ -31,10 +31,11 @@ public class Stage1EventCamera : ICamera {
     public float m_Step3TextureDrawTime = 1.0f;
     [SerializeField, TooltipAttribute("カメラを回すスピード")]
     public float m_Speed = -15.0f;
-    [SerializeField, TooltipAttribute("ゴールのオブジェクト")]
-    public GameObject m_GoalObject;
 
-
+    /// <summary>
+    /// ゴールのオブジェクト
+    /// </summary>
+    private GameObject m_GoalObject;
     /// <summary>
     /// ローカルに変換したオフセット
     /// </summary>
@@ -103,9 +104,9 @@ public class Stage1EventCamera : ICamera {
         {
             m_ButtonEnable = true;
             var eventUi  = GameObject.FindObjectOfType<StageEvent>();
-            eventUi.ChangeEnd();
+            if(eventUi) eventUi.ChangeEnd();
         }
-        if(Input.GetButtonDown("PS4_Circle") && m_ButtonEnable)
+        if((Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))  && m_ButtonEnable)
         {
             StepChange(Steps.Step3);
         }
@@ -117,15 +118,17 @@ public class Stage1EventCamera : ICamera {
     void Step3()
     {
         m_Timer += Time.deltaTime;
+        transform.position = m_GoalObject.transform.position;
+        transform.localRotation = m_GoalObject.transform.localRotation;
         if (m_Timer > m_Step3TextureDrawTime)
         {
             m_ButtonEnable = true;
             var eventUi = GameObject.FindObjectOfType<StageEvent>();
-            eventUi.ChangeEnd();
+            if (eventUi) eventUi.ChangeEnd();
         }
-        if (Input.GetButtonDown("PS4_Circle") && m_ButtonEnable)
+        if ((Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return)) && m_ButtonEnable)
         {
-            StepChange(Steps.Step3);
+            StepChange(Steps.Step4);
         }
     }
 
@@ -154,6 +157,11 @@ public class Stage1EventCamera : ICamera {
         m_ButtonEnable = false;
         m_Timer = 0.0f;
         m_CurrentStep = step;
+    }
+
+    public void SetPosition(GameObject obj)
+    {
+        m_GoalObject = obj;
     }
 
 }
