@@ -31,6 +31,8 @@ public class Stage1EventCamera : ICamera {
     public float m_Step3TextureDrawTime = 1.0f;
     [SerializeField, TooltipAttribute("カメラを回すスピード")]
     public float m_Speed = -15.0f;
+    [SerializeField, TooltipAttribute("中心位置からオフセットする数値")]
+    public Vector3 m_CenterOffsetPosition;
 
     /// <summary>
     /// ゴールのオブジェクト
@@ -78,18 +80,20 @@ public class Stage1EventCamera : ICamera {
     void Step1()
     {
         m_Timer += Time.deltaTime;
-        //歩く時間を過ぎたら
-        if(m_WalkTime > m_Timer)
-        {
-            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
-            Instantiate(m_DrawTexture);
-            StepChange(Steps.Step2);
-        }
         m_Offset = m_Target.right * m_TargetOffset.x + m_Target.up * m_TargetOffset.y + m_Target.forward * m_TargetOffset.z;
         Vector3 position = (m_Target.position + m_Offset) + (-m_Target.forward * m_Distance);
 
         transform.position = position;
         transform.localRotation = Quaternion.LookRotation(m_Target.forward,m_Target.up);
+
+        //歩く時間を過ぎたら
+        if (m_WalkTime > m_Timer)
+        {
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
+            Instantiate(m_DrawTexture);
+            transform.position = m_StageCenter.transform.position + m_CenterOffsetPosition;
+            StepChange(Steps.Step2);
+        }
     }
 
     /// <summary>
