@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public bool isDebug = true;
 
     private static GameManager sInstance;
+    private BGMControl bgmCtrl;
 
     public static GameManager Instance
     {
@@ -81,6 +82,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NONE);
+        bgmCtrl = GameObject.Find("BGMControl").GetComponent<BGMControl>();
     }
 
     public void Update()
@@ -178,6 +180,7 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.UnloadScene(mCurrentScene);
         SceneManager.LoadScene(mNextStageName, LoadSceneMode.Additive);
+        //bgmCtrl.ChangeBGM(mCurrentScene.name, mNextStageName);
         mCurrentScene = SceneManager.GetSceneByName(mNextStageName);
     }
 
