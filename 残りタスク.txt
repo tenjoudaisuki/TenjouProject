@@ -10,8 +10,6 @@
 
 ƒoƒOF
 
-ƒCƒxƒ“ƒg’†‚ÍƒvƒŒƒCƒ„[‚ð“®‚©‚·“ü—Í‚Ì‚ÝØ‚Á‚Ä
-
 ƒQ[ƒ€ƒNƒŠƒAŒãAƒvƒŒƒCƒ„[‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ªŠÛ‚Ü‚Á‚Ä‚ÄAƒWƒƒƒ“ƒv‚à—Ž‰º‚à‚Å‚«‚È‚¢
 
 ƒCƒxƒ“ƒg’†‚ÌƒvƒŒƒCƒ„[‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ªƒCƒPƒCƒP‚É‚È‚Á‚Ä‚é
@@ -39,8 +37,6 @@ finaldoor ‚ÌŽž‚ÌƒCƒxƒ“ƒgƒJƒƒ‰‚ÍAƒJƒƒ‰‚ª–Ú•W’n“_‚É“ž’…‚µ‚Ä‚©‚çfinaldoor‚ªŠJ‚«‚
 ƒXƒe[ƒW‚ªØ‚è‘Ö‚í‚éŽžAƒJƒƒ‰‰ŠúˆÊ’u‚É’…‚¢‚Ä‚©‚çƒtƒFƒCƒhƒCƒ“‚·‚é‚æ‚¤‚É‚µ‚Ä‚Ù‚µ‚¢istart game‚ð‘I‘ð‚µ‚½ŽžˆÈŠOj
 
 ‘å–C‚ªŠ®¬‚µ‚½Žž‚ÉƒvƒŒƒCƒ„[‚ª‘å–C‚É‚­‚Á‚Â‚­‚æ‚¤‚É‚·‚é
-
-ƒuƒƒbƒN‚ð’Í‚ñ‚¾Žž‚Éã‚°‚é‚Ì‚ðintensity‚Å‚Í‚È‚­range‚É‚µ‚½‚¢
 
 •Ç‚ÉŽÎ‚ß‚É“–‚½‚é‚Æi‚ß‚È‚­‚È‚é‚¯‚Ç‚ä‚Á‚­‚èi‚ß‚é‚æ‚¤‚É‚µ‚Ä‚Ù‚µ‚¢
 
@@ -114,8 +110,6 @@ stagef‚â0‚ÅƒCƒxƒ“ƒgŒã‚ÌƒJƒƒ‰‚ªƒvƒŒƒCƒ„[‚ÌŒã‚ë‚É–ß‚é‚Ü‚Åƒ|[ƒYo—ˆ‚È‚¢‚æ‚¤‚É‚µ‚
 
 stage0‚ÅƒCƒxƒ“ƒgƒJƒƒ‰‚ªƒvƒŒƒCƒ„[‚Ì•û‚É–ß‚Á‚Ä‚é“r’†‚Åƒ|[ƒY‰æ–ÊŠJ‚­‚ÆAmenuback‚ª•\Ž¦‚³‚ê‚È‚¢‚µ‰½‚ð‘I‘ð‚µ‚Ä‚à”½‰ž‚µ‚È‚­‚È‚é(ª‚Å‰ðŒˆH)
 
-stage0‚Åƒ`ƒFƒbƒNƒ|ƒCƒ“ƒg2‚ð’Ê‰ß‚µ‚Ä‚¢‚Ä‚àƒCƒxƒ“ƒg‚ª”­¶‚µ‚¿‚á‚¤
-
 stage0ˆÈŠO‚ÅƒCƒxƒ“ƒgŒ©‚Ä‚©‚çstage0‚ÅƒCƒxƒ“ƒg”­¶‚·‚é‚ÆZ‰Ÿ‚µ‚Ä‚àƒJƒƒ‰‚ª‚·‚®–ß‚ç‚È‚¢
 
 stage0‚ÅÅŒã‚ÌƒCƒxƒ“ƒg‚ÌŒãAƒJƒƒ‰‚ª‚·‚®–ß‚ç‚È‚­‚ÄA‚»‚ÌŒã‚·‚×‚Ä‚ÌƒCƒxƒ“ƒg‚Å“¯‚¶Œ»Û‚ª”­¶
@@ -123,9 +117,5 @@ stage0‚ÅÅŒã‚ÌƒCƒxƒ“ƒg‚ÌŒãAƒJƒƒ‰‚ª‚·‚®–ß‚ç‚È‚­‚ÄA‚»‚ÌŒã‚·‚×‚Ä‚ÌƒCƒxƒ“ƒg‚Å“¯‚¶
 “S–_“o‚Á‚Ä‚éŽž‚Æ‚Ô‚ç‰º‚ª‚Á‚Ä‚éŽž‚ÉƒCƒxƒ“ƒg”­¶‚·‚é‚Æ—Ž‚¿‚¿‚á‚¤
 
 ƒ|[ƒY‰æ–Ê’†‚ÉŽžŠÔ§‚ÌƒCƒxƒ“ƒg‚ª”­¶‚µ‚¿‚á‚¤
-
-stage4‚ÌƒXƒCƒbƒ`‚Ìnonactive‚ðA‰Ÿ‚µ‚½Žž‚Ì‚Ý•\Ž¦‚·‚é
-
-‚Ô‚ç‰º‚ª‚Á‚Ä‚éŽž‚Éƒ`ƒFƒbƒNƒ|ƒCƒ“ƒg‚Æ‚Ì‚ ‚½‚è”»’è‚ª‚ ‚é‚æ‚¤‚É‚µ‚Ä‚Ù‚µ‚¢
 
 ƒuƒƒbƒN‚É‹ß‚Ã‚­‘O‚©‚ç’Í‚Ýƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚½‚Ü‚ÜƒuƒƒbƒN‚ð‰Ÿ‚·‚ÆƒvƒŒƒCƒ„[‚ªƒuƒƒbƒN‚ÉŒÅ’è‚³‚ê‚È‚¢Ž–‚ª‚ ‚é
