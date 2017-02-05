@@ -67,6 +67,9 @@ public class MenuManager : MonoBehaviour
     //メニューの項目を変更中かどうか
     private bool changingSelection = true;
 
+    //BGM変更用
+    private BGMControl bgmctrl;
+
     void Start()
     {
         //Menuシーン（自身のシーン）を検索
@@ -92,6 +95,8 @@ public class MenuManager : MonoBehaviour
 
         //実際に描画されるステージ番号の配列を登録
         drawingStageNumbars = new int[] { 0, 1, 2, 3, 4, 11 };
+
+        bgmctrl = GameObject.Find("BGMControl").GetComponent<BGMControl>();
     }
 
     void Update()
@@ -728,7 +733,7 @@ public class MenuManager : MonoBehaviour
                 GameManager.Instance.GameModeChange(GameManager.GameMode.GamePlay);
                 //------------------------------------------------------------------
                 SceneManager.UnloadScene(menu);
-                SoundManager.Instance.PlayBgm("ingame");
+                bgmctrl.StartGameSelected();
             }));
         });
     }
@@ -883,7 +888,23 @@ public class MenuManager : MonoBehaviour
             StartCoroutine(DelayMethod(1.1f, () =>
             {
                 SceneManager.UnloadScene(menu);
-                SoundManager.Instance.PlayBgm("ingame");
+                SoundManager.Instance.PlayBgm("stage1");
+                if (stageNumber == 5)
+                {
+                    //最終ステージ
+                    bgmctrl.StageFinalSelected();
+                }
+                else if(stageNumber == 0)
+                {
+                    //チュートリアルステージ
+                    bgmctrl.StartGameSelected();
+                }
+                else
+                {
+                    //ステージ１～４
+                    bgmctrl.Stage1_4Selected();
+                }
+
             }));
         });
     }
