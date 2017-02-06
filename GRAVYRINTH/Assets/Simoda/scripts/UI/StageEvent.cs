@@ -18,7 +18,7 @@ public class StageEvent : MonoBehaviour
     private UIInputManager input;
 
     //メニューの項目を変更中かどうか
-    private bool changingSelection = true;
+    private bool isChanging = true;
 
     private RectTransform background;
     private RectTransform next;
@@ -114,11 +114,16 @@ public class StageEvent : MonoBehaviour
             LeanTween.alpha(rectTr, 1.0f, 1.0f);
         }
 
+        StartCoroutine(DelayMethod(1.1f, () =>
+        {
+            isChanging = false;
+        }));
+
         input.SetSubmitAction(() =>
         {
             SoundManager.Instance.PlaySe("enter");
 
-            changingSelection = true;
+            isChanging = true;
 
             foreach (RectTransform rectTr in rectTransforms)
             {
@@ -135,7 +140,7 @@ public class StageEvent : MonoBehaviour
     private void SingleTextInput()
     {
         //メニューの項目を変更中ならば処理しない
-        if (changingSelection == true) return;
+        if (isChanging == true) return;
 
         if (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
         {
@@ -160,11 +165,16 @@ public class StageEvent : MonoBehaviour
             LeanTween.alpha(rectTr, 1.0f, 1.0f);
         }
 
+        StartCoroutine(DelayMethod(1.1f, () =>
+        {
+            isChanging = false;
+        }));
+
         input.SetSubmitAction(() =>
         {
             SoundManager.Instance.PlaySe("enter");
 
-            changingSelection = true;
+            isChanging = true;
 
             //rectTransformsからText以外を削除
             rectTransforms.Remove(background);
@@ -191,7 +201,7 @@ public class StageEvent : MonoBehaviour
     private void MultiTextInput()
     {
         //メニューの項目を変更中ならば処理しない
-        if (changingSelection == true) return;
+        if (isChanging == true) return;
 
         if (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
         {
@@ -202,7 +212,7 @@ public class StageEvent : MonoBehaviour
                 {
                     SoundManager.Instance.PlaySe("enter");
 
-                    changingSelection = true;
+                    isChanging = true;
 
                     LeanTween.alpha(texts[textNumbar], 0.0f, 1.0f);
 
@@ -214,10 +224,10 @@ public class StageEvent : MonoBehaviour
                     {
                         LeanTween.alpha(texts[textNumbar], 1.0f, 1.0f);
 
-                        //StartCoroutine(DelayMethod(1.1f, () =>
-                        //{
-                        //    changingSelection = false;
-                        //}));
+                        StartCoroutine(DelayMethod(1.1f, () =>
+                        {
+                            isChanging = false;
+                        }));
                     }));
                 });
             }
@@ -227,7 +237,7 @@ public class StageEvent : MonoBehaviour
                 {
                     SoundManager.Instance.PlaySe("enter");
 
-                    changingSelection = true;
+                    isChanging = true;
 
                     rectTransforms.Add(background);
                     rectTransforms.Add(next);
@@ -271,9 +281,18 @@ public class StageEvent : MonoBehaviour
         }));
     }
 
-    public void ChangeEnd()
+    //public void ChangeEnd()
+    //{
+    //    changingSelection = false;
+    //}
+
+    /// <summary>
+    /// イベントが終了したかどうか？
+    /// </summary>
+    /// <returns>false = イベント終了</returns>
+    public bool IsChanging()
     {
-        changingSelection = false;
+        return isChanging;
     }
 
     /// <summary>
