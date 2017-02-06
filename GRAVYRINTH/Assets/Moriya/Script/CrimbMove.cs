@@ -88,6 +88,7 @@ public class CrimbMove : MonoBehaviour
                 //地面まで降りたら鉄棒を離す
                 if (poleDownTimeCount > poleDownTime)
                 {
+                    poleDownTimeCount = 0.0f;
                     GetComponent<NormalMove>().SetIronBarHitDelay(ironBarHitDelay);
                     touchIronBar = false;
                     jumpCursor.IsHit(false);
@@ -174,11 +175,12 @@ public class CrimbMove : MonoBehaviour
     public void SetTouchIronBar(bool ishit, RaycastHit hitInto)
     {
         rb.velocity = Vector3.zero;
+        poleDownTimeCount = 0.0f;
 
         StartCoroutine(DelayMethod(6, () =>
         {
             tr.localPosition += tr.forward * (0.17f + hitInto.distance / 2.0f);
-            print(hitInto.distance);
+            //print(hitInto.distance);
         }));
 
         this.hitInto = hitInto;
@@ -206,7 +208,7 @@ public class CrimbMove : MonoBehaviour
             Quaternion rotate = Quaternion.LookRotation(tr.forward, ironBar.GetComponent<IronBar>().GetBarVector());
             tr.localRotation = rotate;
             float ang = Vector3.Angle(tr.up, ironBar.GetComponent<IronBar>().GetBarVector());
-            print(ang);
+            //print(ang);
 
             tr.localRotation *= Quaternion.Euler(ang, 0, 0);
         }));
@@ -222,7 +224,7 @@ public class CrimbMove : MonoBehaviour
                 Quaternion rotate = Quaternion.LookRotation(tr.forward, ironBar.GetComponent<IronBar>().GetBarVector());
                 tr.localRotation = rotate;
                 float ang = Vector3.Angle(tr.up, ironBar.GetComponent<IronBar>().GetBarVector());
-                print(ang);
+                //print(ang);
 
                 tr.localRotation *= Quaternion.Euler(-ang, 0, 0);
             }

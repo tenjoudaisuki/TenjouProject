@@ -126,6 +126,7 @@ public class DangleMove : MonoBehaviour
             //アニメーション
             anm.SetTrigger("Pole_Jump");
             m_MoveManager.SetState(PlayerState.NORMAL);
+            m_MoveManager.SetPlayerUpFront(tr.up, tr.forward);
         }
 
         if (Input.GetAxis("Horizontal") != 0)

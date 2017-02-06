@@ -105,7 +105,7 @@ public class StageEvent : MonoBehaviour
     private void SingleTextInitialize()
     {
         //Backgroundの検索　代入
-        background = GameObject.Find("Background").GetComponent<RectTransform>();
+        background = GameObject.Find("EventBackground").GetComponent<RectTransform>();
         next = GameObject.Find("Next").GetComponent<RectTransform>();
 
         //Listの中身のAlphaを1.0秒かけて1.0にTween
