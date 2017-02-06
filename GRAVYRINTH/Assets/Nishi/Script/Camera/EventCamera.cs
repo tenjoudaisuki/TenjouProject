@@ -216,4 +216,13 @@ public class EventCamera : ICamera
     {
         mButtonActiveCompleateAction = action;
     }
+
+    /// <summary>
+    /// カメラの移動が終了したか？
+    /// </summary>
+    /// <returns>true = イベント終了</returns>
+    public bool IsCameraMoveEnd()
+    {
+        return mButtonEventEnd;
+    }
 }
