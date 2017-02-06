@@ -175,6 +175,7 @@ public class DangleMove : MonoBehaviour
 
         ironBar = hitInto.collider.gameObject;
 
+        jumpCursor.ChangeType(JumpCursorDraw.CursorType.IronBar);
         jumpCursor.IsHit(true);
 
         //tr.parent = ironBar.transform;

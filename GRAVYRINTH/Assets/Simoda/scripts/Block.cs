@@ -247,17 +247,21 @@ public class Block : MonoBehaviour
         //print("up,-forward" + tr.up + " " + -tr.forward + " " + Vector3.Dot(tr.up, -tr.forward));
         //プレイヤーの上方向とブロックのプレイヤー方向の面の法線ベクトルで内積を作る
 
-        float dot = Vector3.Dot(player.up, GetPlayerDirection().normal);
+
+        float angle = Vector3.Angle(player.up, GetPlayerDirection().normal);
+        //print(angle);
+        if (angle <= 89.0f || angle >= 91.0f) return;
+        //float dot = Vector3.Dot(player.up, GetPlayerDirection().normal);
         //内積の数値を補正
-        float dotAbs = Mathf.Abs(dot);
-        float dotInt = Mathf.FloorToInt(dotAbs);
+        //float dotAbs = Mathf.Abs(dot);
+        //float dotInt = Mathf.FloorToInt(dotAbs);
         //print(dotInt);
         //dot = Mathf.Clamp(dot, 0.0f, 1.0f);
         //print(player.up);
         //print(GetPlayerDirection().normal);
 
         //内積が0（90度）じゃなかったらreturn
-        if (dotInt != 0) return;
+        //if (dotInt != 0) return;
 
         //ライトの明るさを変更
         blockLight.range = 2;
