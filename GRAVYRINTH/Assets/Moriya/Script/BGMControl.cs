@@ -127,6 +127,7 @@ public class BGMControl : MonoBehaviour
         }
         //触れたらSEとして曲の後奏を再生
         SoundManager.Instance.PlaySe("stagef3");
+        SoundManager.Instance.StopBgm();
 
         ////ＢＧＭをフェードアウト
         //timer = 0.0f;
@@ -155,11 +156,10 @@ public class BGMControl : MonoBehaviour
             yield return null;
         }
 
-        
-
         //大砲が完成したら
         //再生
         SoundManager.Instance.PlaySe("stagef5");
+        SoundManager.Instance.StopBgm();
         ////ＢＧＭをフェードアウト
         //timer = 0.0f;
         //while (timer < m_Stagef4BGMFadeOutTime)
