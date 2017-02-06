@@ -73,7 +73,6 @@ public class EventCamera : ICamera
                         {
                             GetComponent<CameraManager>().StateChange(State.GamePlay);
                             GetComponent<CameraManager>().CameraReset();
-                            GameManager.Instance.SetPausePossible(true);
                         });
                     }
                 }
@@ -121,7 +120,6 @@ public class EventCamera : ICamera
                         {
                             GetComponent<CameraManager>().StateChange(State.GamePlay);
                             GetComponent<CameraManager>().CameraReset();
-                            GameManager.Instance.SetPausePossible(true);
                         });
             }
         }

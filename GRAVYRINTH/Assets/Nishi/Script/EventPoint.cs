@@ -23,6 +23,10 @@ public class EventPoint : MonoBehaviour
     /// </summary>
     public EventPoint mNextCheckPoint;
     /// <summary>
+    /// 昔のチェックポイント
+    /// </summary>
+    public EventPoint mPrevCheckPoint;
+    /// <summary>
     /// イベントが起動しているか
     /// </summary>
     public bool isActive;
@@ -79,6 +83,7 @@ public class EventPoint : MonoBehaviour
                     GameObject.Find("Camera").GetComponent<EventCamera>().SetMoveTime(mMoveTime);
                     GameObject.Find("Camera").GetComponent<EventCamera>().SetTetubou(mSecondPos);
                     GameObject.Find("Camera").GetComponent<EventCamera>().SetGoal(mGoalPos);
+                    GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(0.0f);
                     GameObject.Find("Camera").GetComponent<EventCamera>().SetBotton(true);
                     GameObject.Find("Camera").GetComponent<EventCamera>().SetTarget(mCameraPoint);
 
@@ -95,18 +100,34 @@ public class EventPoint : MonoBehaviour
 
     public void Active()
     {
-        if(!mNextCheckPoint.isSwitch) mNextCheckPoint.isActive = true;
+        if (!mNextCheckPoint.isSwitch)
+        {
+            mNextCheckPoint.isActive = true;
+        }
     }
 
     public void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
-            isActive = false;
-            isSwitch = true;
-            if (mNextCheckPoint)
+            if (mPrevCheckPoint)
             {
-                Active();
+                if (!mPrevCheckPoint.isSwitch) return;
+                isActive = false;
+                isSwitch = true;
+                if (mNextCheckPoint)
+                {
+                    Active();
+                }
+            }
+            else
+            {
+                isActive = false;
+                isSwitch = true;
+                if (mNextCheckPoint)
+                {
+                    Active();
+                }
             }
         }
     }
