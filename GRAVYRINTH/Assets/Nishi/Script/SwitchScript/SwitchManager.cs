@@ -45,6 +45,8 @@ public class SwitchManager : MonoBehaviour
 
             LeanTween.rotate(mFinalDoor, new Vector3(90, 0, 0), mOpenTime);
             gameObject.SetActive(false);
+
+            GameObject.Find("BGMControl").GetComponent<BGMControl>().PlayerFinalDoorSwitchTouched();
         }
     }
 }

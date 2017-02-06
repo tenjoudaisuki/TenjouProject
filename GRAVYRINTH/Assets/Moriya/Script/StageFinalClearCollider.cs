@@ -180,6 +180,7 @@ public class StageFinalClearCollider : MonoBehaviour
 
             StartCoroutine(DelayMethod(stairPullDownTime * 6.0f, () =>
               {
+                  GameObject.Find("BGMControl").GetComponent<BGMControl>().CreatedTaihou();
                   SoundManager.Instance.PlaySe("doom");
                   //大砲を傾ける
                   LeanTween.rotate(m_Taihou, new Vector3(taihouAngle, 0, 0), taihouAngleTime)

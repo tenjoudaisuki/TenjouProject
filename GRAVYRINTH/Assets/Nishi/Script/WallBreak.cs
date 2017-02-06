@@ -9,6 +9,7 @@ public class WallBreak : MonoBehaviour {
     {
         Instantiate(mEndRoll);
         SoundManager.Instance.PlaySe("break");
+        GameObject.Find("BGMControl").GetComponent<BGMControl>().BreakedWall();
         var walls = transform.GetComponentsInChildren<Rigidbody>();
         foreach(var wall in walls)
         {
