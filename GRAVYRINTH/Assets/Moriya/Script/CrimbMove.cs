@@ -188,6 +188,7 @@ public class CrimbMove : MonoBehaviour
 
         //tr.parent = ironBar.transform;
 
+        jumpCursor.ChangeType(JumpCursorDraw.CursorType.Pole);
         jumpCursor.IsHit(true);
 
         StartCoroutine(DelayMethod(2, () =>

@@ -19,6 +19,7 @@ public class JumpCursorDrawSpace : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            jumpCursor.ChangeType(JumpCursorDraw.CursorType.Space);
             jumpCursor.IsHit(true);
         }
     }

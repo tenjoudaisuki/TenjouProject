@@ -3,6 +3,14 @@ using System.Collections;
 
 public class JumpCursorDraw : MonoBehaviour
 {
+    public enum CursorType
+    {
+        Space,
+        IronBar,
+        Pole,
+    }
+    private CursorType cursorType;
+
     private GameObject jumpCursor;
     private Transform player;
     private Transform tr;
@@ -17,6 +25,8 @@ public class JumpCursorDraw : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
         tr = gameObject.transform;
+
+        cursorType = CursorType.Space;
 
         //offset = new Vector3(
         //    0.0f,
@@ -44,9 +54,28 @@ public class JumpCursorDraw : MonoBehaviour
     private void JumpCursorControl()
     {
         cursorRenderer.enabled = true;
-        jumpCursor.transform.position = player.position + player.up * 0.8f;
+        switch (cursorType)
+        {
+            case CursorType.Space:
+                jumpCursor.transform.position = player.position + player.up * 0.8f;
+                break;
+
+            case CursorType.IronBar:
+                jumpCursor.transform.position = player.position + player.up * 0.8f + player.forward * 0.3f;
+                break;
+
+            case CursorType.Pole:
+                jumpCursor.transform.position = player.position + player.up * 0.8f + -Camera.main.transform.forward * 0.4f;
+                break;
+        }
+
 
         jumpCursor.transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward, Camera.main.transform.up);
+    }
+
+    public void ChangeType(CursorType type)
+    {
+        cursorType = type;
     }
 
     public void IsHit(bool hit)
