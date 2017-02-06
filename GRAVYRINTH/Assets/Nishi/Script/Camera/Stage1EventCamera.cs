@@ -107,8 +107,8 @@ public class Stage1EventCamera : ICamera {
         if(m_Timer > m_Step2TextureDrawTime)
         {
             m_ButtonEnable = true;
-            var eventUi  = GameObject.FindObjectOfType<StageEvent>();
-            if(eventUi) eventUi.ChangeEnd();
+            //var eventUi  = GameObject.FindObjectOfType<StageEvent>();
+            //if(eventUi) eventUi.ChangeEnd();
         }
         if((Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))  && m_ButtonEnable)
         {
@@ -127,8 +127,8 @@ public class Stage1EventCamera : ICamera {
         if (m_Timer > m_Step3TextureDrawTime)
         {
             m_ButtonEnable = true;
-            var eventUi = GameObject.FindObjectOfType<StageEvent>();
-            if (eventUi) eventUi.ChangeEnd();
+            //var eventUi = GameObject.FindObjectOfType<StageEvent>();
+            //if (eventUi) eventUi.ChangeEnd();
         }
         if ((Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return)) && m_ButtonEnable)
         {

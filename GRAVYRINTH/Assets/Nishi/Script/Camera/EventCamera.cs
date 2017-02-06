@@ -78,8 +78,6 @@ public class EventCamera : ICamera
                 }
                 else
                 {
-                    var eventUi = GameObject.FindObjectOfType<StageEvent>();
-                    if(eventUi)eventUi.ChangeEnd();
                     mButtonEventEnd = true;
                 }
             });
@@ -89,6 +87,11 @@ public class EventCamera : ICamera
 
     public void Update()
     {
+        var eventUi = GameObject.FindObjectOfType<StageEvent>();
+        if (eventUi)
+        {
+            if (eventUi.IsChanging() && !mButtonEventEnd) return;
+        }
         if (mButtonMode && mButtonEventEnd && (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return)) )
         {
             mButtonEventEnd = false;
