@@ -23,10 +23,6 @@ public class EventPoint : MonoBehaviour
     /// </summary>
     public EventPoint mNextCheckPoint;
     /// <summary>
-    /// 昔のチェックポイント
-    /// </summary>
-    public EventPoint mPrevCheckPoint;
-    /// <summary>
     /// イベントが起動しているか
     /// </summary>
     public bool isActive;
@@ -62,7 +58,7 @@ public class EventPoint : MonoBehaviour
 
     public void Update()
     {
-        if (isActive)
+        if (isActive && !isSwitch)
         {
             mTimer += Time.deltaTime;
             if (mTimer >= mWaitSecond)
@@ -89,7 +85,6 @@ public class EventPoint : MonoBehaviour
 
                     GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Event);
                 }
-                isActive = false;
                 isSwitch = true;
                 //UIを表示
                 Instantiate(DrawUI);
@@ -100,35 +95,30 @@ public class EventPoint : MonoBehaviour
 
     public void Active()
     {
-        if (!mNextCheckPoint.isSwitch)
-        {
-            mNextCheckPoint.isActive = true;
-        }
+        isActive = true;
+    }
+
+    /// <summary>
+    /// あたり判定の起動
+    /// </summary>
+    public void TriggerActive()
+    {
+        isSwitch = true;
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" && isActive)
         {
-            if (mPrevCheckPoint)
+
+            isActive = false;
+            isSwitch = true;
+            if (mNextCheckPoint)
             {
-                if (!mPrevCheckPoint.isSwitch) return;
-                isActive = false;
-                isSwitch = true;
-                if (mNextCheckPoint)
-                {
-                    Active();
-                }
+                mNextCheckPoint.Active();
+                Destroy(this);
             }
-            else
-            {
-                isActive = false;
-                isSwitch = true;
-                if (mNextCheckPoint)
-                {
-                    Active();
-                }
-            }
+
         }
     }
 }
