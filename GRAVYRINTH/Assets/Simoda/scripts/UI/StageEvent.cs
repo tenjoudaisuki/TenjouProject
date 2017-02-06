@@ -19,6 +19,7 @@ public class StageEvent : MonoBehaviour
 
     //メニューの項目を変更中かどうか
     private bool isChanging = true;
+    private EventCamera eventCamera;
 
     private RectTransform background;
     private RectTransform next;
@@ -36,6 +37,8 @@ public class StageEvent : MonoBehaviour
         rectTransforms.AddRange(GameObject.Find("Frame").GetComponentsInChildren<RectTransform>());
         //ListにFrameも入ってしまっているので削除（中身を子のみにする）
         rectTransforms.Remove(GameObject.Find("Frame").GetComponent<RectTransform>());
+
+        eventCamera = Camera.main.GetComponent<EventCamera>();
 
         //1.0秒後に変更しているかどうかをfalseに
         //StartCoroutine(DelayMethod(1.0f, () =>
@@ -140,7 +143,7 @@ public class StageEvent : MonoBehaviour
     private void SingleTextInput()
     {
         //メニューの項目を変更中ならば処理しない
-        if (isChanging == true) return;
+        if (isChanging == true || !eventCamera.IsCameraMoveEnd()) return;
 
         if (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
         {
@@ -190,10 +193,10 @@ public class StageEvent : MonoBehaviour
             {
                 LeanTween.alpha(texts[textNumbar], 1.0f, 1.0f);
 
-                //StartCoroutine(DelayMethod(1.1f, () =>
-                //{
-                //    changingSelection = false;
-                //}));
+                StartCoroutine(DelayMethod(1.1f, () =>
+                {
+                    isChanging = false;
+                }));
             }));
         });
     }
@@ -201,7 +204,7 @@ public class StageEvent : MonoBehaviour
     private void MultiTextInput()
     {
         //メニューの項目を変更中ならば処理しない
-        if (isChanging == true) return;
+        if (isChanging == true || !eventCamera.IsCameraMoveEnd()) return;
 
         if (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
         {
