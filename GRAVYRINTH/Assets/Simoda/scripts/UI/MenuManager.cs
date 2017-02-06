@@ -888,7 +888,7 @@ public class MenuManager : MonoBehaviour
             StartCoroutine(DelayMethod(1.1f, () =>
             {
                 SceneManager.UnloadScene(menu);
-                SoundManager.Instance.PlayBgm("stage1");
+                SoundManager.Instance.StopBgm();
                 if (stageNumber == 5)
                 {
                     //最終ステージ

@@ -8,18 +8,14 @@ using System.Collections;
 
 public class BGMControl : MonoBehaviour 
 {
-    [SerializeField, Tooltip("チュートリアルステージで、ＢＧＭの切り替えを行うまでの時間")]
-    private float m_TutorialBGMWaitTime = 12.2f;
-    [SerializeField, Tooltip("ステージＦで、ＢＧＭの切り替えを行うまでの時間(stagef1→stagef2)")]
-    private float m_Stagef1to2BGMWaitTime = 30.0f;
-    [SerializeField, Tooltip("ステージＦで、stagef2のフェードアウトにかける時間")]
-    private float m_Stagef2BGMFadeOutTime = 1.0f;
-    [SerializeField, Tooltip("ステージＦで、stagef4のフェードアウトにかける時間")]
-    private float m_Stagef4BGMFadeOutTime = 2.0f;
-    [SerializeField, Tooltip("ステージＦで、stagef5が開始してからstagef6を再生するまでの待ち時間")]
-    private float m_Stagef5to6BGMWaitTime = 24.5f;
-    [SerializeField, Tooltip("ステージＦで、stagef6のフェードアウトにかける時間")]
-    private float m_Stagef6BGMFadeOutTime = 1.0f;
+    [SerializeField, Tooltip("再生を待つときの、曲の長さ（秒）を短くする補正値 0.1くらいにしないとループが止まらない")]
+    private float m_WaitTimeThreshold = 0.1f;
+    //[SerializeField, Tooltip("ステージＦで、stagef2のフェードアウトにかける時間")]
+    //private float m_Stagef2BGMFadeOutTime = 1.0f;
+    //[SerializeField, Tooltip("ステージＦで、stagef4のフェードアウトにかける時間")]
+    //private float m_Stagef4BGMFadeOutTime = 2.0f;
+    //[SerializeField, Tooltip("ステージＦで、stagef6のフェードアウトにかける時間")]
+    //private float m_Stagef6BGMFadeOutTime = 1.0f;
 
     [SerializeField, Tooltip("ステージＦのデバッグモード")]
     private bool m_IsStageFDebugMode = false;
@@ -73,17 +69,16 @@ public class BGMControl : MonoBehaviour
     IEnumerator StartGameCor()
     {
         float timer = 0.0f;
+        SoundManager.Instance.StopBgm();
+        SoundManager.Instance.volume.bgm = 1.0f;
         SoundManager.Instance.PlayBgm("stage0-1");
-        while(true)
+        while(timer < SoundManager.Instance.GetBGMClip("stage0-1").length)
         {
             timer += Time.deltaTime;
-            if (timer > m_TutorialBGMWaitTime)
-            {
-                SoundManager.Instance.PlayBgm("stage0-2");
-                yield break;
-            }
             yield return null;
         } 
+        SoundManager.Instance.PlayBgm("stage0-2");
+        yield break;
     }
 
     /// <summary>
@@ -91,6 +86,8 @@ public class BGMControl : MonoBehaviour
     /// </summary>
     public void Stage1_4Selected()
     {
+        SoundManager.Instance.StopBgm();
+        SoundManager.Instance.volume.bgm = 1.0f;
         SoundManager.Instance.PlayBgm("stage1");
     }
 
@@ -106,18 +103,19 @@ public class BGMControl : MonoBehaviour
     IEnumerator StageFinalCor()
     {
         float timer = 0.0f;
+        SoundManager.Instance.StopBgm();
+        SoundManager.Instance.volume.bgm = 1.0f;
 
-        //stagef1→stagef2
-        SoundManager.Instance.PlayBgm("stagef1");
-        while (timer < m_Stagef1to2BGMWaitTime)
+        //開始
+        SoundManager.Instance.PlaySe("stagef1");
+        //stagef1が流れ終わるまで待機
+        while (timer < SoundManager.Instance.GetSEClip("stagef1").length - m_WaitTimeThreshold)
         {
             timer += Time.deltaTime;
-            if (timer >= m_Stagef1to2BGMWaitTime)
-            {
-                SoundManager.Instance.PlayBgm("stagef2");
-            }
             yield return null;
         }
+        //流れ終わったらstagef2再生
+        SoundManager.Instance.PlayBgm("stagef2");
 
         //プレイヤーがfinaldoorswitchに触れるまで待機
         m_IsTouchFinalDoorSwitch = false;
@@ -125,7 +123,13 @@ public class BGMControl : MonoBehaviour
         {            
             yield return null;
         }
-        //触れたらSEとして曲の後奏を再生
+
+        //触れたらＢＧＭが１周するまで待機
+        while (SoundManager.Instance.GetBGMSource().time < SoundManager.Instance.GetBGMClip("stagef2").length - 0.1f)
+        {
+            yield return null;
+        }
+        //１周待ったらSEとして曲の後奏を再生
         SoundManager.Instance.PlaySe("stagef3");
         SoundManager.Instance.StopBgm();
 
@@ -156,10 +160,8 @@ public class BGMControl : MonoBehaviour
             yield return null;
         }
 
-        //大砲が完成したら
-        //再生
+        //大砲が完成したらstagef5再生
         SoundManager.Instance.PlaySe("stagef5");
-        SoundManager.Instance.StopBgm();
         ////ＢＧＭをフェードアウト
         //timer = 0.0f;
         //while (timer < m_Stagef4BGMFadeOutTime)
@@ -168,20 +170,20 @@ public class BGMControl : MonoBehaviour
         //    SoundManager.Instance.volume.bgm = Mathf.Lerp(1.0f, 0.0f, timer / m_Stagef4BGMFadeOutTime);
         //    yield return null;
         //}
+        SoundManager.Instance.StopBgm();
 
 
-        //stagef5が終わるまで待機（フェードアウトの時間分も足して終わるまでの時間を計測するのでtimer = 0.0fしない）
-        while (timer < m_Stagef5to6BGMWaitTime)
+        //stagef5が終わるまで待機（ＢＧＭをフェードアウトする場合はフェードアウトの時間分も足して終わるまでの時間を計測するのでtimer = 0.0fしない）
+        timer = 0.0f;
+        while (timer < SoundManager.Instance.GetSEClip("stagef5").length)
         {
             timer += Time.deltaTime;
-            if (timer >= m_Stagef5to6BGMWaitTime)
-            {
-                //stagef5が終わったら再生
-                SoundManager.Instance.volume.bgm = 1.0f;
-                SoundManager.Instance.PlayBgm("stagef6");
-            }
             yield return null;
         }
+
+        //stagef5が終わったら再生
+        SoundManager.Instance.volume.bgm = 1.0f;
+        SoundManager.Instance.PlayBgm("stagef6");
 
         //壁が破壊されるまで待機
         m_IsBreakedWall = false;
@@ -190,12 +192,11 @@ public class BGMControl : MonoBehaviour
             yield return null;
         }
 
-        //壁が破壊されたらＢＧＭをフェードアウト
+        //壁が破壊されたらＢＧＭが一周するまで待機
         timer = 0.0f;
-        while (timer < m_Stagef6BGMFadeOutTime)
+        while (SoundManager.Instance.GetBGMSource().time < SoundManager.Instance.GetBGMClip("stagef6").length - m_WaitTimeThreshold)
         {
             timer += Time.deltaTime;
-            SoundManager.Instance.volume.bgm = Mathf.Lerp(1.0f, 0.0f, timer / m_Stagef6BGMFadeOutTime);
             yield return null;
         }
 

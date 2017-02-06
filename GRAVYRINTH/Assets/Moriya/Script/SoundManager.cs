@@ -172,6 +172,15 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         seRequestQueue.Clear();
     }
 
+    public AudioSource GetBGMSource()
+    {
+        return bgmSource;
+    }
+
+    public AudioClip GetBGMClip(string name)
+    {
+        return bgmClips[GetBgmIndex(name)];
+    }
 
     public AudioClip GetSEClip(string name)
     {

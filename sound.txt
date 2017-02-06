@@ -11,7 +11,7 @@ BGM:
 ☆stagef6.wav　stagef5.wavが終わったらループ再生、f_wallを過ぎたらループ解除
 ☆stagef7.wav　stagef6.wavが終わったら一回再生
 
-※stagef3,5,7はSEとして再生
+※stagef1,3,5,7はSEとして再生
 
 
 SE:
