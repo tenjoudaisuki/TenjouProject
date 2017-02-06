@@ -83,7 +83,6 @@ public class PlayerMoveManager : MonoBehaviour
     {
         m_PrevPlayerState = m_PlayerState;
         m_PlayerState = state;
-        Action(m_PlayerState);
 
         //特定の変更時に行う処理
         //ＡＮＹ→ＮＯＮＥへの変更時
@@ -131,11 +130,15 @@ public class PlayerMoveManager : MonoBehaviour
         //最終ステージクリア時
         else if (m_PlayerState == PlayerState.STAGE_FINAL_CLEAR)
         {
+            //SEを止める
+            m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().StopSE();
             //移動開始
             m_Moves[PlayerState.STAGE_FINAL_CLEAR].GetComponent<StageFinalClearMove>().StartMove();
         }
         else if(m_PlayerState == PlayerState.NOT_MOVE)
         {
+            //SEを止める
+            m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().StopSE();
             NotMove nm = m_Moves[PlayerState.NOT_MOVE].GetComponent<NotMove>();
             nm.SetUpFront(tr.up, tr.forward);
             AnimationInitialize();

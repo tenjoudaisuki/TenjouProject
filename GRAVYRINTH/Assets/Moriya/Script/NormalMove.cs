@@ -1056,4 +1056,12 @@ public class NormalMove : MonoBehaviour
     {
         StartCoroutine(EventInputDisable());
     }
+
+    /// <summary>
+    /// SEを停止
+    /// </summary>
+    public void StopSE()
+    {
+        se.Stop();
+    }
 }
