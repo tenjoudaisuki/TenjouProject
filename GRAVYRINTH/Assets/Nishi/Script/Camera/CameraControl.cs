@@ -205,6 +205,7 @@ public class CameraControl : ICamera
         {
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
             mCurrentState = State.Normal;
+            GameManager.Instance.SetPausePossible(true);
         }
 
         CameraPosDirection = -m_Target.forward;
