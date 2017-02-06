@@ -147,6 +147,8 @@ public class PlayerMoveManager : MonoBehaviour
             m_PrevPlayerState == PlayerState.NOT_MOVE
             && m_PlayerState == PlayerState.NORMAL)
         {
+            //SE再開
+            m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().RestartSE();
             m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().SetUpFront(tr.up, tr.forward);
         }
         else if (

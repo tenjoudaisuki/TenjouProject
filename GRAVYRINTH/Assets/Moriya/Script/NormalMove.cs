@@ -1058,6 +1058,15 @@ public class NormalMove : MonoBehaviour
     }
 
     /// <summary>
+    /// SEを開始
+    /// </summary>
+    public void RestartSE()
+    {
+        se.volume = 0.0f;
+        se.Play();
+    }
+
+    /// <summary>
     /// SEを停止
     /// </summary>
     public void StopSE()

@@ -128,14 +128,14 @@ public class BGMControl : MonoBehaviour
         //触れたらSEとして曲の後奏を再生
         SoundManager.Instance.PlaySe("stagef3");
 
-        //ＢＧＭをフェードアウト
-        timer = 0.0f;
-        while (timer < m_Stagef2BGMFadeOutTime)
-        {
-            timer += Time.deltaTime;
-            SoundManager.Instance.volume.bgm = Mathf.Lerp(1.0f, 0.0f, timer / m_Stagef2BGMFadeOutTime);
-            yield return null;
-        }
+        ////ＢＧＭをフェードアウト
+        //timer = 0.0f;
+        //while (timer < m_Stagef2BGMFadeOutTime)
+        //{
+        //    timer += Time.deltaTime;
+        //    SoundManager.Instance.volume.bgm = Mathf.Lerp(1.0f, 0.0f, timer / m_Stagef2BGMFadeOutTime);
+        //    yield return null;
+        //}
 
         //プレイヤーが大砲の部屋に入るまで待機
         m_IsPlayerInTaihouRoom = false;
@@ -160,14 +160,14 @@ public class BGMControl : MonoBehaviour
         //大砲が完成したら
         //再生
         SoundManager.Instance.PlaySe("stagef5");
-        //ＢＧＭをフェードアウト
-        timer = 0.0f;
-        while (timer < m_Stagef4BGMFadeOutTime)
-        {
-            timer += Time.deltaTime;
-            SoundManager.Instance.volume.bgm = Mathf.Lerp(1.0f, 0.0f, timer / m_Stagef4BGMFadeOutTime);
-            yield return null;
-        }
+        ////ＢＧＭをフェードアウト
+        //timer = 0.0f;
+        //while (timer < m_Stagef4BGMFadeOutTime)
+        //{
+        //    timer += Time.deltaTime;
+        //    SoundManager.Instance.volume.bgm = Mathf.Lerp(1.0f, 0.0f, timer / m_Stagef4BGMFadeOutTime);
+        //    yield return null;
+        //}
 
 
         //stagef5が終わるまで待機（フェードアウトの時間分も足して終わるまでの時間を計測するのでtimer = 0.0fしない）
