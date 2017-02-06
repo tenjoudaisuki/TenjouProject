@@ -473,72 +473,79 @@ public class NormalMove : MonoBehaviour
 
             m_CollisionBlock.IsPushDistance();
             //ブロックが押せない状態なら実行しない
-            if (m_CollisionBlock.isPush == false) return;
-
-            //print(Vector3.Angle(tr.right, m_Camera.right));
-            float angle = Vector3.Angle(tr.right, m_Camera.right);
-            float input = -inputVec.y;
-
-            BlockArrow blockArrow = GameObject.FindGameObjectWithTag("BlockArrow").GetComponent<BlockArrow>();
-
-            if (angle <= 45.0f)
+            if (m_CollisionBlock.isPush == false
+                || Vector3.Angle(tr.up, m_CollisionBlock.GetPlayerDirection().normal) <= 87.0f
+                || Vector3.Angle(tr.up, m_CollisionBlock.GetPlayerDirection().normal) >= 93.0f)
             {
-                input = -inputVec.y;
-                blockArrow.SetInfo(true, "Vertical");
-                m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Vertical") < -0.1f);
-            }
-            else if (angle >= 135.0f)
-            {
-                input = inputVec.y;
-                blockArrow.SetInfo(true, "Vertical");
-                m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Vertical") > 0.1f);
             }
             else
             {
-                angle = Vector3.Angle(tr.forward, m_Camera.right);
+
+                //print(Vector3.Angle(tr.right, m_Camera.right));
+                float angle = Vector3.Angle(tr.right, m_Camera.right);
+                float input = -inputVec.y;
+
+                BlockArrow blockArrow = GameObject.FindGameObjectWithTag("BlockArrow").GetComponent<BlockArrow>();
+
                 if (angle <= 45.0f)
                 {
-                    input = -inputVec.x;
-                    blockArrow.SetInfo(true, "Horizontal");
-                    m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Horizontal") < -0.1f);
+                    input = -inputVec.y;
+                    blockArrow.SetInfo(true, "Vertical");
+                    m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Vertical") < -0.1f);
                 }
                 else if (angle >= 135.0f)
                 {
-                    input = inputVec.x;
-                    blockArrow.SetInfo(true, "Horizontal");
-                    m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Horizontal") > 0.1f);
+                    input = inputVec.y;
+                    blockArrow.SetInfo(true, "Vertical");
+                    m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Vertical") > 0.1f);
                 }
+                else
+                {
+                    angle = Vector3.Angle(tr.forward, m_Camera.right);
+                    if (angle <= 45.0f)
+                    {
+                        input = -inputVec.x;
+                        blockArrow.SetInfo(true, "Horizontal");
+                        m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Horizontal") < -0.1f);
+                    }
+                    else if (angle >= 135.0f)
+                    {
+                        input = inputVec.x;
+                        blockArrow.SetInfo(true, "Horizontal");
+                        m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Horizontal") > 0.1f);
+                    }
+                }
+
+                //後ろに壁があるなら移動させない
+                float stopspeed = 1.0f;
+                //後ろ方向への移動入力があるなら実行
+                if (input >= 0)
+                {
+                    //自身の後ろレイを飛ばして壁との判定
+                    Ray ray_back = new Ray(tr.position + tr.forward * 0.2f, -tr.forward);
+                    RaycastHit hit;
+                    bool ishit;
+                    //指定レイヤー以外と判定させる
+                    int layermask = ~(1 << 10 | 1 << LayerMask.NameToLayer("IronBar"));
+                    ishit = Physics.Raycast(ray_back, out hit, m_BlockMoveBackwardRayLength, layermask, QueryTriggerInteraction.Ignore);
+
+                    if (ishit) stopspeed = 0.0f;
+                }
+
+                //ブロックの向きから移動方向を計算
+                Vector3 moveDirection = m_CollisionBlock.GetBlockMoveDirection();
+                m_MoveVelocity = (moveDirection * input) * m_LastSpeed * stopspeed;
+                //ブロックを移動させる
+                m_CollisionBlock.SetMoveVector(m_MoveVelocity);
+
+                //自身の前方向をブロックに向ける
+                m_Front = -m_CollisionBlock.GetPlayerDirection().normal;
+
+                //向きを変更
+                Quaternion rotateBlock = Quaternion.LookRotation(m_Front, m_Up);
+                tr.localRotation = Quaternion.Slerp(transform.localRotation, rotateBlock, m_RotateLerpValue);
+                //tr.localRotation = rotateBlock;
             }
-
-            //後ろに壁があるなら移動させない
-            float stopspeed = 1.0f;
-            //後ろ方向への移動入力があるなら実行
-            if (input >= 0)
-            {
-                //自身の後ろレイを飛ばして壁との判定
-                Ray ray_back = new Ray(tr.position + tr.forward * 0.2f, -tr.forward);
-                RaycastHit hit;
-                bool ishit;
-                //指定レイヤー以外と判定させる
-                int layermask = ~(1 << 10 | 1 << LayerMask.NameToLayer("IronBar"));
-                ishit = Physics.Raycast(ray_back, out hit, m_BlockMoveBackwardRayLength, layermask, QueryTriggerInteraction.Ignore);
-
-                if (ishit) stopspeed = 0.0f;
-            }
-
-            //ブロックの向きから移動方向を計算
-            Vector3 moveDirection = m_CollisionBlock.GetBlockMoveDirection();
-            m_MoveVelocity = (moveDirection * input) * m_LastSpeed * stopspeed;
-            //ブロックを移動させる
-            m_CollisionBlock.SetMoveVector(m_MoveVelocity);
-
-            //自身の前方向をブロックに向ける
-            m_Front = -m_CollisionBlock.GetPlayerDirection().normal;
-
-            //向きを変更
-            Quaternion rotateBlock = Quaternion.LookRotation(m_Front, m_Up);
-            tr.localRotation = Quaternion.Slerp(transform.localRotation, rotateBlock, m_RotateLerpValue);
-            //tr.localRotation = rotateBlock;
         }
         //通常時
         else
