@@ -79,6 +79,44 @@ public class EventCamera : ICamera
                 else
                 {
                     mButtonEventEnd = true;
+                    //同期システムにラムダを送る
+                    var syncSystem = GameObject.FindObjectOfType<UIandCameraSync>();
+                    if (!syncSystem) return;
+                    syncSystem.SetCameraAction(() =>
+                    {
+                        mButtonEventEnd = false;
+                        mButtonMode = false;
+
+                        //アクションを起動
+                        mButtonActiveCompleateAction();
+                        mButtonActiveCompleateAction = () => { };
+
+                        //ゴールPositionがあれば
+                        if (mGoalPos)
+                        {
+                            //ダミー　ディレイをかける
+                            LeanTween.move(gameObject, gameObject.transform.position, 0.0f)
+                                    .setOnComplete(() =>
+                                    {
+                                        SetTarget(mGoalPos);
+                                        SetBotton(true);
+                                        Start();
+                                        mGoalPos = null;
+                                        return;
+                                    });
+                        }
+                        else
+                        {
+                            LeanTween.move(gameObject, gameObject.transform.position, 0.0f)
+                            .setDelay(mEventEndTime)
+                            .setOnComplete(() =>
+                            {
+                                GetComponent<CameraManager>().StateChange(State.GamePlay);
+                                GetComponent<CameraManager>().CameraReset();
+                            });
+                        }
+                    });
+                    
                 }
             });
 
@@ -87,11 +125,9 @@ public class EventCamera : ICamera
 
     public void Update()
     {
-        var eventUi = GameObject.FindObjectOfType<StageEvent>();
-        if (eventUi)
-        {
-            if (eventUi.IsChanging() && !mButtonEventEnd) return;
-        }
+        var syncSystem = GameObject.FindObjectOfType<UIandCameraSync>();
+        if (syncSystem) return;
+
         if (mButtonMode && mButtonEventEnd && (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return)) )
         {
             mButtonEventEnd = false;
