@@ -6,7 +6,14 @@ using System.Collections;
 /// </summary>
 public class UIandCameraSync : MonoBehaviour {
 
+    /// <summary>
+    /// イベントカメラ
+    /// </summary>
     EventCamera m_EventCamera;
+    /// <summary>
+    /// ステージ最初のイベントカメラ
+    /// </summary>
+    Stage1EventCamera m_StageEventCamera;
     StageEvent m_StageEvent;
 
 
@@ -18,12 +25,24 @@ public class UIandCameraSync : MonoBehaviour {
     {
         m_StageEvent = GetComponent<StageEvent>();
         m_EventCamera = GameObject.Find("Camera").GetComponent<EventCamera>();
-	}
+        m_StageEventCamera = GameObject.Find("Camera").GetComponent<Stage1EventCamera>();
+    }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if (m_StageEvent.IsChanging() || !m_EventCamera.IsCameraMoveEnd()) return;
+        bool cameraEventEnd = false;
+        //イベントカメラがアクティブであるなら
+        if(m_EventCamera.isActiveAndEnabled)
+        {
+            cameraEventEnd = m_EventCamera.IsCameraMoveEnd();
+        }
+        else
+        {
+            cameraEventEnd = m_StageEventCamera.IsCameraMoveEnd();
+        }
+
+        if (m_StageEvent.IsChanging() || !cameraEventEnd) return;
 
         if(Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
         {
