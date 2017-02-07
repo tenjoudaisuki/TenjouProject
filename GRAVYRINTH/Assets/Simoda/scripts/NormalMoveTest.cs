@@ -17,6 +17,7 @@ public class NormalMoveTest : MonoBehaviour
     private Rigidbody rb;
     private Animator anm;
     private CapsuleCollider cc;
+    private AudioSource se;
     //プレイヤーの状態管理クラス
     private PlayerMoveManager m_MoveManager;
 
@@ -44,23 +45,35 @@ public class NormalMoveTest : MonoBehaviour
     [SerializeField, TooltipAttribute("ポールからジャンプするときの強さ")]
     private float m_PoleJumpPower = 140.0f;
     [SerializeField, TooltipAttribute("壁キックの強さ")]
-    public float m_WallKickPower = 200.0f;
+    private float m_WallKickPower = 200.0f;
     [SerializeField, TooltipAttribute("壁キックの高さ（上方向へ向かう量、0だと真横、1だと斜め45度）")]
-    public float m_WallKickHeight = 1.5f;
+    private float m_WallKickHeight = 1.5f;
     [SerializeField, TooltipAttribute("壁衝突時　壁キック可能な壁とみなす角度")]
-    public float m_WallKickAbleAngle = 80.0f;
+    private float m_WallKickAbleAngle = 80.0f;
     [SerializeField, TooltipAttribute("壁キック後の操作不能時間")]
-    public float m_DisableInputTime = 0.2f;
+    private float m_DisableInputTime = 0.2f;
     [SerializeField, TooltipAttribute("ジャンプ後、通常移動速度からジャンプ中の移動速度に変更するまでにかかる時間")]
-    public float m_ToJumpMoveSpeedTime = 0.5f;
+    private float m_ToJumpMoveSpeedTime = 0.5f;
     [SerializeField, TooltipAttribute("ぶら下がりをスペースキーで解除時、当たり判定を消滅させる時間")]
-    public float m_DangleColliderOffTime = 0.6f;
+    private float m_DangleColliderOffTime = 0.6f;
     [SerializeField, TooltipAttribute("壁に着地したとき、押し返す量")]
-    public float m_OnWallPushBack = 0.1f;
+    private float m_OnWallPushBack = 0.1f;
     [SerializeField, TooltipAttribute("プレイヤーを入力方向へ向ける速さ　補完値")]
-    public float m_RotateLerpValue = 0.3f;
+    private float m_RotateLerpValue = 0.3f;
+    [SerializeField, TooltipAttribute("ブロックを掴んでいる状態のときの後ろ方向のレイの長さ")]
+    private float m_BlockMoveBackwardRayLength = 0.5f;
+    [SerializeField, TooltipAttribute("鉄棒をよじ登りで判定するときの当たり判定の大きさ")]
+    private float m_CrimbHitSize = 0.1f;
+    [SerializeField, TooltipAttribute("上方向の鉄棒をぶら下がりで判定するときの当たり判定の大きさ")]
+    private float m_DangleUpHitSize = 0.1f;
+    [SerializeField, TooltipAttribute("下方向の鉄棒をぶら下がりで判定するときの当たり判定の大きさ")]
+    private float m_DangleDownHitSize = 0.2f;
+    [SerializeField, TooltipAttribute("歩きのSE")]
+    private AudioClip m_WalkMoveSEClip;
+    [SerializeField, TooltipAttribute("壁ずりのSE")]
+    private AudioClip m_WallSEClip;
     [SerializeField, TooltipAttribute("崖登りを行うか（デバッグ用）")]
-    public bool m_IsWallHold = false;
+    private bool m_IsWallHold = false;
 
     /*==内部設定変数==*/
     //重力の方向を所持するクラス。プレイヤー以外で重力を扱う場合こちらのクラスを使用してください。
@@ -113,6 +126,9 @@ public class NormalMoveTest : MonoBehaviour
     //連続で鉄棒に当たらないようにするための待ち時間
     private float m_IronBarHitDelay = 0.0f;
 
+    //ジャンプ中に速度を遅くするコルーチン
+    private Coroutine m_LastSpeedCoroutine;
+
     //アニメーション用
     //*-壁キック
     private bool m_IsWall;
@@ -128,6 +144,7 @@ public class NormalMoveTest : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         anm = GetComponent<Animator>();
         cc = GetComponent<CapsuleCollider>();
+        se = GetComponent<AudioSource>();
         m_MoveManager = GetComponent<PlayerMoveManager>();
     }
 
@@ -150,10 +167,15 @@ public class NormalMoveTest : MonoBehaviour
         m_InitParentTr = tr.parent;
 
         m_LastSpeed = m_MoveSpeed;
+
+        //null参照回避のため一度動かす
+        m_LastSpeedCoroutine = StartCoroutine(LastSpeedCalc());
     }
 
     void Update()
     {
+        se.volume = 0.0f;
+
         //地面との判定処理
         Ground();
 
@@ -177,6 +199,16 @@ public class NormalMoveTest : MonoBehaviour
 
         //アニメーション
         anm.SetBool("IsWall", m_IsWall);
+        //歩きのSEの音量
+        if (m_GroundHitInfo.isHit && m_MoveVelocity.magnitude > 0.0f)
+        {
+            if (se.clip == m_WallSEClip)
+            {
+                se.clip = m_WalkMoveSEClip;
+                se.Play();
+            }
+            se.volume = 1.0f;
+        }
     }
 
     void FixedUpdate()
@@ -231,7 +263,7 @@ public class NormalMoveTest : MonoBehaviour
         int layerMask = 1 << 8;
 
         //鉄棒をポールとして判定
-        if (Physics.BoxCast(forward.origin, Vector3.one * 0.1f, forward.direction, out forwardHitInto, tr.localRotation, 0.1f, layerMask, QueryTriggerInteraction.Ignore))
+        if (Physics.BoxCast(forward.origin, Vector3.one * m_CrimbHitSize, forward.direction, out forwardHitInto, tr.localRotation, 0.1f, layerMask, QueryTriggerInteraction.Ignore))
         {
             float angle = Vector3.Angle(tr.up, forwardHitInto.collider.GetComponent<IronBar>().GetBarVector());
 
@@ -244,6 +276,7 @@ public class NormalMoveTest : MonoBehaviour
 
                 //アニメーション
                 anm.SetTrigger("PoleV");
+                StopCoroutine(m_LastSpeedCoroutine);
             }
         }
 
@@ -253,7 +286,7 @@ public class NormalMoveTest : MonoBehaviour
         Debug.DrawRay(down.origin, down.direction * 0.7f, Color.black);
 
         //鉄棒を鉄棒として判定
-        if (Physics.BoxCast(down.origin, Vector3.one * 0.2f, down.direction, out downHitInto, tr.localRotation, 0.2f, layerMask, QueryTriggerInteraction.Ignore)
+        if (Physics.BoxCast(down.origin, Vector3.one * m_DangleDownHitSize, down.direction, out downHitInto, tr.localRotation, 0.2f, layerMask, QueryTriggerInteraction.Ignore)
             && !GetIsGroundHit())
         {
             float angle = Vector3.Angle(tr.up, downHitInto.collider.GetComponent<IronBar>().GetBarVector());
@@ -267,6 +300,7 @@ public class NormalMoveTest : MonoBehaviour
 
                 //アニメーション
                 anm.SetTrigger("PoleH");
+                StopCoroutine(m_LastSpeedCoroutine);
 
                 return;
             }
@@ -279,7 +313,7 @@ public class NormalMoveTest : MonoBehaviour
         Debug.DrawRay(up.origin, up.direction * 0.7f, Color.black);
 
         //鉄棒を鉄棒として判定
-        if (Physics.BoxCast(up.origin, Vector3.one * 0.1f, up.direction, out upHitInto, tr.localRotation, 0.7f, layerMask, QueryTriggerInteraction.Ignore))
+        if (Physics.BoxCast(up.origin, Vector3.one * m_DangleUpHitSize, up.direction, out upHitInto, tr.localRotation, 0.7f, layerMask, QueryTriggerInteraction.Ignore))
         {
             float angle = Vector3.Angle(tr.up, upHitInto.collider.GetComponent<IronBar>().GetBarVector());
 
@@ -292,6 +326,8 @@ public class NormalMoveTest : MonoBehaviour
 
                 //アニメーション
                 anm.SetTrigger("PoleH");
+                StopCoroutine(m_LastSpeedCoroutine);
+
             }
         }
     }
@@ -310,6 +346,7 @@ public class NormalMoveTest : MonoBehaviour
         //壁に触れているか？
         if ((180 - m_WallKickAbleAngle / 2 < wallAngle && wallAngle < 180 + m_WallKickAbleAngle / 2))
         {
+
             //落下中なら
             if (Vector3.Dot(tr.up, rb.velocity) < 0)
             {
@@ -322,12 +359,17 @@ public class NormalMoveTest : MonoBehaviour
                     anm.SetTrigger("Wall");
 
                     m_IsWall = true;
+                    se.clip = m_WallSEClip;
+                    se.Play();
                 }
+                se.volume = 1.0f;
             }
 
             //壁キックボタンを押したとき
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump"))
             {
+                SoundManager.Instance.PlaySe("jump");
+
                 //壁キックする方向
                 Vector3 dir = tr.up * m_WallKickHeight + m_WallNormal;
                 dir.Normalize();
@@ -344,6 +386,8 @@ public class NormalMoveTest : MonoBehaviour
                 //アニメーション
                 anm.SetTrigger("Wall_Jump");
 
+                //最終的な移動量の計算コルーチン実行
+                m_LastSpeedCoroutine = StartCoroutine(LastSpeedCalc());
                 //操作不能時間計測開始
                 StartCoroutine(WallKickInputDisable());
             }
@@ -428,68 +472,91 @@ public class NormalMoveTest : MonoBehaviour
         if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true)
         {
             if (Input.GetButtonDown("Action"))
-                SoundManager.Instance.PlaySe("sword3");
+                SoundManager.Instance.PlaySe("block");
 
             //アニメーション
             anm.SetBool("Block", true);
 
             m_CollisionBlock.IsPushDistance();
             //ブロックが押せない状態なら実行しない
-            if (m_CollisionBlock.isPush == false) return;
-
-            //print(Vector3.Angle(tr.right, m_Camera.right));
-            float angle = Vector3.Angle(tr.right, m_Camera.right);
-            float input = -inputVec.y;
-
-            BlockArrow blockArrow = GameObject.Find("BlockArrow").GetComponent<BlockArrow>();
-
-            if (angle <= 45.0f)
+            if (m_CollisionBlock.isPush == false
+                || Vector3.Angle(tr.up, m_CollisionBlock.GetPlayerDirection().normal) <= 87.0f
+                || Vector3.Angle(tr.up, m_CollisionBlock.GetPlayerDirection().normal) >= 93.0f)
             {
-                input = -inputVec.y;
-                blockArrow.SetInfo(true, "Vertical");
-                m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Vertical") < -0.1f);
-            }
-            else if (angle >= 135.0f)
-            {
-                input = inputVec.y;
-                blockArrow.SetInfo(true, "Vertical");
-                m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Vertical") > 0.1f);
             }
             else
             {
-                angle = Vector3.Angle(tr.forward, m_Camera.right);
+
+                //print(Vector3.Angle(tr.right, m_Camera.right));
+                float angle = Vector3.Angle(tr.right, m_Camera.right);
+                float input = -inputVec.y;
+
+                BlockArrow blockArrow = GameObject.FindGameObjectWithTag("BlockArrow").GetComponent<BlockArrow>();
+
                 if (angle <= 45.0f)
                 {
-                    input = -inputVec.x;
-                    blockArrow.SetInfo(true, "Horizontal");
-                    m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Horizontal") < -0.1f);
+                    input = -inputVec.y;
+                    blockArrow.SetInfo(true, "Vertical");
+                    m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Vertical") < -0.1f);
                 }
                 else if (angle >= 135.0f)
                 {
-                    input = inputVec.x;
-                    blockArrow.SetInfo(true, "Horizontal");
-                    m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Horizontal") > 0.1f);
+                    input = inputVec.y;
+                    blockArrow.SetInfo(true, "Vertical");
+                    m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Vertical") > 0.1f);
                 }
+                else
+                {
+                    angle = Vector3.Angle(tr.forward, m_Camera.right);
+                    if (angle <= 45.0f)
+                    {
+                        input = -inputVec.x;
+                        blockArrow.SetInfo(true, "Horizontal");
+                        m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Horizontal") < -0.1f);
+                    }
+                    else if (angle >= 135.0f)
+                    {
+                        input = inputVec.x;
+                        blockArrow.SetInfo(true, "Horizontal");
+                        m_CollisionBlock.GetComponent<Block>().SetPushDecision(-Input.GetAxis("Horizontal") > 0.1f);
+                    }
+                }
+
+                //後ろに壁があるなら移動させない
+                float stopspeed = 1.0f;
+                //後ろ方向への移動入力があるなら実行
+                if (input >= 0)
+                {
+                    //自身の後ろレイを飛ばして壁との判定
+                    Ray ray_back = new Ray(tr.position + tr.forward * 0.2f, -tr.forward);
+                    RaycastHit hit;
+                    bool ishit;
+                    //指定レイヤー以外と判定させる
+                    int layermask = ~(1 << 10 | 1 << LayerMask.NameToLayer("IronBar"));
+                    ishit = Physics.Raycast(ray_back, out hit, m_BlockMoveBackwardRayLength, layermask, QueryTriggerInteraction.Ignore);
+
+                    if (ishit) stopspeed = 0.0f;
+                }
+
+                //ブロックの向きから移動方向を計算
+                Vector3 moveDirection = m_CollisionBlock.GetBlockMoveDirection();
+                m_MoveVelocity = (moveDirection * input) * m_LastSpeed * stopspeed;
+                //ブロックを移動させる
+                m_CollisionBlock.SetMoveVector(m_MoveVelocity);
+
+                //自身の前方向をブロックに向ける
+                m_Front = -m_CollisionBlock.GetPlayerDirection().normal;
+
+                //向きを変更
+                Quaternion rotateBlock = Quaternion.LookRotation(m_Front, m_Up);
+                tr.localRotation = Quaternion.Slerp(transform.localRotation, rotateBlock, m_RotateLerpValue);
+                //tr.localRotation = rotateBlock;
             }
-
-            //ブロックの向きから移動方向を計算
-            Vector3 moveDirection = m_CollisionBlock.GetBlockMoveDirection();
-            m_MoveVelocity = (moveDirection * input) * m_LastSpeed;
-            //ブロックを移動させる
-            m_CollisionBlock.SetMoveVector(m_MoveVelocity);
-
-            //自身の前方向をブロックに向ける
-            m_Front = -m_CollisionBlock.GetPlayerDirection().normal;
-
-            //向きを変更
-            Quaternion rotateBlock = Quaternion.LookRotation(m_Front, m_Up);
-            tr.localRotation = Quaternion.Slerp(transform.localRotation, rotateBlock, m_RotateLerpValue);
-            //tr.localRotation = rotateBlock;
         }
         //通常時
         else
         {
-            BlockArrow blockArrow = GameObject.Find("BlockArrow").GetComponent<BlockArrow>();
+            BlockArrow blockArrow = GameObject.FindGameObjectWithTag("BlockArrow").GetComponent<BlockArrow>();
             blockArrow.SetInfo(false, "Horizontal");
             //向きを変更
             m_Front.Normalize();
@@ -622,6 +689,7 @@ public class NormalMoveTest : MonoBehaviour
         //地面にいるときのジャンプ始動処理
         if (m_GroundHitInfo.isHit && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
+            SoundManager.Instance.PlaySe("jump");
             //アニメーション
             anm.SetTrigger("Jump");
 
@@ -634,7 +702,7 @@ public class NormalMoveTest : MonoBehaviour
             m_GroundHitInfo.isHit = false;
 
             //最終的な移動量の計算コルーチン実行
-            StartCoroutine(LastSpeedCalc());
+            m_LastSpeedCoroutine = StartCoroutine(LastSpeedCalc());
             //ジャンプ後の地面との判定を行わない時間計測コルーチン実行
             StartCoroutine(CheckGroundOffTime());
         }
@@ -661,6 +729,7 @@ public class NormalMoveTest : MonoBehaviour
     /// </summary>
     private void OnGroundTrigger(Vector3 cameraFoward)
     {
+        SoundManager.Instance.PlaySe("land");
         //外積をスティックの角度で回転させて前ベクトルを計算
         m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * cameraFoward;
         //操作可能にする
@@ -832,12 +901,14 @@ public class NormalMoveTest : MonoBehaviour
         {
             timer += Time.deltaTime;
             m_LastSpeed = Mathf.Lerp(m_MoveSpeed, m_JumpMoveSpeed, timer / m_ToJumpMoveSpeedTime);
-
             if (m_GroundHitInfo.isHit)
             {
                 m_LastSpeed = m_MoveSpeed;
-                yield break;
+                if (m_LastSpeedCoroutine != null)
+                    StopCoroutine(m_LastSpeedCoroutine);
             }
+
+
             yield return null;
         }
     }
@@ -859,11 +930,24 @@ public class NormalMoveTest : MonoBehaviour
         yield break;
     }
 
-
-
-
-
-
+    /// <summary>
+    /// イベント時の操作不能コルーチン
+    /// </summary>
+    IEnumerator EventInputDisable()
+    {
+        //操作不能にする
+        m_DisableInput = true;
+        while (true)
+        {
+            //ボタン入力で操作可能にする
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("PS4_Circle"))
+            {
+                m_DisableInput = false;
+                yield break;
+            }
+            yield return null;
+        }
+    }
 
     /**==============================================================================================*/
     /** 外部から使用する
@@ -918,6 +1002,8 @@ public class NormalMoveTest : MonoBehaviour
         rb.AddForce(v * m_PoleJumpPower);
         m_InputAngleY += 180;
         StartCoroutine(DangleToNormalColliderOff());
+        //最終的な移動量の計算コルーチン実行
+        m_LastSpeedCoroutine = StartCoroutine(LastSpeedCalc());
     }
 
     /// <summary>
@@ -957,11 +1043,40 @@ public class NormalMoveTest : MonoBehaviour
     public void DangleToNormal()
     {
         StartCoroutine(DangleToNormalColliderOff());
+        //最終的な移動量の計算コルーチン実行
+        print("called statrcoroutine");
+        StopCoroutine(m_LastSpeedCoroutine);
+        m_LastSpeedCoroutine = StartCoroutine(LastSpeedCalc());
     }
 
     //連続で鉄棒に当たらないための時間を設定
     public void SetIronBarHitDelay(float delay)
     {
         m_IronBarHitDelay = delay;
+    }
+
+    /// <summary>
+    /// イベント時の操作不能コルーチンを開始
+    /// </summary>
+    public void StartEventInputDisable()
+    {
+        StartCoroutine(EventInputDisable());
+    }
+
+    /// <summary>
+    /// SEを開始
+    /// </summary>
+    public void RestartSE()
+    {
+        se.volume = 0.0f;
+        se.Play();
+    }
+
+    /// <summary>
+    /// SEを停止
+    /// </summary>
+    public void StopSE()
+    {
+        se.Stop();
     }
 }

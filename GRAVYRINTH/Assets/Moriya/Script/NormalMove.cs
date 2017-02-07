@@ -62,6 +62,18 @@ public class NormalMove : MonoBehaviour
     private float m_RotateLerpValue = 0.3f;
     [SerializeField, TooltipAttribute("ブロックを掴んでいる状態のときの後ろ方向のレイの長さ")]
     private float m_BlockMoveBackwardRayLength = 0.5f;
+    [SerializeField, TooltipAttribute("鉄棒をよじ登りで判定するときの当たり判定の大きさ")]
+    private float m_CrimbHitSize = 0.1f;
+    [SerializeField, TooltipAttribute("上方向の鉄棒をぶら下がりで判定するときの当たり判定の大きさ")]
+    private float m_DangleUpHitSize = 0.1f;
+    [SerializeField, TooltipAttribute("下方向の鉄棒をぶら下がりで判定するときの当たり判定の大きさ")]
+    private float m_DangleDownHitSize = 0.2f;
+    [SerializeField, TooltipAttribute("鉄棒をよじ登りで判定するときのレイの長さ 変えない方がいいかも")]
+    private float m_CrimRayLength = 0.1f;
+    [SerializeField, TooltipAttribute("上方向の鉄棒をぶら下がりで判定するときのレイの長さ 変えない方がいいかも")]
+    private float m_DangleUpRayLength = 0.7f;
+    [SerializeField, TooltipAttribute("下方向の鉄棒をぶら下がりで判定するときのレイの長さ 変えない方がいいかも")]
+    private float m_DangleDownRayLength = 0.2f;
     [SerializeField, TooltipAttribute("歩きのSE")]
     private AudioClip m_WalkMoveSEClip;
     [SerializeField, TooltipAttribute("壁ずりのSE")]
@@ -257,7 +269,7 @@ public class NormalMove : MonoBehaviour
         int layerMask = 1 << 8;
 
         //鉄棒をポールとして判定
-        if (Physics.BoxCast(forward.origin, Vector3.one * 0.1f, forward.direction, out forwardHitInto, tr.localRotation, 0.1f, layerMask, QueryTriggerInteraction.Ignore))
+        if (Physics.BoxCast(forward.origin, Vector3.one * m_CrimbHitSize, forward.direction, out forwardHitInto, tr.localRotation, m_CrimRayLength, layerMask, QueryTriggerInteraction.Ignore))
         {
             float angle = Vector3.Angle(tr.up, forwardHitInto.collider.GetComponent<IronBar>().GetBarVector());
 
@@ -280,7 +292,7 @@ public class NormalMove : MonoBehaviour
         Debug.DrawRay(down.origin, down.direction * 0.7f, Color.black);
 
         //鉄棒を鉄棒として判定
-        if (Physics.BoxCast(down.origin, Vector3.one * 0.2f, down.direction, out downHitInto, tr.localRotation, 0.2f, layerMask, QueryTriggerInteraction.Ignore)
+        if (Physics.BoxCast(down.origin, Vector3.one * m_DangleDownHitSize, down.direction, out downHitInto, tr.localRotation, m_DangleDownRayLength, layerMask, QueryTriggerInteraction.Ignore)
             && !GetIsGroundHit())
         {
             float angle = Vector3.Angle(tr.up, downHitInto.collider.GetComponent<IronBar>().GetBarVector());
@@ -307,7 +319,7 @@ public class NormalMove : MonoBehaviour
         Debug.DrawRay(up.origin, up.direction * 0.7f, Color.black);
 
         //鉄棒を鉄棒として判定
-        if (Physics.BoxCast(up.origin, Vector3.one * 0.1f, up.direction, out upHitInto, tr.localRotation, 0.7f, layerMask, QueryTriggerInteraction.Ignore))
+        if (Physics.BoxCast(up.origin, Vector3.one * m_DangleUpHitSize, up.direction, out upHitInto, tr.localRotation, m_DangleUpRayLength, layerMask, QueryTriggerInteraction.Ignore))
         {
             float angle = Vector3.Angle(tr.up, upHitInto.collider.GetComponent<IronBar>().GetBarVector());
 
@@ -902,7 +914,7 @@ public class NormalMove : MonoBehaviour
                     StopCoroutine(m_LastSpeedCoroutine);
             }
 
-           
+
             yield return null;
         }
     }
