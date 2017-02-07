@@ -63,4 +63,9 @@ public class CameraManager : MonoBehaviour
     {
         mCurrentCameraScript.Warp();
     }
+
+    public State GetCurrentCameraState()
+    {
+        return mCurrentState;
+    }
 }

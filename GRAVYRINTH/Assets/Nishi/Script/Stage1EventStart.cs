@@ -5,6 +5,7 @@ public class Stage1EventStart : MonoBehaviour
 {
     public float mWaitTime = 2.0f;
     public GameObject mGoalObject;
+    public GameObject m_DrawTexture;
 
     // Use this for initialization
     void Start()
@@ -14,10 +15,11 @@ public class Stage1EventStart : MonoBehaviour
 
     public void LateUpdate()
     {
-        if (GameManager.Instance.GetMode() == GameManager.GameMode.GamePlay)
+        if (GameObject.Find("Camera").GetComponent<CameraManager>().GetCurrentCameraState() == State.GamePlay)
         {
             StartCoroutine(DelayMethod(mWaitTime, () =>
             {
+                Instantiate(m_DrawTexture);
                 GameObject.Find("Camera").GetComponent<Stage1EventCamera>().SetPosition(mGoalObject);
                 GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Stage1Event);
                 Destroy(this);
