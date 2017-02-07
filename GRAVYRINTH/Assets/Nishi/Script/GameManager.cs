@@ -257,6 +257,10 @@ public class GameManager : MonoBehaviour
         GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance();
     }
 
+    /// <summary>
+    /// ポーズができる状態であるか
+    /// </summary>
+    /// <param name="isPossible"></param>
     public void SetPausePossible(bool isPossible)
     {
         mPausePossible = isPossible;
