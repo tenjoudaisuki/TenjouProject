@@ -8,7 +8,7 @@ using System.Collections;
 
 public class BGMControl : MonoBehaviour 
 {
-    [SerializeField, Tooltip("再生を待つときの、曲の長さ（秒）を短くする補正値 0.1くらいにしないとループが止まらない")]
+    [SerializeField, Tooltip("BGM→BGMへの再生を待つときの、曲の長さ（秒）を短くする補正値 0.1くらいにしないとループが止まらない")]
     private float m_WaitTimeThreshold = 0.1f;
     //[SerializeField, Tooltip("ステージＦで、stagef2のフェードアウトにかける時間")]
     //private float m_Stagef2BGMFadeOutTime = 1.0f;
@@ -109,7 +109,7 @@ public class BGMControl : MonoBehaviour
         //開始
         SoundManager.Instance.PlaySe("stagef1");
         //stagef1が流れ終わるまで待機
-        while (timer < SoundManager.Instance.GetSEClip("stagef1").length - m_WaitTimeThreshold)
+        while (timer < SoundManager.Instance.GetSEClip("stagef1").length)
         {
             timer += Time.deltaTime;
             yield return null;
