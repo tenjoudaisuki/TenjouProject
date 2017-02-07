@@ -27,6 +27,14 @@ public class FadeFactory : MonoBehaviour
     {
         GameObject fadeobj = (GameObject)Instantiate(mFadePrefab, transform, false);
         fadeobj.GetComponent<NextStageFade>().mLastMode = false;
+        fadeobj.GetComponent<NextStageFade>().mButtonMode = false;
+    }
+
+    public void FadeInstance(bool bottonMode)
+    {
+        GameObject fadeobj = (GameObject)Instantiate(mFadePrefab, transform, false);
+        fadeobj.GetComponent<NextStageFade>().mLastMode = false;
+        fadeobj.GetComponent<NextStageFade>().mButtonMode = bottonMode;
     }
 
     public void FadeInstance(System.Action action)
@@ -34,6 +42,7 @@ public class FadeFactory : MonoBehaviour
         GameObject fadeobj = (GameObject)Instantiate(mFadePrefab, transform, false);
         fadeobj.GetComponent<NextStageFade>().mAction = action;
         fadeobj.GetComponent<NextStageFade>().mLastMode = true;
+        fadeobj.GetComponent<NextStageFade>().mButtonMode = false;
     }
 
     public void FadeInstance(float speed)
@@ -41,6 +50,7 @@ public class FadeFactory : MonoBehaviour
         mFadePrefab.GetComponent<NextStageFade>().mSpeed = speed;
         GameObject fadeobj = (GameObject)Instantiate(mFadePrefab, transform, false);
         fadeobj.GetComponent<NextStageFade>().mLastMode = false;
+        fadeobj.GetComponent<NextStageFade>().mButtonMode = false;
     }
 
     public void FadeInstance(Color color, float speed)
@@ -49,6 +59,7 @@ public class FadeFactory : MonoBehaviour
         mFadePrefab.GetComponent<NextStageFade>().mSpeed = speed;
         GameObject fadeobj = (GameObject)Instantiate(mFadePrefab, transform, false);
         fadeobj.GetComponent<NextStageFade>().mLastMode = false;
+        fadeobj.GetComponent<NextStageFade>().mButtonMode = false;
     }
 
     public void FadeInstance(Color color, float speed, System.Action action)
@@ -57,6 +68,7 @@ public class FadeFactory : MonoBehaviour
         mFadePrefab.GetComponent<NextStageFade>().mSpeed = speed;
         GameObject fadeobj = (GameObject)Instantiate(mFadePrefab, transform, false);
         fadeobj.GetComponent<NextStageFade>().mLastMode = false;
+        fadeobj.GetComponent<NextStageFade>().mButtonMode = false;
     }
 
     public void BlindInstance()

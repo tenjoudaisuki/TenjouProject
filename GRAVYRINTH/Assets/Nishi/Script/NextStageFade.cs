@@ -25,9 +25,12 @@ public class NextStageFade : MonoBehaviour {
     public GameObject mlastmessage;
     public GameObject mCurrentMessage;
 
+    public bool mButtonMode;
+
 	// Use this for initialization
 	void Start ()
     {
+        GameManager.Instance.SetPausePossible(false);
         mCurrentMessage = null;
         isLoad = false;
         mState = FadeMode.FadeIn;
@@ -56,10 +59,13 @@ public class NextStageFade : MonoBehaviour {
     {
         mColor.a += mSpeed * Time.deltaTime;
         mImage.color = mColor;
+        //不透明であるなら
         if (mColor.a >= 1)
         {
+            //シーンをロードした　かつ　シーンがロードされた
             if (isLoad && GameManager.Instance.isSceneload())
             {
+                //最後のUI表示状態である
                 if (mLastMode)
                 {
                     if(!mCurrentMessage)
@@ -76,10 +82,23 @@ public class NextStageFade : MonoBehaviour {
                         );
                     }
                 }
-                else
+                else //UI表示モードでない
                 {
-                    GameManager.Instance.Reset();
-                    mState = FadeMode.FadeOut;
+                    //ボタンでフェードアウトにする状態である
+                    if(mButtonMode)
+                    {
+                        if(Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
+                        {
+                            GameManager.Instance.Reset();
+                            mState = FadeMode.FadeOut;
+                            mButtonMode = false;
+                        }
+                    }
+                    else
+                    {
+                        GameManager.Instance.Reset();
+                        mState = FadeMode.FadeOut;
+                    }
                 }
 
                 Time.timeScale = 1.0f;

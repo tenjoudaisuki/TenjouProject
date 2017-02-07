@@ -23,12 +23,12 @@ public class Stage1EventCamera : ICamera {
     public float m_Distance = 2.0f;
     [SerializeField, TooltipAttribute("歩く時間")]
     public float m_WalkTime = 2.0f;
-    [SerializeField, TooltipAttribute("映すテクスチャ")]
-    public GameObject m_DrawTexture;
-    [SerializeField, TooltipAttribute("ステップ2で映すテクスチャが描画にかかる時間")]
-    public float m_Step2TextureDrawTime = 1.0f;
-    [SerializeField, TooltipAttribute("ステップ3で映すテクスチャが描画にかかる時間")]
-    public float m_Step3TextureDrawTime = 1.0f;
+    //[SerializeField, TooltipAttribute("映すテクスチャ")]
+    //public GameObject m_DrawTexture;
+    //[SerializeField, TooltipAttribute("ステップ2で映すテクスチャが描画にかかる時間")]
+    //public float m_Step2TextureDrawTime = 1.0f;
+    //[SerializeField, TooltipAttribute("ステップ3で映すテクスチャが描画にかかる時間")]
+    //public float m_Step3TextureDrawTime = 1.0f;
     [SerializeField, TooltipAttribute("カメラを回すスピード")]
     public float m_Speed = -15.0f;
     [SerializeField, TooltipAttribute("中心位置からオフセットする数値")]
@@ -58,6 +58,10 @@ public class Stage1EventCamera : ICamera {
     /// stageのセンター
     /// </summary>
     private GameObject m_StageCenter;
+    /// <summary>
+    /// UIとの同期
+    /// </summary>
+    private UIandCameraSync m_SyncSystem;
 
     // Use this for initialization
     public override void Start ()
@@ -66,6 +70,8 @@ public class Stage1EventCamera : ICamera {
         m_Timer = 0.0f;
         m_CurrentStep = Steps.Step1;
         m_StageCenter = GameObject.Find("StageCenter");
+        //Instantiate(m_DrawTexture);
+        m_SyncSystem = GameObject.FindObjectOfType<UIandCameraSync>();
     }
 	
 	// Update is called once per frame
@@ -89,9 +95,6 @@ public class Stage1EventCamera : ICamera {
         //歩く時間を過ぎたら
         if (m_WalkTime > m_Timer)
         {
-            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
-            Instantiate(m_DrawTexture);
-            transform.position = m_StageCenter.transform.position + m_CenterOffsetPosition;
             StepChange(Steps.Step2);
         }
     }
@@ -104,16 +107,8 @@ public class Stage1EventCamera : ICamera {
         m_Timer += Time.deltaTime;
         transform.LookAt(m_StageCenter.transform);
         transform.RotateAround(m_StageCenter.transform.position, Vector3.up, m_Speed * Time.deltaTime);
-        if(m_Timer > m_Step2TextureDrawTime)
-        {
-            m_ButtonEnable = true;
-            //var eventUi  = GameObject.FindObjectOfType<StageEvent>();
-            //if(eventUi) eventUi.ChangeEnd();
-        }
-        if((Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))  && m_ButtonEnable)
-        {
-            StepChange(Steps.Step3);
-        }
+        m_SyncSystem.SetCameraAction(() => { StepChange(Steps.Step3); });
+        m_ButtonEnable = true;
     }
 
     /// <summary>
@@ -124,16 +119,8 @@ public class Stage1EventCamera : ICamera {
         m_Timer += Time.deltaTime;
         transform.position = m_GoalObject.transform.position;
         transform.localRotation = m_GoalObject.transform.localRotation;
-        if (m_Timer > m_Step3TextureDrawTime)
-        {
-            m_ButtonEnable = true;
-            //var eventUi = GameObject.FindObjectOfType<StageEvent>();
-            //if (eventUi) eventUi.ChangeEnd();
-        }
-        if ((Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return)) && m_ButtonEnable)
-        {
-            StepChange(Steps.Step4);
-        }
+        m_SyncSystem.SetCameraAction(() => { StepChange(Steps.Step4); });
+        m_ButtonEnable = true;
     }
 
     /// <summary>
@@ -166,6 +153,11 @@ public class Stage1EventCamera : ICamera {
     public void SetPosition(GameObject obj)
     {
         m_GoalObject = obj;
+    }
+
+    public bool IsCameraMoveEnd()
+    {
+        return m_ButtonEnable;
     }
 
 }
