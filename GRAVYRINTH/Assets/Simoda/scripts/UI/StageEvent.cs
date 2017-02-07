@@ -28,8 +28,12 @@ public class StageEvent : MonoBehaviour
     public List<RectTransform> texts = new List<RectTransform>();
     public int textNumbar = 0;
 
+    private UIandCameraSync syncsystem;
+
     void Start()
     {
+        syncsystem = GetComponent<UIandCameraSync>();
+
         //UIInputManagerを取得
         input = GetComponent<UIInputManager>();
 
@@ -91,16 +95,16 @@ public class StageEvent : MonoBehaviour
 
     void Update()
     {
-        switch (eventTextType)
-        {
-            case EventTextType.SingleText:
-                SingleTextInput();
-                break;
+        //switch (eventTextType)
+        //{
+        //    case EventTextType.SingleText:
+        //        //SingleTextInput();
+        //        break;
 
-            case EventTextType.MultiText:
-                MultiTextInput();
-                break;
-        }
+        //    case EventTextType.MultiText:
+        //        //MultiTextInput();
+        //        break;
+        //}
 
 
     }
@@ -119,6 +123,7 @@ public class StageEvent : MonoBehaviour
 
         StartCoroutine(DelayMethod(1.1f, () =>
         {
+            syncsystem.SetUIAction(() => { input.Submit(); });
             isChanging = false;
         }));
 
@@ -147,7 +152,7 @@ public class StageEvent : MonoBehaviour
 
         if (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
         {
-            input.Submit();
+            //input.Submit();
         }
     }
 
@@ -170,6 +175,7 @@ public class StageEvent : MonoBehaviour
 
         StartCoroutine(DelayMethod(1.1f, () =>
         {
+            syncsystem.SetUIAction(() => { input.Submit(); });
             isChanging = false;
         }));
 
@@ -196,6 +202,53 @@ public class StageEvent : MonoBehaviour
                 StartCoroutine(DelayMethod(1.1f, () =>
                 {
                     isChanging = false;
+                    if (textNumbar < texts.Count - 1)
+                    {
+                        input.SetSubmitAction(() =>
+                        {
+                            SoundManager.Instance.PlaySe("enter");
+
+                            isChanging = true;
+
+                            LeanTween.alpha(texts[textNumbar], 0.0f, 1.0f);
+
+                            rectTransforms.Remove(texts[textNumbar]);
+                            textNumbar++;
+                            rectTransforms.Add(texts[textNumbar]);
+
+                            StartCoroutine(DelayMethod(1.1f, () =>
+                            {
+                                LeanTween.alpha(texts[textNumbar], 1.0f, 1.0f);
+
+                                StartCoroutine(DelayMethod(1.1f, () =>
+                                {
+                                    isChanging = false;
+                                }));
+                            }));
+                        });
+                    }
+                    else
+                    {
+                        input.SetSubmitAction(() =>
+                        {
+                            SoundManager.Instance.PlaySe("enter");
+
+                            isChanging = true;
+
+                            rectTransforms.Add(background);
+                            rectTransforms.Add(next);
+
+                            foreach (RectTransform rectTr in rectTransforms)
+                            {
+                                LeanTween.alpha(rectTr, 0.0f, 1.0f);
+                            }
+
+                            StartCoroutine(DelayMethod(1.1f, () =>
+                            {
+                                Destroy(gameObject);
+                            }));
+                        });
+                    }
                 }));
             }));
         });
@@ -206,7 +259,7 @@ public class StageEvent : MonoBehaviour
         //メニューの項目を変更中ならば処理しない
         if (isChanging == true || !eventCamera.IsCameraMoveEnd()) return;
 
-        if (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
+        //if (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
         {
             input.Submit();
             if (textNumbar < texts.Count - 1)
