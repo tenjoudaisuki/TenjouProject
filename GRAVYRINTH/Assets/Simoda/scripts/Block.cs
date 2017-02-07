@@ -160,8 +160,26 @@ public class Block : MonoBehaviour
 
         distanceToWall += distanceToWallPlus;
 
-        //int layermask = ~(1 << 10);
-        int layermask = 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9;
+        int layermask = 1 << LayerMask.NameToLayer("StopWall");
+
+        if (Physics.BoxCast(tr.position, new Vector3(xDistance, yDistance, zDistance), -GetPlayerDirection().normal, out hitInto, tr.rotation, distanceToWall / distanceToWallDivide, layermask))
+        {
+            if (pushDecision)
+            {
+                return;
+            }
+        }
+
+        if (Physics.BoxCast(tr.position, new Vector3(xDistance, yDistance, zDistance), GetPlayerDirection().normal, out hitInto, tr.rotation, distanceToWall / distanceToWallDivide, layermask))
+        {
+            if (!pushDecision)
+            {
+                return;
+            }
+        }
+
+        layermask = ~(1 << LayerMask.NameToLayer("IgnoredObj") | 1 << LayerMask.NameToLayer("Player") | LayerMask.NameToLayer("StopWall"));
+        //int layermask = 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9;
         //new Vector3(xDistance, yDistance, zDistance) / 14.0f
         if (Physics.BoxCast(tr.position, new Vector3(xDistance, yDistance, zDistance), -GetPlayerDirection().normal, out hitInto, tr.rotation, distanceToWall / distanceToWallDivide, layermask, QueryTriggerInteraction.Ignore))
         {
