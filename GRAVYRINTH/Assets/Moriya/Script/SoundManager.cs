@@ -74,6 +74,8 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             int sound_index = seRequestQueue.Dequeue();
             playSeImpl(sound_index);
         }
+
+        SEVolumeCustom();
     }
 
     
@@ -95,6 +97,12 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
     }
 
+    //SEの音量を個別に指定
+    private void SEVolumeCustom()
+    {
+        //seClips[17]. = 0.0f;
+        //seSources.
+    }
     
     public int GetSeIndex(string name)
     {
@@ -186,4 +194,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     {
         return seClips[GetSeIndex(name)];
     }
+
+
 }
