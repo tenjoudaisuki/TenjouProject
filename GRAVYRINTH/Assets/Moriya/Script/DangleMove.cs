@@ -101,6 +101,9 @@ public class DangleMove : MonoBehaviour
 
         if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
+            //アニメーション
+            anm.SetTrigger("Pole_Jump");
+
             //tr.parent = null;
             //tr.parent = GameObject.Find("Pausable").transform;
             //touchIronBar = false;
@@ -123,8 +126,6 @@ public class DangleMove : MonoBehaviour
             //CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
             //col.enabled = true;
 
-            //アニメーション
-            anm.SetTrigger("Pole_Jump");
             m_MoveManager.SetState(PlayerState.NORMAL);
             StartCoroutine(DelayMethod(1, () =>
             {

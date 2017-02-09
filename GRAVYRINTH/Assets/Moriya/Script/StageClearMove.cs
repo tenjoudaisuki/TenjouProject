@@ -22,6 +22,8 @@ public class StageClearMove : MonoBehaviour
     private Transform m_ClearDoorTr;
     //クリアした瞬間のプレイヤーの座標
     private Vector3 m_ClearPosition;
+    //アニメーション
+    private Animator anm;
 
     /*==外部参照変数==*/
 
@@ -30,6 +32,7 @@ public class StageClearMove : MonoBehaviour
     {
         tr = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
+        anm = GetComponent<Animator>();
     }
 
     void Start()
@@ -49,6 +52,9 @@ public class StageClearMove : MonoBehaviour
     /// </summary>
     public void StartClearMove()
     {
+        // アニメーション
+        anm.SetTrigger("Goal");
+
         m_ClearDoorTr = GameObject.FindGameObjectWithTag("ClearDoor").transform;
         m_ClearPosition = tr.position;
         StartCoroutine(ClearMove());

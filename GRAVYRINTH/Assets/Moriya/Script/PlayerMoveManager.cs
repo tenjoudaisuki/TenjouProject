@@ -121,6 +121,12 @@ public class PlayerMoveManager : MonoBehaviour
             //ステージクリア移動開始
             m_Moves[PlayerState.STAGE_CLEAR].GetComponent<StageClearMove>().StartClearMove();
         }
+        //ステージクリア→通常への変更時
+        else if (m_PrevPlayerState == PlayerState.STAGE_CLEAR && m_PlayerState == PlayerState.NORMAL)
+        {
+            // アニメーション
+            anm.SetTrigger("Reset");
+        }
         //大砲ブロック→通常への変更時
         else if (m_PrevPlayerState == PlayerState.CANNON_BLOCK && m_PlayerState == PlayerState.NORMAL)
         {
@@ -137,6 +143,10 @@ public class PlayerMoveManager : MonoBehaviour
         }
         else if(m_PlayerState == PlayerState.NOT_MOVE)
         {
+            // アニメーション
+            anm.SetTrigger("Reset");
+            anm.SetFloat("Jump_Velo", 0);
+
             //SEを止める
             m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().StopSE();
             NotMove nm = m_Moves[PlayerState.NOT_MOVE].GetComponent<NotMove>();

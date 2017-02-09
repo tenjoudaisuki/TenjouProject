@@ -25,6 +25,7 @@ public class CrimbMove : MonoBehaviour
 
     //アニメーション
     private Animator anm;
+    private bool pole;
 
     void Start()
     {
@@ -54,7 +55,7 @@ public class CrimbMove : MonoBehaviour
         //        touchIronBar = true;
         //    }
         //}
-
+        print(pole);
         if (touchIronBar == true)
         {
             rb.velocity = Vector3.zero;
@@ -88,6 +89,9 @@ public class CrimbMove : MonoBehaviour
                 //地面まで降りたら鉄棒を離す
                 if (poleDownTimeCount > poleDownTime)
                 {
+                    // アニメーション
+                    anm.SetTrigger("Landing");
+
                     poleDownTimeCount = 0.0f;
                     GetComponent<NormalMove>().SetIronBarHitDelay(ironBarHitDelay);
                     touchIronBar = false;
@@ -109,10 +113,19 @@ public class CrimbMove : MonoBehaviour
                     barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
                     Vector3 movement = barVectorNor * -Input.GetAxis("Vertical") * -moveSpeed * Time.deltaTime;
                     tr.localPosition += movement;
+
+                    // アニメーション
+                    pole = false;
                 }
                 else
                 {
                     //自動で鉄棒を登る処理
+
+                    // アニメーション
+                    anm.SetFloat("Pole", 1);
+                    anm.SetBool("Pole_Move", true);
+                    pole = true;
+
                     poleDownTimeCount += Time.deltaTime;
                     barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
                     Vector3 movement = barVectorNor * -1.0f * -moveSpeed * Time.deltaTime;
@@ -142,6 +155,9 @@ public class CrimbMove : MonoBehaviour
 
         if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
+            //アニメーション
+            anm.SetTrigger("Pole_Jump");
+
             SoundManager.Instance.PlaySe("jump");
             poleDownTimeCount = 0.0f;
 
@@ -159,17 +175,17 @@ public class CrimbMove : MonoBehaviour
             //CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
             //col.enabled = true;
 
-            //アニメーション
-            anm.SetTrigger("Pole_Jump");
-
             m_MoveManager.SetState(PlayerState.NORMAL);
         }
 
         //アニメーション
-        if (Input.GetAxis("Vertical") != 0)
-            anm.SetBool("Pole_Move", true);
-        else
-            anm.SetBool("Pole_Move", false);
+        if (!pole)
+        {
+            if (Input.GetAxis("Vertical") != 0)
+                anm.SetBool("Pole_Move", true);
+            else
+                anm.SetBool("Pole_Move", false);
+        }
     }
 
     public void SetTouchIronBar(bool ishit, RaycastHit hitInto)

@@ -45,9 +45,6 @@ public class CannonBlockMove : MonoBehaviour
 
     void Update()
     {
-        // 01/17アニメーション
-        anm.SetBool("Block", true);
-
         //重力
         if (!m_GroundHitInfo.isHit)
             rb.AddForce(-tr.up * m_GravityPower);

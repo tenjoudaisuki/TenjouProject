@@ -34,7 +34,7 @@ public class CannonBlock : MonoBehaviour
     public float angle = 20.0f;
     public Transform cannonSetPoint;
 
-    // 01/17アニメーション
+    // アニメーション
     private Animator anm;
     private float anm_value;
 
@@ -49,7 +49,7 @@ public class CannonBlock : MonoBehaviour
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
-        // 01/17アニメーション
+        // アニメーション
         anm = GameObject.FindGameObjectWithTag("Player").GetComponent<Animator>();
 
         tr = gameObject.transform;
@@ -215,30 +215,9 @@ public class CannonBlock : MonoBehaviour
         player.RotateAround(rotateCenter.position, Vector3.forward, (InputAxisDirection() * angle) * Time.deltaTime);
         tr.RotateAround(rotateCenter.position, Vector3.forward, (InputAxisDirection() * angle) * Time.deltaTime);
 
-        // 01/17アニメーション
+        // アニメーション
         anm.SetBool("Block", true);
-        anm_value = InputAxisDirection();
-        if (anm_value == 0)
-        {
-            anm.SetBool("BlockMove", false);
-        }
-        else
-        {
-            anm.SetBool("BlockMove", true);
-        }
-
-        if (tr.right == GetPlayerDirection().normal)
-        {
-            anm.SetFloat("Block_x", anm_value);
-            anm.SetFloat("Block_y", anm_value);
-            anm.SetFloat("Block_z", anm_value);
-        }
-        else if (-tr.right == GetPlayerDirection().normal)
-        {
-            anm.SetFloat("Block_x", -anm_value);
-            anm.SetFloat("Block_y", -anm_value);
-            anm.SetFloat("Block_z", -anm_value);
-        }
+        anm.SetFloat("Block_Velo", InputAxisDirection() * Vector3.Dot(tr.right, GetPlayerDirection().normal));
     }
 
     public RaycastHit GetPlayerDirection()

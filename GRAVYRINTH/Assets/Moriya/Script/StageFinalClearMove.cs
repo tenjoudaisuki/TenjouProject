@@ -62,6 +62,9 @@ public class StageFinalClearMove : MonoBehaviour
         m_ClearPosition = tr.position;
 
         StartCoroutine(SettingMove());
+
+        // アニメーション
+        anm.SetTrigger("Goal");
     }
 
     public void StopMove()
@@ -76,8 +79,6 @@ public class StageFinalClearMove : MonoBehaviour
     /// </summary>
     IEnumerator SettingMove()
     {
-        //ホバーアニメーション開始
-        anm.SetBool("Ending_Hover", true);
         float timer = 0.0f;
         while (true)
         {
@@ -112,8 +113,7 @@ public class StageFinalClearMove : MonoBehaviour
     IEnumerator Spin()
     {
         float speed = 0.0f;
-        //丸まりアニメーション開始
-        anm.SetBool("Ending_Hover", false);
+        // アニメーション
         anm.SetBool("IsTaihouRoll", true);
         while (true)
         {
