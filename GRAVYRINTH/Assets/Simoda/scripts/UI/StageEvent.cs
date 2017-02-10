@@ -12,7 +12,7 @@ public class StageEvent : MonoBehaviour
     }
     public EventTextType eventTextType;
     public bool isSerifText = false;
-    public float serifDrawTime = 1.0f;
+    //public float serifDrawTime = 1.0f;
 
     //UIの入力管理
     private UIInputManager input;
@@ -52,16 +52,16 @@ public class StageEvent : MonoBehaviour
 
         if (isSerifText == true)
         {
-            if (texts.Count >= 2)
-            {
-                //EventTextTypeを設定
-                eventTextType = EventTextType.MultiText;
-            }
-            else
-            {
+            //if (texts.Count >= 2)
+            //{
+            //    //EventTextTypeを設定
+            //    eventTextType = EventTextType.MultiText;
+            //}
+            //else
+            //{
                 //EventTextTypeを設定
                 eventTextType = EventTextType.SingleSerifText;
-            }
+            //}
         }
         else
         {
@@ -88,7 +88,7 @@ public class StageEvent : MonoBehaviour
                 break;
 
             case EventTextType.SingleSerifText:
-                MultiTextInitialize();
+                SingleSerifTextInitialize();
                 break;
         }
     }
@@ -320,15 +320,15 @@ public class StageEvent : MonoBehaviour
             LeanTween.alpha(rectTr, 1.0f, 1.0f);
         }
 
-        StartCoroutine(DelayMethod(1.1f, () =>
+        StartCoroutine(DelayMethod(2.1f, () =>
         {
             foreach (RectTransform rectTr in rectTransforms)
             {
-                LeanTween.alpha(rectTr, 1.0f, 1.0f);
+                LeanTween.alpha(rectTr, 0.0f, 1.0f);
             }
         }));
 
-        StartCoroutine(DelayMethod(2.2f, () =>
+        StartCoroutine(DelayMethod(3.2f, () =>
         {
             foreach (RectTransform rectTr in rectTransforms)
             {
