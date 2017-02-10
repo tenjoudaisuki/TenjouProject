@@ -34,9 +34,7 @@ public class DoorButton : MonoBehaviour
         GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(3.0f);
         GameObject.Find("Camera").GetComponent<EventCamera>().SetTarget(mCameraPos);
 
-        LeanTween.moveLocalX(gameObject,transform.position.x,0).setDelay(0.5f).setOnComplete(() => {
-            GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Event);
-        });
+        StartCoroutine(DelayMethod(0.5f, () => { GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Event); }));
 
         mButton.SetActive(false);
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
@@ -55,5 +53,18 @@ public class DoorButton : MonoBehaviour
     public bool IsButtonDown()
     {
         return isDown;
+    }
+
+    /// <summary>
+    /// 渡された処理を指定時間後に実行する
+    /// </summary>
+    /// <param name="delayFrameCount"></param>
+    /// <param name="action">実行したい処理</param>
+    /// <returns></returns>
+    private IEnumerator DelayMethod(float delayFrameCount, System.Action action)
+    {
+
+        yield return new WaitForSeconds(delayFrameCount);
+        action();
     }
 }

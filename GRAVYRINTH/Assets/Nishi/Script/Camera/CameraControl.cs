@@ -48,6 +48,10 @@ public class CameraControl : ICamera
     /// 最初のカメラ位置
     /// </summary>
     private Vector3 mFastPosition;
+    /// <summary>
+    /// 最初のカメラ回転
+    /// </summary>
+    private Quaternion mFastRotate;
 
     private State mCurrentState = State.StartMove;
 
@@ -63,6 +67,7 @@ public class CameraControl : ICamera
     {
         mTimer = 0.0f;
         mFastPosition = transform.position;
+        mFastRotate = transform.localRotation;
         mCurrentState = State.StartMove;
     }
 
@@ -70,11 +75,11 @@ public class CameraControl : ICamera
     {
         StateUpdate();
 
-        if (Input.GetButtonDown("CameraReset"))
-        {
-            //カメラを元の位置に移動
-            CameraReset();
-        }
+        //if (Input.GetButtonDown("CameraReset"))
+        //{
+        //    //カメラを元の位置に移動
+        //    CameraReset();
+        //}
     }
 
     /// <summary>
@@ -214,9 +219,10 @@ public class CameraControl : ICamera
         Vector3 next = (m_Target.position + offset) + (CameraPosDirection * m_Distance);
 
         transform.position = Vector3.Lerp(mFastPosition, next, mTimer);
+
         transform.localRotation = Quaternion.Slerp(
-            transform.localRotation,
-            Quaternion.LookRotation((m_Target.position + offset) - transform.position, m_Target.up),
+            mFastRotate,
+            Quaternion.LookRotation(-CameraPosDirection, m_Target.up),
             mTimer);
 
         XAxisTotal = 0;

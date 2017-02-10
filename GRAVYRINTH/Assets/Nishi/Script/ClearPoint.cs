@@ -18,6 +18,7 @@ public class ClearPoint : MonoBehaviour
                 camera.GetComponent<CameraManager>().StateChange(State.Clear);
                 GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeColorChange(mFadeColor);
                 GameManager.Instance.GameModeChangTitleEx();
+                Destroy(this);
             }
             else
             {

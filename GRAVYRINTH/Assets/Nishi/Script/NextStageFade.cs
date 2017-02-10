@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class NextStageFade : MonoBehaviour {
 
-    enum FadeMode
+    public enum FadeMode
     {
         FadeIn,
         FadeOut
@@ -18,7 +18,7 @@ public class NextStageFade : MonoBehaviour {
 
     public string mNextScene;
 
-    FadeMode mState;
+    public FadeMode mState;
     bool isLoad;
 
     public bool mLastMode = false;
@@ -77,7 +77,11 @@ public class NextStageFade : MonoBehaviour {
                     {
                         LeanTween.alpha(mCurrentMessage.GetComponent<Image>().rectTransform, 0.0f, 1.0f).setOnComplete(()=>
                         {
+                            GameManager.Instance.Reset();
+                            mState = FadeMode.FadeOut;
                             mLastMode = false;
+                            mButtonMode = false;
+                            return;
                         }
                         );
                     }

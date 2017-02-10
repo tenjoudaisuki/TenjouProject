@@ -59,6 +59,8 @@ public class GameManager : MonoBehaviour
 
     public void Awake()
     {
+        Cursor.visible = false;
+
         mPausePossible = true;
         if (isDebug)
         {

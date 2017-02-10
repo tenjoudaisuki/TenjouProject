@@ -11,7 +11,7 @@ public class Stage1EventStart : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        if(GameManager.Instance.GetMode() == GameManager.GameMode.GamePlay)
+        if(GameObject.Find("Camera").GetComponent<CameraManager>().GetCurrentCameraState() == State.Clear)
         {
             Instantiate(m_FastDrawTexture);
         }
