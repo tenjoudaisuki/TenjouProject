@@ -4,27 +4,23 @@
 
 ƒTƒEƒ“ƒh‘S”Ê’Ç‰Á
 
-ƒXƒe[ƒW‚P‚ÅƒCƒxƒ“ƒgƒJƒƒ‰’Ç‰ÁiŽd—l‘ŽQÆj
-
 ‰Â”\‚Å‚ ‚ê‚Îspinchild‚ÅƒvƒŒƒCƒ„[‚ª‚­‚Á‚Â‚­Žd—l‚ð•Ç‚¸‚è‚É‚à‘Î‰ž‚µ‚Ä‚Ù‚µ‚¢
 
 •Ç‚¸‚è‚Ì—Ž‚¿‚Ä‚¢‚­‘¬“x‚ð•ÏX‚Å‚«‚é‚æ‚¤‚É‚µ‚Ä‚Ù‚µ‚¢
 
 ƒS[ƒ‹‚É“ü‚Á‚½‚Æ‚«‚ÉƒvƒŒƒCƒ„[‚ðƒtƒFƒCƒhƒAƒEƒg‚µ‚Ä‚Ù‚µ‚¢
 
+ƒS[ƒ‹‚É“ü‚Á‚½Žž‚ÉƒvƒŒƒCƒ„[‚ªƒS[ƒ‹‚Ì”½‘Î‘¤‚Ü‚Å‹z‚¢ž‚Ü‚ê‚é‚æ‚¤‚É‚µ‚Ä‚Ù‚µ‚¢
+
 
 
 ƒoƒOF
 
-ƒQ[ƒ€ƒNƒŠƒAŒãAƒvƒŒƒCƒ„[‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ªŠÛ‚Ü‚Á‚Ä‚ÄAƒWƒƒƒ“ƒv‚à—Ž‰º‚à‚Å‚«‚È‚¢
-
-stagef@‚ÅƒXƒCƒbƒ`‚ªÁ‚¦‚È‚¢‚æ‚¤‚É‚µ‚Ä‚Ù‚µ‚¢
+finaldoorswitch‚ÉG‚ê‚½‚Æ‚«‚Éfinaldoorswitchred,yellow,green,blue‚Ì“–‚½‚è”»’è‚ðÁ‚·
 
 finaldoor‚ªŠJ‚«I‚í‚Á‚½‚çƒJƒƒ‰‚ª’n–Ê‚É“ü‚Á‚¿‚á‚¤
 
 finaldoor ‚ÌŽž‚ÌƒCƒxƒ“ƒgƒJƒƒ‰‚ÍAƒJƒƒ‰‚ª–Ú•W’n“_‚É“ž’…‚µ‚Ä‚©‚çfinaldoor‚ªŠJ‚«‚Í‚¶‚ßAŠJ‚«I‚í‚Á‚Ä‚©‚çƒvƒŒƒCƒ„[‚Ì•û‚É–ß‚é‚æ‚¤‚É‚·‚é
-
-‹ó’†ˆÚ“®‘¬“x‚Æ‘¬“xŒ¸Š‚ð•ÇƒLƒbƒN‚Æ“S–_ƒLƒbƒN‚É“K‰ž
 
 ƒƒjƒ…[‚Å¶ƒXƒeƒBƒbƒN‚Æ\ŽšƒL[—¼•û‚Å‘I‚×‚é‚æ‚¤‚É‚·‚é
 
@@ -38,15 +34,17 @@ finaldoor ‚ÌŽž‚ÌƒCƒxƒ“ƒgƒJƒƒ‰‚ÍAƒJƒƒ‰‚ª–Ú•W’n“_‚É“ž’…‚µ‚Ä‚©‚çfinaldoor‚ªŠJ‚«‚
 
 ‚æ‚¶‚Ì‚Ú‚è‚ÅƒJƒƒ‰‚ªÅ‰‚ÌˆÊ’u‚És‚­ŽžAƒvƒŒƒCƒ„[‚ð’†S‚É‰ñ“]‚µ‚Ä‚Ù‚µ‚¢
 
-“S–_icjR‚Á‚½Žž‚ÉU‚èŒü‚©‚¸‚»‚Ìæ‚É•Ç‚ª‚ ‚Á‚Ä‚àŠÑ’Ê‚µ‚¿‚á‚¤
+“S–_icj‚ðR‚ç‚È‚¢Žž‚ª‚ ‚é
 
 stage0‚Ì“S–_ã‚ª‚èØ‚Á‚½Š‚ÆAstagef‚Ì‘å–C‚ÌŽÎ–Ê‚©‚ç“S–_icj‚É”ò‚ÑˆÚ‚éŽž‚ÉƒvƒŒƒCƒ„[‚ÌŒü‚«‚ª‚¨‚©‚µ‚­‚È‚é
 
 “S–_icj‚É‚­‚Á‚Â‚­ŽžƒvƒŒƒCƒ„[‚ÌˆÊ’u‚ª‚¸‚ê‚éŽ–‚ª‚ ‚éAƒWƒƒƒ“ƒv’†‚ª‘½‚¢
 
-“S–_icjƒLƒbƒN‚·‚éŽž‚É‰¡‚É‚¸‚ê‚é
+‚Ô‚ç‰º‚ª‚è‚Å“S–_i‰¡j—£‚µ‚½Žž‚ÉƒJƒƒ‰‚ª‚©‚­‚Â‚©‚È‚¢‚æ‚¤‚É‚µ‚Ä‚Ù‚µ‚¢
 
-“S–_i‰¡j‚ªŠp“x‚É‚æ‚Á‚Ä‰¡ˆÚ“®‚ª‚Å‚«‚È‚­‚È‚é
+“S–_i‰¡j‚©‚ç“S–_i‰¡j‚Éæ‚èˆÚ‚Á‚½Žž‚É‚¿‚á‚ñ‚ÆƒJƒƒ‰‚ª‰ŠúˆÊ’u‚És‚©‚È‚¢Žž‚ª‚ ‚é
+
+“S–_ic‰¡j‚ÉŽÎ‚ß‚Å‚­‚Á‚Â‚­‚ÆŽÎ‚ß‚Ì‚Ü‚Ü‚É‚È‚é
 
 ƒJƒƒ‰‚ð^‰º‚©^ã‚É‚µ‚È‚ª‚ç‰ñ“]‚³‚¹‚é‚ÆƒvƒŒƒCƒ„[‚ª­‚µ‚¸‚Â‰ñ“]‚µ‚¿‚á‚¤
 
@@ -60,8 +58,6 @@ stage0‚Ì“S–_ã‚ª‚èØ‚Á‚½Š‚ÆAstagef‚Ì‘å–C‚ÌŽÎ–Ê‚©‚ç“S–_icj‚É”ò‚ÑˆÚ‚éŽž‚ÉƒvƒŒ
 
 ‚½‚Ü‚É“S–_‚É•ß‚Ü‚éŽž‚Éƒzƒo[ƒAƒjƒ[ƒVƒ‡ƒ“‚É‚È‚é‚ñ‚¾‚¯‚ÇAˆê“x‚È‚é‚Æí‚É‚Ô‚ç‰º‚ª‚éŽž‚Éƒzƒo[‚É‚È‚é
 
-‘å–C‚É“ü‚Á‚½Žž‚Éƒzƒo[ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì‚©‚í‚è‚É•à‚«ƒAƒjƒ[ƒVƒ‡ƒ“‚É‚È‚éŽ–‚ª‘½‚¢A‚±‚ÌŽžŠÛ‚Ü‚èƒAƒjƒ[ƒVƒ‡ƒ“‚à”­“®‚µ‚È‚¢
-
 ƒuƒƒbƒN‚ð‰Ÿ‚·‚Æ‚«ƒvƒŒƒCƒ„[‚ªŽÎ‚ß‚¾‚ÆƒuƒƒbƒN‚ª‰¡‚É­‚µ‚¸‚ê‚éŽž‚ª‚ ‚é
 
 f_wall‚É‰Ÿ‚µ–ß‚³‚ê‚éŽž‚ÉƒJƒƒ‰‚ª“ñ‰ñ‚©‚­‚Â‚­
@@ -74,15 +70,7 @@ thank you•\Ž¦‚³‚ê‚½Žž‚Éƒ^ƒCƒgƒ‹‚Ìse‚ª—¬‚ê‚¿‚á‚Á‚Ä‚é(ª‚Å‰ðŒˆH)
 
 •à‚¢‚Ä‚é“r’†‚Åƒ|[ƒY‰æ–ÊAƒCƒxƒ“ƒg‚É“ü‚é‚Æ•à‚­se‚ª–Â‚è‘±‚¯‚¿‚á‚¤(ªª‚Å‰ðŒˆH)
 
-ƒ|[ƒY‰æ–Ê‚Å“ü—ÍŒn‚Ìse‚ª–Â‚ç‚È‚¢
-
 ƒ`ƒ…[ƒgƒŠƒAƒ‹‚Ì•`‰æ‡–â‘è
-
-‚Ô‚ç‰º‚ª‚è‚Å“S–_i‰¡j—£‚µ‚½Žž‚ÉƒJƒƒ‰‚ª‚©‚­‚Â‚©‚È‚¢‚æ‚¤‚É‚µ‚Ä‚Ù‚µ‚¢
-
-“S–_i‰¡j‚©‚ç“S–_i‰¡j‚Éæ‚èˆÚ‚Á‚½Žž‚É‚¿‚á‚ñ‚ÆƒJƒƒ‰‚ª‰ŠúˆÊ’u‚És‚©‚È‚¢Žž‚ª‚ ‚é
-
-“S–_ic‰¡j‚ÉŽÎ‚ß‚Å‚­‚Á‚Â‚­‚ÆŽÎ‚ß‚Ì‚Ü‚Ü‚É‚È‚é
 
 •Ç‚É“–‚½‚Á‚½Žž‚É‚©‚×‚ÌŠp“x‚É‡‚í‚¹‚Ä•Ç‚¸‚è‚·‚é‚æ‚¤‚É‚µ‚Ä‚Ù‚µ‚¢
 
