@@ -26,6 +26,8 @@ public class SwitchManager : MonoBehaviour
 
     void ButtonCheck()
     {
+        if (isActive) return;
+
         foreach (DoorButton button in mDoorButtons)
         {
             if (!button.IsButtonDown()) return;
@@ -38,7 +40,7 @@ public class SwitchManager : MonoBehaviour
         if(isActive && other.tag == "Player")
         {
             //ゴゴゴと扉が開く音
-            //SoundManager.Instance.PlaySe("");
+            SoundManager.Instance.PlayLoopSe("rumble");
             GameObject.Find("Camera").GetComponent<EventCamera>().SetMoveTime(2.0f);
             GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(3.0f);
             GameObject.Find("Camera").GetComponent<EventCamera>().SetTarget(mCameraPos);
@@ -46,7 +48,10 @@ public class SwitchManager : MonoBehaviour
             GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Event);
 
             //扉が開いたときの音
-            LeanTween.rotate(mFinalDoor, new Vector3(90, 0, 0), mOpenTime).setOnComplete(()=> { SoundManager.Instance.PlaySe("doom"); });
+            LeanTween.rotate(mFinalDoor, new Vector3(90, 0, 0), mOpenTime).setOnComplete(()=> {
+                SoundManager.Instance.PlaySe("doom");
+                SoundManager.Instance.StopLoopSe();
+            });
             gameObject.SetActive(false);
 
             GameObject.Find("BGMControl").GetComponent<BGMControl>().PlayerFinalDoorSwitchTouched();

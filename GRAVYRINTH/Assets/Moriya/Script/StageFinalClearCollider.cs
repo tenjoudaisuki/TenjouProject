@@ -84,6 +84,9 @@ public class StageFinalClearCollider : MonoBehaviour
         //クリアしたら
         if (isClear == false && m_CannonManager.GetIsSetAll() == true)
         {
+            SoundManager.Instance.PlayLoopSe("rumble");
+            SoundManager.Instance.PlayLoopSe("trick");
+
             GameObject.Find("Camera").GetComponent<EventCamera>().SetMoveTime(0.0f);
             GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(EventCameraEndTime);
             GameObject.Find("Camera").GetComponent<EventCamera>().SetTarget(CameraTarget);
@@ -187,6 +190,7 @@ public class StageFinalClearCollider : MonoBehaviour
                         .setEase(LeanTweenType.easeInOutBack)
                         .setOnComplete(() =>
                         {
+                            SoundManager.Instance.StopLoopSe();
                             isFlashing = true;
                         });
               }));

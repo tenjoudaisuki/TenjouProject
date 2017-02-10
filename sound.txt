@@ -4,8 +4,7 @@ BGM:
 ☆stage0-2.wav　stage0-1.m3がおわったらループ再生、違うステージに移ったらフェイドアウト
 ☆stage1.mp3　ステージ１～４はループ再生、次のステージもしくはステージ選択で選んだステージが１～４だったら継続、それ以外のステージに移ったらフェイドアウト、ループの際、音楽が終わってからではなく、2:26秒あたりで次のをかぶせて再生
 ☆stagef1.wav　最終ステージに移動したら一回再生、ステージセレクトで選択した場合も一回再生
-☆stagef2.wav　stagef1.wavが終わったらループ再生、スイッチが四つ押されたらループ解除
-stagef2.5.wav　stagef2.wavが終わったらループ再生、finaldoorswitchに触れたらループ解除
+☆stagef2.wav　stagef1.wavが終わったらループ再生、finaldoorswitchに触れたらループ解除
 ☆stagef3.wav　stagef3.wavが終わったら一回再生
 ☆stagef4.wav　大砲がある部屋に入ったらループ再生、大砲が出来上がったらフェイドアウト
 ☆stagef5.wav　stagef4.wavが終わる2秒前に一回再生
@@ -39,7 +38,7 @@ back.wav　backの時、return to ○○の時、ステージセレクトで最左で左選択した時、最
 
 ☆undive.wav　水から出た時
 
-rumble.mp3　finaldoorが開いてる間、finaldoorのスイッチが沈んでる間、大砲の階段一つ一つが沈んでる間、大砲が傾いてる間、ブロックを動かしてる間
+☆rumble.mp3　finaldoorが開いてる間、finaldoorのスイッチが沈んでる間、大砲の階段一つ一つが沈んでる間、大砲が傾いてる間、ブロックを動かしてる間
 
 ☆wind.mp3　stagef の細い廊下を歩いている間
 
@@ -53,13 +52,13 @@ rumble.mp3　finaldoorが開いてる間、finaldoorのスイッチが沈んでる間、大砲の階段一
 
 ☆goal2.wav　最終ステージ以外のゴールに触れた時
 
-trick.mp3　最終ステージでスイッチ押してからfinaldoorのスイッチ沈むまでの間、大砲のブロック動かしてる間にrumble.mp3と合わせて、大砲完成してから変形し終わるまでの間、回転するオブジェクトが回転してる間
+☆trick.mp3　最終ステージでスイッチ押してからfinaldoorのスイッチ沈むまでの間、大砲のブロック動かしてる間にrumble.mp3と合わせて、大砲完成してから変形し終わるまでの間、回転するオブジェクトが回転してる間
 
-doom.wav　finaldoorrが開ききった時、大砲の階段一つ一つが沈みきった時
+☆doom.wav　finaldoorrが開ききった時、大砲の階段一つ一つが沈みきった時
 
-switch.mp3　スイッチを押した時
+☆switch.mp3　スイッチを押した時
 
-charge.wav　大砲に吸い込まれてから発射されるまで
+☆charge.wav　大砲に吸い込まれてから発射されるまで
 
 ☆canon.mp3　大砲からプレイヤーが発射される時
 

@@ -464,6 +464,7 @@ public class NormalMove : MonoBehaviour
             }
         }
 
+        Vector3 prev = m_MoveVelocity;
         //前ベクトル×スティックの傾き×移動速度
         m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_LastSpeed;
 
@@ -478,7 +479,9 @@ public class NormalMove : MonoBehaviour
         if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true)
         {
             if (Input.GetButtonDown("Action"))
+            {
                 SoundManager.Instance.PlaySe("block");
+            }
 
             //アニメーション
             anm.SetBool("Block", true);
@@ -544,11 +547,17 @@ public class NormalMove : MonoBehaviour
                     if (ishit) stopspeed = 0.0f;
                 }
 
+
                 //ブロックの向きから移動方向を計算
                 Vector3 moveDirection = m_CollisionBlock.GetBlockMoveDirection();
                 m_MoveVelocity = (moveDirection * input) * m_LastSpeed * stopspeed;
                 //ブロックを移動させる
                 m_CollisionBlock.SetMoveVector(m_MoveVelocity);
+
+                //音
+                if (prev == Vector3.zero && inputVec.magnitude > 0)
+                    SoundManager.Instance.PlayLoopSe("rumble");           
+
 
                 //自身の前方向をブロックに向ける
                 m_Front = -m_CollisionBlock.GetPlayerDirection().normal;
@@ -562,6 +571,9 @@ public class NormalMove : MonoBehaviour
         //通常時
         else
         {
+            if (Input.GetButtonUp("Action"))
+                SoundManager.Instance.StopLoopSe();
+
             BlockArrow blockArrow = GameObject.FindGameObjectWithTag("BlockArrow").GetComponent<BlockArrow>();
             blockArrow.SetInfo(false, "Horizontal");
             //向きを変更

@@ -14,7 +14,7 @@ public class Stage4Switch : MonoBehaviour
 
     /*==内部設定変数==*/
     //スイッチマネージャー
-    private SwitchManager m_SwitchManager;
+    private Stage4SwitchManager m_SwitchManager;
     //ボタンが押されているか？
     private bool m_IsDown = false;
     //スイッチのボタン部分のオブジェクト　押されている場合にActiveをfalseにして姿を消す
@@ -24,7 +24,7 @@ public class Stage4Switch : MonoBehaviour
 
     void Start()
     {
-        m_SwitchManager = GameObject.FindGameObjectWithTag("SwitchManager").GetComponent<SwitchManager>();
+        m_SwitchManager = GameObject.FindGameObjectWithTag("SwitchManager").GetComponent<Stage4SwitchManager>();
         m_IsDown = false;
         m_Button = transform.FindChild("active").gameObject;
         m_NonacttiveButton = transform.FindChild("nonactive").gameObject;
@@ -40,6 +40,7 @@ public class Stage4Switch : MonoBehaviour
     {
         if (other.tag != "Player" || m_IsDown == true) return;
         SoundManager.Instance.PlaySe("switch");
+        SoundManager.Instance.PlayLoopSe("trick");
         m_IsDown = true;
         m_Button.SetActive(!m_IsDown);
         m_NonacttiveButton.SetActive(m_IsDown);

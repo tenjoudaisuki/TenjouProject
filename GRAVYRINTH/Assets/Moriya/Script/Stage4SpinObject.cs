@@ -70,6 +70,7 @@ public class Stage4SpinObject : MonoBehaviour
                 m_CureRotation = m_StartRotation * Quaternion.AngleAxis(m_StopAngle * m_StopCount, m_Axis);
                 tr.rotation = m_CureRotation;
                 m_StopCount++;
+                SoundManager.Instance.StopLoopSe();
                 yield break;
             }
             yield return null;
