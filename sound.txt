@@ -4,7 +4,8 @@ BGM:
 ☆stage0-2.wav　stage0-1.m3がおわったらループ再生、違うステージに移ったらフェイドアウト
 ☆stage1.mp3　ステージ１～４はループ再生、次のステージもしくはステージ選択で選んだステージが１～４だったら継続、それ以外のステージに移ったらフェイドアウト、ループの際、音楽が終わってからではなく、2:26秒あたりで次のをかぶせて再生
 ☆stagef1.wav　最終ステージに移動したら一回再生、ステージセレクトで選択した場合も一回再生
-☆stagef2.wav　stagef1.wavが終わったらループ再生、finaldoorswitchに触れたらループ解除
+☆stagef2.wav　stagef1.wavが終わったらループ再生、スイッチが四つ押されたらループ解除
+stagef2.5.wav　stagef2.wavが終わったらループ再生、finaldoorswitchに触れたらループ解除
 ☆stagef3.wav　stagef3.wavが終わったら一回再生
 ☆stagef4.wav　大砲がある部屋に入ったらループ再生、大砲が出来上がったらフェイドアウト
 ☆stagef5.wav　stagef4.wavが終わる2秒前に一回再生
