@@ -115,6 +115,7 @@ public class StageFinalClearMove : MonoBehaviour
         float speed = 0.0f;
         // アニメーション
         anm.SetBool("IsTaihouRoll", true);
+        SoundManager.Instance.PlayLoopSe("charge");
         while (true)
         {
             cc.enabled = false;
@@ -139,6 +140,7 @@ public class StageFinalClearMove : MonoBehaviour
     {
         float timer = 0.0f;
         SoundManager.Instance.PlaySe("canon");
+        SoundManager.Instance.StopLoopSe();
         while (true)
         {
             //時間経過で移動

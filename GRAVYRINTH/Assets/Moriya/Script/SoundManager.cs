@@ -109,7 +109,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             {
                 source.clip = seClips[index];
                 source.loop = false;
-                source.name = seClips[index].name;
+                //source.name = seClips[index].name;
                 //音量をセットして再生
                 source.volume = volume.se;
                 foreach (var setting in seVolumeSettings)
@@ -136,7 +136,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             {
                 source.clip = seClips[index];
                 source.loop = true;
-                source.name = seClips[index].name;
+                //source.name = seClips[index].name;
                 //音量をセットして再生
                 source.volume = volume.se;
                 foreach (var setting in seVolumeSettings)
@@ -234,16 +234,20 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
     }
 
+    
     //一部のSeを止める
-    public void StopSe(string stopname)
-    {
-        foreach (AudioSource source in seSources)
-        {
-            if (source.name == stopname)
-            source.Stop();
-            source.clip = null;
-        }
-    }
+    //public void StopSe(string stopname)
+    //{
+    //    foreach (AudioSource source in seSources)
+    //    {
+    //        //AudioClipの名前を拾ってこれない・・・
+    //        if (source.clip.name == stopname)
+    //        {
+    //            source.Stop();
+    //            source.clip = null;
+    //        }
+    //    }
+    //}
 
     //すべてのLoopSeを止める
     public void StopLoopSe()
@@ -252,17 +256,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         foreach (AudioSource source in loopSeSources)
         {
             source.Stop();
-            source.clip = null;
-        }
-    }
-
-    //一部のLoopSeを止める
-    public void StopLoopSe(string stopname)
-    {
-        foreach (AudioSource source in loopSeSources)
-        {
-            if (source.name == stopname)
-                source.Stop();
             source.clip = null;
         }
     }

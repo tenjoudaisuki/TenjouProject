@@ -5,8 +5,11 @@ public class Stage1EventStart : MonoBehaviour
 {
     public float mWaitTime = 2.0f;
     public GameObject mGoalObject;
+
     public GameObject m_FastDrawTexture;
     public GameObject m_DrawTexture;
+
+    public Vector3 m_CenterOffset;
 
     // Use this for initialization
     void Start()
@@ -15,6 +18,7 @@ public class Stage1EventStart : MonoBehaviour
         {
             Instantiate(m_FastDrawTexture);
         }
+        GameObject.Find("Camera").GetComponent<Stage1EventCamera>().SetCenterOffset(m_CenterOffset);
     }
 
     public void LateUpdate()
