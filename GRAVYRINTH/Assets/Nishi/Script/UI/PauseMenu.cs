@@ -167,7 +167,7 @@ public class PauseMenu : MonoBehaviour
 
         input.SetCancelAction(() =>
         {
-            SoundManager.Instance.PlaySe("enter");
+            SoundManager.Instance.PlaySe("back");
 
             changingSelection = true;
 
@@ -387,7 +387,7 @@ public class PauseMenu : MonoBehaviour
 
         input.SetCancelAction(() =>
         {
-            SoundManager.Instance.PlaySe("enter");
+            SoundManager.Instance.PlaySe("back");
 
             changingSelection = true;
 
@@ -694,7 +694,7 @@ public class PauseMenu : MonoBehaviour
 
         input.SetCancelAction(() =>
         {
-            SoundManager.Instance.PlaySe("enter");
+            SoundManager.Instance.PlaySe("back");
 
             changingSelection = true;
 
@@ -741,7 +741,7 @@ public class PauseMenu : MonoBehaviour
     {
         input.SetSubmitAction(() =>
         {
-            SoundManager.Instance.PlaySe("enter");
+            SoundManager.Instance.PlaySe("back");
 
             changingSelection = true;
 
@@ -826,7 +826,7 @@ public class PauseMenu : MonoBehaviour
     {
         input.SetSubmitAction(() =>
         {
-            SoundManager.Instance.PlaySe("enter");
+            SoundManager.Instance.PlaySe("back");
 
             changingSelection = true;
 
@@ -858,7 +858,7 @@ public class PauseMenu : MonoBehaviour
     {
         input.SetSubmitAction(() =>
         {
-            SoundManager.Instance.PlaySe("enter");
+            SoundManager.Instance.PlaySe("back");
 
             changingSelection = true;
 
@@ -887,7 +887,7 @@ public class PauseMenu : MonoBehaviour
     {
         input.SetSubmitAction(() =>
         {
-            SoundManager.Instance.PlaySe("enter");
+            SoundManager.Instance.PlaySe("back");
 
             changingSelection = true;
 
@@ -967,7 +967,7 @@ public class PauseMenu : MonoBehaviour
     {
         input.SetSubmitAction(() =>
         {
-            SoundManager.Instance.PlaySe("enter");
+            SoundManager.Instance.PlaySe("back");
 
             changingSelection = true;
 
@@ -996,7 +996,7 @@ public class PauseMenu : MonoBehaviour
     {
         input.SetSubmitAction(() =>
         {
-            SoundManager.Instance.PlaySe("enter");
+            SoundManager.Instance.PlaySe("back");
 
             changingSelection = true;
 

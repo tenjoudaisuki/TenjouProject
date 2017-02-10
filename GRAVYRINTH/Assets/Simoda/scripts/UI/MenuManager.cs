@@ -164,7 +164,7 @@ public class MenuManager : MonoBehaviour
 
         input.SetCancelAction(() =>
         {
-            SoundManager.Instance.PlaySe("enter");
+            SoundManager.Instance.PlaySe("back");
 
             changingSelection = true;
 
@@ -380,7 +380,7 @@ public class MenuManager : MonoBehaviour
 
         input.SetCancelAction(() =>
         {
-            SoundManager.Instance.PlaySe("enter");
+            SoundManager.Instance.PlaySe("back");
 
             changingSelection = true;
 
@@ -665,7 +665,7 @@ public class MenuManager : MonoBehaviour
 
         input.SetCancelAction(() =>
         {
-            SoundManager.Instance.PlaySe("enter");
+            SoundManager.Instance.PlaySe("back");
 
             changingSelection = true;
 
@@ -801,7 +801,7 @@ public class MenuManager : MonoBehaviour
     {
         input.SetSubmitAction(() =>
         {
-            SoundManager.Instance.PlaySe("enter");
+            SoundManager.Instance.PlaySe("back");
 
             changingSelection = true;
 
@@ -830,7 +830,7 @@ public class MenuManager : MonoBehaviour
     {
         input.SetSubmitAction(() =>
         {
-            SoundManager.Instance.PlaySe("enter");
+            SoundManager.Instance.PlaySe("back");
 
             changingSelection = true;
 
@@ -915,7 +915,7 @@ public class MenuManager : MonoBehaviour
     {
         input.SetSubmitAction(() =>
         {
-            SoundManager.Instance.PlaySe("enter");
+            SoundManager.Instance.PlaySe("back");
 
             changingSelection = true;
 
@@ -949,7 +949,7 @@ public class MenuManager : MonoBehaviour
     {
         input.SetSubmitAction(() =>
         {
-            SoundManager.Instance.PlaySe("enter");
+            SoundManager.Instance.PlaySe("back");
 
             changingSelection = true;
 
