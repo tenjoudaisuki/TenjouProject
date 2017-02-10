@@ -39,9 +39,14 @@ public class DoorButton : MonoBehaviour
         mButton.SetActive(false);
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
 
+
+
+        SoundManager.Instance.PlayLoopSe("rumble");
+        SoundManager.Instance.PlayLoopSe("trick");
+
         GameObject.Find("Camera").GetComponent<EventCamera>().SetCompleteAction(
             () => {
-                LeanTween.moveLocalY(mDoor,-0.01f,1.0f).setDelay(1.0f);
+                LeanTween.moveLocalY(mDoor, -0.01f, 1.0f).setDelay(1.0f).setOnComplete(() => { SoundManager.Instance.StopLoopSe(); });
                 LeanTween.alpha(mAura, 0.0f, 1.0f).setOnComplete(() => { Destroy(mAura); }).setDelay(3.0f);
                 mlight.gameObject.SetActive(true);
                 LeanTween.value(0.1f, 8.0f, 1.0f).setOnUpdate((float val) => { mlight.intensity = val; }).setDelay(5.0f);
