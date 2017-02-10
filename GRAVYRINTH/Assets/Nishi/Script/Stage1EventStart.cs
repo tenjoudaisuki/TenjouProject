@@ -5,12 +5,16 @@ public class Stage1EventStart : MonoBehaviour
 {
     public float mWaitTime = 2.0f;
     public GameObject mGoalObject;
+    public GameObject m_FastDrawTexture;
     public GameObject m_DrawTexture;
 
     // Use this for initialization
     void Start()
     {
-
+        if(GameManager.Instance.GetMode() == GameManager.GameMode.GamePlay)
+        {
+            Instantiate(m_FastDrawTexture);
+        }
     }
 
     public void LateUpdate()

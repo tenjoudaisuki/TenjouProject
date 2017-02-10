@@ -16,6 +16,7 @@ public class UIandCameraSync : MonoBehaviour {
     Stage1EventCamera m_StageEventCamera;
     StageEvent m_StageEvent;
 
+    bool m_CameraEventEnd;
 
     System.Action m_CameraAction = ()=> { };
     System.Action m_UIAction = () => { };
@@ -23,6 +24,7 @@ public class UIandCameraSync : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
+        m_CameraEventEnd = false;
         m_StageEvent = GetComponent<StageEvent>();
         m_EventCamera = GameObject.Find("Camera").GetComponent<EventCamera>();
         m_StageEventCamera = GameObject.Find("Camera").GetComponent<Stage1EventCamera>();
@@ -31,18 +33,17 @@ public class UIandCameraSync : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        bool cameraEventEnd = false;
         //イベントカメラがアクティブであるなら
         if(m_EventCamera.isActiveAndEnabled)
         {
-            cameraEventEnd = m_EventCamera.IsCameraMoveEnd();
+            m_CameraEventEnd = m_EventCamera.IsCameraMoveEnd();
         }
-        else
+        if(m_StageEventCamera.isActiveAndEnabled)
         {
-            cameraEventEnd = m_StageEventCamera.IsCameraMoveEnd();
+            m_CameraEventEnd = m_StageEventCamera.IsCameraMoveEnd();
         }
 
-        if (m_StageEvent.IsChanging() || !cameraEventEnd) return;
+        if (m_StageEvent.IsChanging() || !m_CameraEventEnd) return;
 
         if(Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
         {
@@ -59,5 +60,11 @@ public class UIandCameraSync : MonoBehaviour {
     public void SetCameraAction(System.Action action)
     {
         m_CameraAction = action;
+    }
+
+    public void SetIsCameraEvent(bool check)
+    {
+        Debug.Log(check);
+        m_CameraEventEnd = check;
     }
 }
