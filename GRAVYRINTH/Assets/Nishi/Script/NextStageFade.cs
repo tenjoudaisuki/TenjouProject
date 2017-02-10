@@ -85,14 +85,17 @@ public class NextStageFade : MonoBehaviour {
                 else //UI表示モードでない
                 {
                     //ボタンでフェードアウトにする状態である
-                    if(mButtonMode)
+                    if (mButtonMode)
                     {
-                        if(Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
+                        var sync = GameObject.FindObjectOfType<UIandCameraSync>();
+                        if (!sync) return;
+                        sync.SetIsCameraEvent(true);
+                        sync.SetCameraAction(() => 
                         {
                             GameManager.Instance.Reset();
                             mState = FadeMode.FadeOut;
                             mButtonMode = false;
-                        }
+                        });
                     }
                     else
                     {
