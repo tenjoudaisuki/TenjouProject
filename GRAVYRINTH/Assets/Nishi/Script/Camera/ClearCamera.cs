@@ -68,7 +68,7 @@ public class ClearCamera : ICamera {
         if (mTimer > 1)
         {
             mBackVec = -mClearObject.transform.forward * mApproachSpeed;
-            GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance(true);
+            if(GameManager.Instance.GetCurrentSceneName() == "StageF") GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance(true);
             mTimer = 0.0f;
             mState = Mode.Approach;
         }
