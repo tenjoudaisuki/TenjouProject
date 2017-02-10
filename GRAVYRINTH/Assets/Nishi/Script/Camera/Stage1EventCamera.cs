@@ -23,17 +23,13 @@ public class Stage1EventCamera : ICamera {
     public float m_Distance = 2.0f;
     [SerializeField, TooltipAttribute("歩く時間")]
     public float m_WalkTime = 2.0f;
-    //[SerializeField, TooltipAttribute("映すテクスチャ")]
-    //public GameObject m_DrawTexture;
-    //[SerializeField, TooltipAttribute("ステップ2で映すテクスチャが描画にかかる時間")]
-    //public float m_Step2TextureDrawTime = 1.0f;
-    //[SerializeField, TooltipAttribute("ステップ3で映すテクスチャが描画にかかる時間")]
-    //public float m_Step3TextureDrawTime = 1.0f;
     [SerializeField, TooltipAttribute("カメラを回すスピード")]
     public float m_Speed = -15.0f;
-    [SerializeField, TooltipAttribute("中心位置からオフセットする数値")]
-    public Vector3 m_CenterOffsetPosition;
 
+    /// <summary>
+    /// センターオフセット
+    /// </summary>
+    private Vector3 m_CenterOffsetPosition;
     /// <summary>
     /// ゴールのオブジェクト
     /// </summary>
@@ -57,7 +53,7 @@ public class Stage1EventCamera : ICamera {
     /// <summary>
     /// stageのセンター
     /// </summary>
-    private GameObject m_StageCenter;
+    private Transform m_StageCenter;
     /// <summary>
     /// UIとの同期
     /// </summary>
@@ -69,7 +65,7 @@ public class Stage1EventCamera : ICamera {
         m_ButtonEnable = false;
         m_Timer = 0.0f;
         m_CurrentStep = Steps.Step1;
-        m_StageCenter = GameObject.Find("StageCenter");
+        m_StageCenter = GameObject.Find("StageCenter").transform;
         //Instantiate(m_DrawTexture);
         m_SyncSystem = GameObject.FindObjectOfType<UIandCameraSync>();
     }
@@ -95,6 +91,7 @@ public class Stage1EventCamera : ICamera {
         //歩く時間を過ぎたら
         if (m_WalkTime > m_Timer)
         {
+            transform.position = m_StageCenter.position + m_CenterOffsetPosition;
             StepChange(Steps.Step2);
         }
     }
@@ -105,8 +102,10 @@ public class Stage1EventCamera : ICamera {
     void Step2()
     {
         m_Timer += Time.deltaTime;
-        transform.LookAt(m_StageCenter.transform);
-        transform.RotateAround(m_StageCenter.transform.position, Vector3.up, m_Speed * Time.deltaTime);
+        //カメラから中心に向かうベクトル
+        Vector3 sub = m_StageCenter.position - transform.position;
+        transform.localRotation = Quaternion.LookRotation(sub.normalized , m_StageCenter.up);
+        transform.RotateAround(m_StageCenter.transform.position, m_StageCenter.up , m_Speed * Time.deltaTime);
         m_SyncSystem.SetCameraAction(() => { StepChange(Steps.Step3); });
         m_ButtonEnable = true;
     }
@@ -158,6 +157,11 @@ public class Stage1EventCamera : ICamera {
     public bool IsCameraMoveEnd()
     {
         return m_ButtonEnable;
+    }
+
+    public void SetCenterOffset(Vector3 offset)
+    {
+        m_CenterOffsetPosition = offset;
     }
 
 }
