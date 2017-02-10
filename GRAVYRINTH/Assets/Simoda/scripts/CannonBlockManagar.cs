@@ -7,8 +7,10 @@ public class CannonBlockManagar : MonoBehaviour
     private bool isSetAll = false;
     private int setCount = 0;
     private List<CannonBlock> cannonBlocks = new List<CannonBlock>();
+    private int isSetTrueCount = 0;
 
     public bool isDebug = false;
+    public GameObject DrawUI;
 
     void Start()
     {
@@ -40,6 +42,9 @@ public class CannonBlockManagar : MonoBehaviour
     public void IsSetTrue()
     {
         setCount++;
+        isSetTrueCount++;
+        if (isSetTrueCount == 1) return;
+        Instantiate(DrawUI);
     }
 
     public void IsSetFalse()

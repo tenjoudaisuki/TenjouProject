@@ -40,6 +40,8 @@ public class StageFinalClearCollider : MonoBehaviour
 
     public float EventCameraEndTime = 8.0f;
 
+    public GameObject DrawUI;
+
     void Start()
     {
         //オブジェクトの検索
@@ -124,7 +126,7 @@ public class StageFinalClearCollider : MonoBehaviour
             StartCoroutine(DelayMethod(stairPullDownTime * 2.0f, () =>
             {
                 SoundManager.Instance.PlaySe("doom");
-                
+
                 GameObject stairUp3 = m_StairUp.transform.FindChild("object2 (2)").gameObject;
                 LeanTween.move(stairUp3, new Vector3(stairUp3.transform.position.x, stairUp1Y, stairUp3.transform.position.z), stairPullDownTime);
 
@@ -188,6 +190,7 @@ public class StageFinalClearCollider : MonoBehaviour
                         .setOnComplete(() =>
                         {
                             isFlashing = true;
+                            Instantiate(DrawUI);
                         });
               }));
 
