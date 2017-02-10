@@ -125,7 +125,6 @@ public class NotMove : MonoBehaviour
     /// </summary>
     public void SetUpFront(Vector3 up, Vector3 front)
     {
-        print("called");
         //向きを変更
         Quaternion rotate = Quaternion.LookRotation(front, up);
         tr.localRotation = rotate;
