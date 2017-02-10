@@ -22,8 +22,6 @@ public class DangleMove : MonoBehaviour
     //プレイヤーの状態管理クラス
     private PlayerMoveManager m_MoveManager;
 
-    private Vector3 forward;
-
     //アニメーション
     private Animator anm;
 
@@ -104,30 +102,25 @@ public class DangleMove : MonoBehaviour
             //アニメーション
             anm.SetTrigger("Pole_Jump");
 
-            //tr.parent = null;
-            //tr.parent = GameObject.Find("Pausable").transform;
-            //touchIronBar = false;
-
             m_GravityDir.SetDirection(-tr.up);
-            //プレイヤーの向きを更新する
-            //m_MoveManager.SetPlayerUpFront(tr.up, Vector3.Cross(tr.up, Camera.main.transform.right));
-            m_MoveManager.SetPlayerUpFront(tr.up, tr.forward);
-
             //カメラの視点をプレイヤーにする
             GameObject.Find("Camera").GetComponent<CameraControl>().SetTarget(gameObject);
 
             GetComponent<NormalMove>().SetIronBarHitDelay(ironBarHitDelay);
-
             touchIronBar = false;
-
             jumpCursor.IsHit(false);
 
             //プレイヤーの向きを更新する
             //m_MoveManager.SetPlayerUpFront(tr.up, Vector3.Cross(tr.up, Camera.main.transform.right));
-            m_MoveManager.SetPlayerUpFront(tr.up, tr.forward);
+            //m_MoveManager.SetPlayerUpFront(tr.up, tr.forward);
+
             StartCoroutine(DelayMethod(1, () =>
             {
                 m_MoveManager.SetState(PlayerState.NORMAL);
+            }));
+            StartCoroutine(DelayMethod(3, () =>
+            {
+                m_MoveManager.SetPlayerUpFront(tr.up, tr.forward);
             }));
         }
 
@@ -192,11 +185,11 @@ public class DangleMove : MonoBehaviour
         StartCoroutine(DelayMethod(3, () =>
         {
             rb.velocity = Vector3.zero;
-            forward = Vector3.Cross(tr.up, ironBar.GetComponent<IronBar>().GetIronBarVector());
-            Quaternion rotate = Quaternion.LookRotation(-forward, tr.up);
+            Vector3 playerForward = Vector3.Cross(tr.up, ironBar.GetComponent<IronBar>().GetIronBarVector());
+            Quaternion rotate = Quaternion.LookRotation(-playerForward, tr.up);
             tr.localRotation = rotate;
             float angle = 90.0f - Vector3.Angle(tr.up, ironBar.GetComponent<IronBar>().GetIronBarVector());
-            print(angle);
+            //print(angle);
             tr.localRotation *= Quaternion.Euler(0, 0, angle);
         }));
     }
