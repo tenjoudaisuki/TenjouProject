@@ -264,7 +264,7 @@ public class NormalMove : MonoBehaviour
         Ray forward = new Ray(tr.position, tr.forward);
         RaycastHit forwardHitInto;
 
-        Debug.DrawRay(forward.origin, forward.direction * 0.2f, Color.yellow);
+        //Debug.DrawRay(forward.origin, forward.direction * 0.2f, Color.yellow);
 
         int layerMask = 1 << 8;
 
@@ -289,7 +289,7 @@ public class NormalMove : MonoBehaviour
         Ray down = new Ray(tr.position, -tr.up);
         RaycastHit downHitInto;
 
-        Debug.DrawRay(down.origin, down.direction * 0.7f, Color.black);
+        //Debug.DrawRay(down.origin, down.direction * 0.7f, Color.black);
 
         //鉄棒を鉄棒として判定
         if (Physics.BoxCast(down.origin, Vector3.one * m_DangleDownHitSize, down.direction, out downHitInto, tr.localRotation, m_DangleDownRayLength, layerMask, QueryTriggerInteraction.Ignore)
@@ -316,7 +316,7 @@ public class NormalMove : MonoBehaviour
         Ray up = new Ray(tr.position, tr.up);
         RaycastHit upHitInto;
 
-        Debug.DrawRay(up.origin, up.direction * 0.7f, Color.black);
+        //Debug.DrawRay(up.origin, up.direction * 0.7f, Color.black);
 
         //鉄棒を鉄棒として判定
         if (Physics.BoxCast(up.origin, Vector3.one * m_DangleUpHitSize, up.direction, out upHitInto, tr.localRotation, m_DangleUpRayLength, layerMask, QueryTriggerInteraction.Ignore))

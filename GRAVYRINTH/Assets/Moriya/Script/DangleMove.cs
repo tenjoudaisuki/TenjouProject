@@ -105,6 +105,7 @@ public class DangleMove : MonoBehaviour
             m_GravityDir.SetDirection(-tr.up);
             //カメラの視点をプレイヤーにする
             GameObject.Find("Camera").GetComponent<CameraControl>().SetTarget(gameObject);
+            m_MoveManager.SetPlayerUpFront(tr.up, tr.forward);
 
             GetComponent<NormalMove>().SetIronBarHitDelay(ironBarHitDelay);
             touchIronBar = false;
