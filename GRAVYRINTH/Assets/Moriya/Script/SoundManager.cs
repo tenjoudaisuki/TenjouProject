@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class SoundManager : SingletonMonoBehaviour<SoundManager>
 {
     public SoundVolume volume = new SoundVolume();
+    public VolumeSetting[] seVolumeSettings;
 
     private AudioClip[] seClips;
     private AudioClip[] bgmClips;
@@ -15,8 +16,10 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     const int cNumChannel = 16;
     private AudioSource bgmSource;
     private AudioSource[] seSources = new AudioSource[cNumChannel];
+    private AudioSource[] loopSeSources = new AudioSource[cNumChannel];
 
     Queue<int> seRequestQueue = new Queue<int>();
+    Queue<int> loopSeRequestQueue = new Queue<int>();
 
     void Awake()
     {
@@ -32,6 +35,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         for (int i = 0; i < seSources.Length; i++)
         {
             seSources[i] = gameObject.AddComponent<AudioSource>();
+            loopSeSources[i] = gameObject.AddComponent<AudioSource>();
         }
 
         seClips = Resources.LoadAll<AudioClip>("SE");
@@ -61,12 +65,21 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         {
             source.mute = volume.mute;
         }
-
-        bgmSource.volume = volume.bgm;
-        foreach (var source in seSources)
+        foreach (var source in loopSeSources)
         {
-            source.volume = volume.se;
+            source.mute = volume.mute;
         }
+
+        //音量設定
+        bgmSource.volume = volume.bgm;
+        //foreach (var source in seSources)
+        //{
+        //    source.volume = volume.se;
+        //}
+        //foreach (var source in loopSeSources)
+        //{
+        //    source.volume = volume.se;
+        //}
 
         int count = seRequestQueue.Count;
         if (count != 0)
@@ -74,8 +87,12 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             int sound_index = seRequestQueue.Dequeue();
             playSeImpl(sound_index);
         }
-
-        SEVolumeCustom();
+        count = loopSeRequestQueue.Count;
+        if (count != 0)
+        {
+            int sound_index = loopSeRequestQueue.Dequeue();
+            playLoopSeImpl(sound_index);
+        }
     }
 
     
@@ -88,20 +105,49 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         foreach (AudioSource source in seSources)
         {
-            if (false == source.isPlaying)
+            if (!source.isPlaying)
             {
                 source.clip = seClips[index];
+                source.loop = false;
+                source.name = seClips[index].name;
+                //音量をセットして再生
+                source.volume = volume.se;
+                foreach (var setting in seVolumeSettings)
+                {
+                    if (source.name == setting.name)
+                        source.volume = setting.volume;
+                }
                 source.Play();
                 return;
             }
         }
     }
 
-    //SEの音量を個別に指定
-    private void SEVolumeCustom()
+    private void playLoopSeImpl(int index)
     {
-        //seClips[17]. = 0.0f;
-        //seSources.
+        if (0 > index || seClips.Length <= index)
+        {
+            return;
+        }
+
+        foreach (AudioSource source in loopSeSources)
+        {
+            if (false == source.isPlaying)
+            {
+                source.clip = seClips[index];
+                source.loop = true;
+                source.name = seClips[index].name;
+                //音量をセットして再生
+                source.volume = volume.se;
+                foreach (var setting in seVolumeSettings)
+                {
+                    if (source.name == setting.name)
+                        source.volume = setting.volume;
+                }
+                source.Play();
+                return;
+            }
+        }
     }
     
     public int GetSeIndex(string name)
@@ -163,7 +209,21 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
     }
 
+    public void PlayLoopSe(string name)
+    {
+        PlayLoopSe(GetSeIndex(name));
+    }
+
+    public void PlayLoopSe(int index)
+    {
+        if (!loopSeRequestQueue.Contains(index))
+        {
+            loopSeRequestQueue.Enqueue(index);
+        }
+    }
+
     
+    //すべてのSeを止める
     public void StopSe()
     {
         ClearAllSeRequest();
@@ -174,10 +234,47 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
     }
 
-    
+    //一部のSeを止める
+    public void StopSe(string stopname)
+    {
+        foreach (AudioSource source in seSources)
+        {
+            if (source.name == stopname)
+            source.Stop();
+            source.clip = null;
+        }
+    }
+
+    //すべてのLoopSeを止める
+    public void StopLoopSe()
+    {
+        ClearAllLoopSeRequest();
+        foreach (AudioSource source in loopSeSources)
+        {
+            source.Stop();
+            source.clip = null;
+        }
+    }
+
+    //一部のLoopSeを止める
+    public void StopLoopSe(string stopname)
+    {
+        foreach (AudioSource source in loopSeSources)
+        {
+            if (source.name == stopname)
+                source.Stop();
+            source.clip = null;
+        }
+    }
+
     public void ClearAllSeRequest()
     {
         seRequestQueue.Clear();
+    }
+
+    public void ClearAllLoopSeRequest()
+    {
+        loopSeRequestQueue.Clear();
     }
 
     public AudioSource GetBGMSource()
