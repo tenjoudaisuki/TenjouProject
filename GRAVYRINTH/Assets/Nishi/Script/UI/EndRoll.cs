@@ -17,11 +17,11 @@ public class EndRoll : MonoBehaviour {
     [SerializeField, TooltipAttribute("エンドロールが開始する時間")]
     public float mDelay;
     [SerializeField, TooltipAttribute("フェードインの時間 スロー中なので小さくして")]
-    public float mFadeInTime = 0.3f;
+    public float[] mFadeInTime;
     [SerializeField, TooltipAttribute("フェードアウトの時間　スロー中なので小さくして")]
-    public float mFadeOutTime = 0.3f;
+    public float[] mFadeOutTime;
     [SerializeField, TooltipAttribute("文字が生きている時間　スロー中なので小さくして")]
-    public float mAliveTime = 0.8f;
+    public float[] mAliveTime;
 
 
     // Use this for initialization
@@ -46,17 +46,17 @@ public class EndRoll : MonoBehaviour {
     //エンドロール処理
     void TextEffect()
     {
-        LeanTween.alpha(mCurrentImage.rectTransform, 1.0f, mFadeInTime)
+        LeanTween.alpha(mCurrentImage.rectTransform, 1.0f, mFadeInTime[mIndex])
         .setOnComplete(()=>
         {
             mIndex++;
-            LeanTween.alpha(mCurrentImage.rectTransform, 0.0f, mFadeOutTime)
+            LeanTween.alpha(mCurrentImage.rectTransform, 0.0f, mFadeOutTime[mIndex])
             .setOnComplete(() => 
             {
                 Destroy(mCurrentImage.gameObject);
                 if (mIndex < mTexts.Length) TextCreate();
             }
-            ).setDelay(mAliveTime);
+            ).setDelay(mAliveTime[mIndex]);
         }
         );
     }
