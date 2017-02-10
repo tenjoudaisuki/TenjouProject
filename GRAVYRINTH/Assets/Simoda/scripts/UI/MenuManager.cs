@@ -904,7 +904,6 @@ public class MenuManager : MonoBehaviour
                     //ステージ１～４
                     bgmctrl.Stage1_4Selected();
                 }
-
             }));
         });
     }

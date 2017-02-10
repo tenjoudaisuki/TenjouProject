@@ -69,6 +69,9 @@ public class PauseMenu : MonoBehaviour
     //メニューの項目を変更中かどうか
     private bool changingSelection = true;
 
+    //BGM変更用
+    private BGMControl bgmctrl;
+
     void Start()
     {
         //Menuシーン（自身のシーン）を検索
@@ -94,6 +97,8 @@ public class PauseMenu : MonoBehaviour
 
         //実際に描画されるステージ番号の配列を登録
         drawingStageNumbars = new int[] { 0, 1, 2, 3, 4, 11 };
+
+        bgmctrl = GameObject.Find("BGMControl").GetComponent<BGMControl>();
     }
 
     void Update()
@@ -189,12 +194,12 @@ public class PauseMenu : MonoBehaviour
         //メニューの項目を変更中ならば処理しない
         if (changingSelection == true) return;
 
-        if (Input.GetButtonDown("Submit"))
+        if (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
         {
             input.Submit();
         }
 
-        if (Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("PS4_Cross") || Input.GetKeyDown(KeyCode.Backspace))
         {
             input.Cancel();
         }
@@ -407,10 +412,21 @@ public class PauseMenu : MonoBehaviour
     {
         if (changingSelection == true) return;
 
+        if (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
+        {
+            input.Submit();
+        }
+
+        if (Input.GetButtonDown("PS4_Cross") || Input.GetKeyDown(KeyCode.Backspace))
+        {
+            input.Cancel();
+        }
+
         input.UpAction(() =>
         {
             //現在選択されている項目がbackの時のみ処理
             if (EventSystem.current.currentSelectedGameObject != stageSelectBack.gameObject) return;
+            SoundManager.Instance.PlaySe("select");
 
             //メニューの項目を更新
             EventSystem.current.SetSelectedGameObject(
@@ -440,6 +456,7 @@ public class PauseMenu : MonoBehaviour
         {
             //現在選択されている項目がback以外の時のみ処理
             if (EventSystem.current.currentSelectedGameObject == stageSelectBack.gameObject) return;
+            SoundManager.Instance.PlaySe("select");
 
             //メニューの項目を更新
             EventSystem.current.SetSelectedGameObject(
@@ -469,6 +486,7 @@ public class PauseMenu : MonoBehaviour
         {
             //現在選択されている項目がback以外の時のみ処理
             if (EventSystem.current.currentSelectedGameObject == stageSelectBack.gameObject) return;
+            SoundManager.Instance.PlaySe("select");
 
             changingSelection = true;
 
@@ -498,6 +516,7 @@ public class PauseMenu : MonoBehaviour
         {
             //現在選択されている項目がback以外の時のみ処理
             if (EventSystem.current.currentSelectedGameObject == stageSelectBack.gameObject) return;
+            SoundManager.Instance.PlaySe("select");
 
             changingSelection = true;
 
@@ -522,16 +541,6 @@ public class PauseMenu : MonoBehaviour
                     ArrowAlpha();
                 });
         });
-
-        if (Input.GetButtonDown("Submit"))
-        {
-            input.Submit();
-        }
-
-        if (Input.GetButtonDown("Cancel"))
-        {
-            input.Cancel();
-        }
     }
 
     private void StageNumbarInitialize(int numbar)
@@ -713,12 +722,12 @@ public class PauseMenu : MonoBehaviour
 
         StartCoroutine(DelayMethod(1, () =>
         {
-            if (Input.GetButtonDown("Submit"))
+            if (Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
             {
                 input.Submit();
             }
 
-            if (Input.GetButtonDown("Cancel"))
+            if (Input.GetButtonDown("PS4_Cross") || Input.GetKeyDown(KeyCode.Backspace))
             {
                 input.Cancel();
             }
@@ -835,8 +844,9 @@ public class PauseMenu : MonoBehaviour
             StartCoroutine(DelayMethod(1.1f, () =>
             {
                 GameManager.Instance.Pause(false);
-                Destroy(gameObject);
                 GameManager.Instance.GameModeChange(GameManager.GameMode.Title);
+                SoundManager.Instance.PlayBgm("title");
+                Destroy(gameObject);
             }));
         });
     }
@@ -928,6 +938,23 @@ public class PauseMenu : MonoBehaviour
                 GameObject.FindGameObjectWithTag("Fade").GetComponent<FadeFactory>().FadeInstance(Color.white, 1.0f);
                 GameManager.Instance.GameModeChange(GameManager.GameMode.GamePlay);
                 GameManager.Instance.Pause(false);
+                SoundManager.Instance.StopBgm();
+                if (stageNumber == 5)
+                {
+                    //最終ステージ
+                    bgmctrl.StageFinalSelected();
+                }
+                else if (stageNumber == 0)
+                {
+                    //チュートリアルステージ
+                    bgmctrl.StartGameSelected();
+                }
+                else
+                {
+                    //ステージ１～４
+                    bgmctrl.Stage1_4Selected();
+                }
+
                 Destroy(gameObject);
             }));
         });

@@ -112,7 +112,6 @@ public class DangleMove : MonoBehaviour
             //プレイヤーの向きを更新する
             //m_MoveManager.SetPlayerUpFront(tr.up, Vector3.Cross(tr.up, Camera.main.transform.right));
             m_MoveManager.SetPlayerUpFront(tr.up, tr.forward);
-            //rb.AddForce(-tr.up * 200.0f);
 
             //カメラの視点をプレイヤーにする
             GameObject.Find("Camera").GetComponent<CameraControl>().SetTarget(gameObject);
@@ -123,13 +122,12 @@ public class DangleMove : MonoBehaviour
 
             jumpCursor.IsHit(false);
 
-            //CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
-            //col.enabled = true;
-
-            m_MoveManager.SetState(PlayerState.NORMAL);
+            //プレイヤーの向きを更新する
+            //m_MoveManager.SetPlayerUpFront(tr.up, Vector3.Cross(tr.up, Camera.main.transform.right));
+            m_MoveManager.SetPlayerUpFront(tr.up, tr.forward);
             StartCoroutine(DelayMethod(1, () =>
             {
-                m_MoveManager.SetPlayerUpFront(tr.up, tr.forward);
+                m_MoveManager.SetState(PlayerState.NORMAL);
             }));
         }
 
@@ -191,8 +189,9 @@ public class DangleMove : MonoBehaviour
         //    tr.localRotation = rotate;
         //}));
 
-        StartCoroutine(DelayMethod(2, () =>
+        StartCoroutine(DelayMethod(3, () =>
         {
+            rb.velocity = Vector3.zero;
             forward = Vector3.Cross(tr.up, ironBar.GetComponent<IronBar>().GetIronBarVector());
             Quaternion rotate = Quaternion.LookRotation(-forward, tr.up);
             tr.localRotation = rotate;
