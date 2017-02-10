@@ -195,6 +195,9 @@ public class DangleMove : MonoBehaviour
             forward = Vector3.Cross(tr.up, ironBar.GetComponent<IronBar>().GetIronBarVector());
             Quaternion rotate = Quaternion.LookRotation(-forward, tr.up);
             tr.localRotation = rotate;
+            float angle = 90.0f - Vector3.Angle(tr.up, ironBar.GetComponent<IronBar>().GetIronBarVector());
+            print(angle);
+            tr.localRotation *= Quaternion.Euler(0, 0, angle);
         }));
     }
 
