@@ -106,7 +106,16 @@ public class Stage1EventCamera : ICamera {
         Vector3 sub = m_StageCenter.position - transform.position;
         transform.localRotation = Quaternion.LookRotation(sub.normalized , m_StageCenter.up);
         transform.RotateAround(m_StageCenter.transform.position, m_StageCenter.up , m_Speed * Time.deltaTime);
-        m_SyncSystem.SetCameraAction(() => { StepChange(Steps.Step3); });
+        if (!m_ButtonEnable)
+        {
+            m_SyncSystem.SetCameraAction(() =>
+            {
+                StartCoroutine(DelayMethod(1.0f, () => {
+                    StepChange(Steps.Step3);
+                    m_ButtonEnable = false;
+                }));
+            });
+        }
         m_ButtonEnable = true;
     }
 
@@ -118,7 +127,7 @@ public class Stage1EventCamera : ICamera {
         m_Timer += Time.deltaTime;
         transform.position = m_GoalObject.transform.position;
         transform.localRotation = m_GoalObject.transform.localRotation;
-        m_SyncSystem.SetCameraAction(() => { StepChange(Steps.Step4); });
+        m_SyncSystem.SetCameraAction(() => { StepChange(Steps.Step4); m_ButtonEnable = false; });
         m_ButtonEnable = true;
     }
 
@@ -162,6 +171,19 @@ public class Stage1EventCamera : ICamera {
     public void SetCenterOffset(Vector3 offset)
     {
         m_CenterOffsetPosition = offset;
+    }
+
+    /// <summary>
+    /// 渡された処理を指定時間後に実行する
+    /// </summary>
+    /// <param name="delayFrameCount"></param>
+    /// <param name="action">実行したい処理</param>
+    /// <returns></returns>
+    private IEnumerator DelayMethod(float delayFrameCount, System.Action action)
+    {
+
+        yield return new WaitForSeconds(delayFrameCount);
+        action();
     }
 
 }

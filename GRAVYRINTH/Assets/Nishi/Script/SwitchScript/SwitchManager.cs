@@ -7,7 +7,8 @@ public class SwitchManager : MonoBehaviour
     public GameObject mCameraPos;
 
     public DoorButton[] mDoorButtons;
-    public GameObject mFinalDoor; 
+    public GameObject mFinalDoor;
+    public GameObject mEventUI;
     bool isActive;
 
     public float mOpenTime = 5.0f;
@@ -39,10 +40,12 @@ public class SwitchManager : MonoBehaviour
     {
         if(isActive && other.tag == "Player")
         {
+            Instantiate(mEventUI);
             //ゴゴゴと扉が開く音
             SoundManager.Instance.PlayLoopSe("rumble");
             GameObject.Find("Camera").GetComponent<EventCamera>().SetMoveTime(2.0f);
-            GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(3.0f);
+            GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(0.0f);
+            GameObject.Find("Camera").GetComponent<EventCamera>().SetBotton(true);
             GameObject.Find("Camera").GetComponent<EventCamera>().SetTarget(mCameraPos);
 
             GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Event);

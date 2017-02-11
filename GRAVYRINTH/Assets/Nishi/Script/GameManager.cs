@@ -212,6 +212,7 @@ public class GameManager : MonoBehaviour
                 GameObject player = GameObject.Find("Player");
                 player.GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
                 GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.GamePlay);
+                GameObject.Find("Camera").GetComponent<CameraManager>().CameraWarp();
                 ; break;
         }
     }

@@ -346,7 +346,7 @@ public class CameraControl : ICamera
         CameraPosDirection = -m_Target.forward;
         CameraMove();
         //カメラを回転させる
-        transform.localRotation = Quaternion.LookRotation((m_Target.position + offset) - transform.position, m_Target.up);
+        transform.localRotation = Quaternion.LookRotation(-CameraPosDirection, m_Target.up);
         XAxisTotal = 0;
     }
 
@@ -370,5 +370,11 @@ public class CameraControl : ICamera
     public float GetHorizontalInput()
     {
         return m_Horizontal;
+    }
+
+    public override void Warp()
+    {
+        CameraReset();
+        mCurrentState = State.Normal;
     }
 }

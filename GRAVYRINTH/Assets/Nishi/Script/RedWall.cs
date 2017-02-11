@@ -6,6 +6,8 @@ public class RedWall : MonoBehaviour
 
     GameObject mTarget;
     public GameObject mRedWall;
+    public GameObject mEventUi;
+    private GameObject mCurrentUI;
 
     public void Start()
     {
@@ -31,6 +33,7 @@ public class RedWall : MonoBehaviour
             Debug.Log(Vector3.Angle(transform.forward, dir));
             if (Vector3.Angle(transform.forward, dir) < 30)
             {
+                if(!mCurrentUI) mCurrentUI = (GameObject)Instantiate(mEventUi);
                 Vector3 position = other.gameObject.transform.position + (-Vector3.forward * 10);
                 GameObject.Find("GravityDirection").GetComponent<GravityDirection>().SetDirection(-Vector3.up);
                 other.gameObject.GetComponent<NormalMove>().Respawn(position, transform.up, -transform.forward);

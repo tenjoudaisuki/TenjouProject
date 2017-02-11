@@ -8,13 +8,17 @@ public class DoorButton : MonoBehaviour
     public GameObject mButton;
     public GameObject mAura;
     public GameObject mDoor;
+    static int mCount = 0;
     public Light mlight;
+
+    public GameObject[] mEventUIs;
 
     private bool isDown = false;
 
     // Use this for initialization
     void Start()
     {
+        mCount = 0;
         isDown = false;
     }
 
@@ -31,14 +35,15 @@ public class DoorButton : MonoBehaviour
         SoundManager.Instance.PlaySe("switch");
 
         GameObject.Find("Camera").GetComponent<EventCamera>().SetMoveTime(2.0f);
-        GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(3.0f);
+        GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(0.0f);
+        GameObject.Find("Camera").GetComponent<EventCamera>().SetBotton(true);
         GameObject.Find("Camera").GetComponent<EventCamera>().SetTarget(mCameraPos);
 
         StartCoroutine(DelayMethod(0.5f, () => { GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Event); }));
 
         mButton.SetActive(false);
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
-
+        Instantiate(mEventUIs[mCount]);
 
 
         SoundManager.Instance.PlayLoopSe("rumble");
