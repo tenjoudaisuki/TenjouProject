@@ -84,6 +84,9 @@ public class PlayerMoveManager : MonoBehaviour
         m_PrevPlayerState = m_PlayerState;
         m_PlayerState = state;
 
+        //同じ状態への変更は行わない
+        if (m_PrevPlayerState == m_PlayerState) return;
+
         //特定の変更時に行う処理
         //ＡＮＹ→ＮＯＮＥへの変更時
         if (m_PlayerState == PlayerState.NONE)

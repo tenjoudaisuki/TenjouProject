@@ -162,6 +162,8 @@ public class StageFinalClearMove : MonoBehaviour
                 //rigidbodyによるrotateの変更のみを封じる
                 rb.constraints = RigidbodyConstraints.None;
                 rb.constraints = RigidbodyConstraints.FreezeRotation;
+                //モデルの位置をもどす
+                tr.FindChild("21.!Root").localPosition = Vector3.zero;
                 yield break;
             }
 
