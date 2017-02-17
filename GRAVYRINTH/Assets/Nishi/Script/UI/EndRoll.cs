@@ -49,7 +49,6 @@ public class EndRoll : MonoBehaviour {
         LeanTween.alpha(mCurrentImage.rectTransform, 1.0f, mFadeInTime[mIndex])
         .setOnComplete(()=>
         {
-            mIndex++;
             LeanTween.alpha(mCurrentImage.rectTransform, 0.0f, mFadeOutTime[mIndex])
             .setOnComplete(() => 
             {
@@ -57,6 +56,7 @@ public class EndRoll : MonoBehaviour {
                 if (mIndex < mTexts.Length) TextCreate();
             }
             ).setDelay(mAliveTime[mIndex]);
+            mIndex++;
         }
         );
     }
