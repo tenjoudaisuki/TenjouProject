@@ -57,7 +57,8 @@ public class NotMove : MonoBehaviour
         //当たった地点に移動
         tr.position = m_GroundHitInfo.hit.point;
         //上方向を当たった平面の法線方向に変更
-        tr.up = m_GroundHitInfo.hit.normal.normalized;
+        SetUpFront(m_GroundHitInfo.hit.normal.normalized, tr.forward);
+        //tr.up = m_GroundHitInfo.hit.normal.normalized;
 
         //ヒットした相手のトランスフォーム
         Transform hitTr = m_GroundHitInfo.hit.transform;
