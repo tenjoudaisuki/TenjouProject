@@ -62,6 +62,8 @@ public class Stage1EventCamera : ICamera {
     // Use this for initialization
     public override void Start ()
     {
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
+        GameManager.Instance.SetPausePossible(false);
         m_ButtonEnable = false;
         m_Timer = 0.0f;
         m_CurrentStep = Steps.Step1;
