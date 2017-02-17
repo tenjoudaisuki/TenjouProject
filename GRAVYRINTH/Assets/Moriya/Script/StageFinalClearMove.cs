@@ -159,6 +159,9 @@ public class StageFinalClearMove : MonoBehaviour
             if (timer > m_FlyEndTime)
             {
                 StopMove();
+                //rigidbodyによるrotateの変更のみを封じる
+                rb.constraints = RigidbodyConstraints.None;
+                rb.constraints = RigidbodyConstraints.FreezeRotation;
                 yield break;
             }
 
