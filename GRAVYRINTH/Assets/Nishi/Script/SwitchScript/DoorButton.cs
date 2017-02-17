@@ -42,7 +42,8 @@ public class DoorButton : MonoBehaviour
         StartCoroutine(DelayMethod(0.5f, () => { GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Event); }));
 
         mButton.SetActive(false);
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
+        //GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetEventInputDisable(true);
         Instantiate(mEventUIs[mCount]);
 
 

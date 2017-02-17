@@ -4,7 +4,7 @@ public enum PlayerState
 {
     NONE = 0,
     NORMAL,     //通常時
-    NOT_MOVE,   //移動しないで重力に従う
+    //NOT_MOVE,   //移動しないで重力に従う
     //JUMP,     //ジャンプ中、通常時にジャンプ時の処理を書いて、この状態は使わない方針
     ROLL,       //丸まり中
     IRON_BAR_DANGLE,    //鉄棒ぶら下がり
