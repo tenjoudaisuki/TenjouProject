@@ -161,10 +161,12 @@ public class CrimbMove : MonoBehaviour
             SoundManager.Instance.PlaySe("jump");
             poleDownTimeCount = 0.0f;
 
-            //tr.parent = null;
-            //tr.parent = GameObject.Find("Pausable").transform;
             //背面斜め上方向に方向にジャンプする
-            m_MoveManager.PlayerPoleKick(Vector3.Normalize(-tr.forward + tr.up));
+            Vector3 poleKickVec = Vector3.Normalize(-tr.forward + tr.up);
+            StartCoroutine(DelayMethod(2, () =>
+            {
+                m_MoveManager.PlayerPoleKick(poleKickVec);
+            }));
 
             GetComponent<NormalMove>().SetIronBarHitDelay(ironBarHitDelay);
 
