@@ -464,16 +464,6 @@ public class NormalMove : MonoBehaviour
             }
         }
 
-        //ブロック移動ボタンを押した瞬間
-        if (Input.GetButtonDown("Action"))
-        {
-            m_MoveVelocity = Vector3.zero;
-            SoundManager.Instance.PlaySe("block");
-        }    
-        Vector3 prev = m_MoveVelocity;
-        //前ベクトル×スティックの傾き×移動速度
-        m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_LastSpeed;
-
         //ブロックが近くになかったらnullを設定
         if (m_CollisionBlock != null
             && m_CollisionBlock.GetPushDistance() < Vector3.Distance(tr.position, m_CollisionBlock.gameObject.transform.position))
@@ -484,6 +474,16 @@ public class NormalMove : MonoBehaviour
         //ブロック移動ボタンを押していて、かつブロックが近くにある時
         if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true)
         {
+            //ブロック移動ボタンを押した瞬間
+            if (Input.GetButtonDown("Action"))
+            {
+                m_MoveVelocity = Vector3.zero;
+                SoundManager.Instance.PlaySe("block");
+            }
+            Vector3 prev = m_MoveVelocity;
+            //前ベクトル×スティックの傾き×移動速度
+            m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_LastSpeed;
+
             //アニメーション
             anm.SetBool("Block", true);
 
@@ -575,6 +575,9 @@ public class NormalMove : MonoBehaviour
         //通常時
         else
         {
+            //前ベクトル×スティックの傾き×移動速度
+            m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_LastSpeed;
+
             if (Input.GetButtonUp("Action"))
                 SoundManager.Instance.StopLoopSe();
 
