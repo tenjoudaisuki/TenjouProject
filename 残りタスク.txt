@@ -24,13 +24,9 @@ finaldoor ‚ÌŽž‚ÌƒCƒxƒ“ƒgƒJƒƒ‰‚ÍAƒJƒƒ‰‚ª–Ú•W’n“_‚É“ž’…‚µ‚Ä‚©‚çfinaldoor‚ªŠJ‚«‚
 
 ƒƒjƒ…[‚Å¶ƒXƒeƒBƒbƒN‚Æ\ŽšƒL[—¼•û‚Å‘I‚×‚é‚æ‚¤‚É‚·‚é
 
-ƒXƒe[ƒW‚ªØ‚è‘Ö‚í‚éŽžAƒJƒƒ‰‰ŠúˆÊ’u‚É’…‚¢‚Ä‚©‚çƒtƒFƒCƒhƒCƒ“‚·‚é‚æ‚¤‚É‚µ‚Ä‚Ù‚µ‚¢istart game‚ð‘I‘ð‚µ‚½ŽžˆÈŠOj
-
 ‘å–C‚ªŠ®¬‚µ‚½Žž‚ÉƒvƒŒƒCƒ„[‚ª‘å–C‚É‚­‚Á‚Â‚­‚æ‚¤‚É‚·‚é
 
 •Ç‚ÉŽÎ‚ß‚É“–‚½‚é‚Æi‚ß‚È‚­‚È‚é‚¯‚Ç‚ä‚Á‚­‚èi‚ß‚é‚æ‚¤‚É‚µ‚Ä‚Ù‚µ‚¢
-
-‚Ô‚ç‰º‚ª‚è‚ÅƒJƒƒ‰‚ª^ã‚â^‰º‚É—ˆ‚½Žž‚Éù‰ñ‚Å‚«‚È‚¢
 
 ‚æ‚¶‚Ì‚Ú‚è‚ÅƒJƒƒ‰‚ªÅ‰‚ÌˆÊ’u‚És‚­ŽžAƒvƒŒƒCƒ„[‚ð’†S‚É‰ñ“]‚µ‚Ä‚Ù‚µ‚¢
 
@@ -80,11 +76,7 @@ finaldoor‚É‚¿‚á‚ñ‚Æ‚Æ‚­‚Á‚Â‚©‚È‚¢Žž‚ª‚ ‚éiª‚Æ“¯‚¶Œ´ˆö‚©‚ÈHj
 
 ƒJƒƒ‰‚ðŠ®‘S‚É’n–Ê‚É‚ß‚èž‚Ü‚È‚¢‚æ‚¤‚É‚µ‚Ä‚Ù‚µ‚¢
 
-ƒ|[ƒY‰æ–Ê‚©‚çƒ^ƒCƒgƒ‹–ß‚é‚Æƒ^ƒCƒgƒ‹ƒXƒe[ƒW‚ÉƒvƒŒƒCƒ„[‚ª‚¢‚ÄƒJƒƒ‰‚à‚»‚Á‚¿Œ©‚¿‚á‚¤‚µƒJƒƒ‰‚à‘€ì‚Å‚«‚¿‚á‚¤
-
 “S–_“o‚Á‚Ä‚éŽž‚Æ‚Ô‚ç‰º‚ª‚Á‚Ä‚éŽž‚ÉƒCƒxƒ“ƒg”­¶‚·‚é‚Æ—Ž‚¿‚¿‚á‚¤
-
-ƒ|[ƒY‰æ–Ê’†‚ÉŽžŠÔ§‚ÌƒCƒxƒ“ƒg‚ª”­¶‚µ‚¿‚á‚¤
 
 ƒuƒƒbƒN‚É‹ß‚Ã‚­‘O‚©‚ç’Í‚Ýƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚½‚Ü‚ÜƒuƒƒbƒN‚ð‰Ÿ‚·‚ÆƒvƒŒƒCƒ„[‚ªƒuƒƒbƒN‚ÉŒÅ’è‚³‚ê‚È‚¢Ž–‚ª‚ ‚é
 
