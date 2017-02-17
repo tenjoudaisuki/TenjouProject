@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Block : MonoBehaviour
+public class Block_Save : MonoBehaviour
 {
     private BlockCursorDraw cursorDraw;
     private GameObject blockCursorPrefab;
@@ -80,12 +80,18 @@ public class Block : MonoBehaviour
         if (hitInto.collider.gameObject != gameObject) return;
 
         Vector3 length = tr.position - hitInto.point;
+
+        //print(a.magnitude);
         pushDistance = length.magnitude + pushDistancePlus;
+
+        //pushDistance = Vector3.Distance(tr.position, GetPlayerDirection().point) + pushDistancePlus;
+
         float currentDistance = Vector3.Distance(tr.position, player.position + offset);
 
         if (currentDistance > pushDistance)
         {
             isPush = false;
+            //player.GetComponent<NormalMove>().SetCollisionBlock(null);
         }
         else player.GetComponent<NormalMove>().SetCollisionBlock(gameObject);
 
@@ -104,49 +110,49 @@ public class Block : MonoBehaviour
         //Scaleの補正値
         float scaleCorrect = -0.1f;
 
-        //Blockの各方向のSizeを取得
         float xDistance = Vector3.Distance(tr.position, tr.FindChild("x").position);
         float yDistance = Vector3.Distance(tr.position, tr.FindChild("y").position);
         float zDistance = Vector3.Distance(tr.position, tr.FindChild("z").position);
 
-        //float xDistanceBox = 0;
-        //float yDistanceBox = 0;
-        //float zDistanceBox = 0;
+        float xDistanceBox = 0;
+        float yDistanceBox = 0;
+        float zDistanceBox = 0;
 
-        //if (-GetPlayerDirection().normal == tr.right || -GetPlayerDirection().normal == -tr.right)
-        //{
-        //    xDistanceBox = xDistance / 15;
-        //    yDistanceBox = yDistance;
-        //    zDistanceBox = zDistance;
-        //}
+        if (-GetPlayerDirection().normal == tr.right || -GetPlayerDirection().normal == -tr.right)
+        {
+            xDistanceBox = xDistance / 10;
+            yDistanceBox = yDistance;
+            zDistanceBox = zDistance;
+        }
 
-        //if (-GetPlayerDirection().normal == tr.up || -GetPlayerDirection().normal == -tr.up)
-        //{
-        //    distanceToWall = yDistance;
+        if (-GetPlayerDirection().normal == tr.up || -GetPlayerDirection().normal == -tr.up)
+        {
+            distanceToWall = yDistance;
 
-        //    xDistanceBox = xDistance;
-        //    yDistanceBox = yDistance / 15;
-        //    zDistanceBox = zDistance;
-        //}
+            xDistanceBox = xDistance;
+            yDistanceBox = yDistance / 10;
+            zDistanceBox = zDistance;
+        }
 
-        //if (-GetPlayerDirection().normal == tr.forward || -GetPlayerDirection().normal == -tr.forward)
-        //{
-        //    distanceToWall = zDistance;
+        if (-GetPlayerDirection().normal == tr.forward || -GetPlayerDirection().normal == -tr.forward)
+        {
+            distanceToWall = zDistance;
 
-        //    xDistanceBox = xDistance;
-        //    yDistanceBox = yDistance;
-        //    zDistanceBox = zDistance / 15;
-        //}
+            xDistanceBox = xDistance;
+            yDistanceBox = yDistance;
+            zDistanceBox = zDistance / 10;
+        }
 
-        //int layermask = ~(1 << LayerMask.NameToLayer("IgnoredObj") | 1 << LayerMask.NameToLayer("Player") | LayerMask.NameToLayer("StopWall"));
-        //Vector3 boxPos = tr.position + -GetPlayerDirection().normal * (distanceToWall + 0.025f);
-        //if (Physics.CheckBox(boxPos, new Vector3(xDistanceBox, yDistanceBox, zDistanceBox), tr.rotation, layermask, QueryTriggerInteraction.Ignore))
-        //{
-        //    tr.position += GetPlayerDirection().normal * Time.deltaTime;
-        //    return;
-        //}
+        int layermask = ~(1 << LayerMask.NameToLayer("IgnoredObj") | 1 << LayerMask.NameToLayer("Player") | LayerMask.NameToLayer("StopWall"));
+        Vector3 boxPos = tr.position + -GetPlayerDirection().normal * (distanceToWall + 0.1f);
+        if (Physics.CheckBox(boxPos, new Vector3(xDistanceBox, yDistanceBox, zDistanceBox), tr.rotation, layermask, QueryTriggerInteraction.Ignore))
+        {
+            tr.position += GetPlayerDirection().normal * Time.deltaTime;
+            return;
+        }
 
-        //プレイヤーとの方向によってdistanceToWallを変更
+        //print(-GetPlayerDirection().normal + ":::" + tr.right + ":::" + tr.up + ":::" + tr.forward);
+
         if (-GetPlayerDirection().normal == tr.right || -GetPlayerDirection().normal == -tr.right)
         {
             distanceToWall = xDistance;
@@ -177,12 +183,22 @@ public class Block : MonoBehaviour
                 scale = new Vector3(0, yDistance + scaleCorrect, 0);
         }
 
-        //Ray当たり判定を行う時の値の準備
         RaycastHit hitInto;
-        distanceToWall += distanceToWallPlus;
-        int layermask = 1 << LayerMask.NameToLayer("StopWall");
+        //Ray forward_Center = new Ray(tr.position, -GetPlayerDirection().normal);
+        //Ray forward_Up = new Ray(tr.position + scale, -GetPlayerDirection().normal);
+        //Ray forward_Down = new Ray(tr.position - scale, -GetPlayerDirection().normal);
 
-        //Rayで壁と判定　StopWallのみ
+        //Ray back_Center = new Ray(tr.position, GetPlayerDirection().normal);
+        //Ray back_Up = new Ray(tr.position + scale, GetPlayerDirection().normal);
+        //Ray back_Down = new Ray(tr.position - scale, GetPlayerDirection().normal);
+
+        //Ray[] forward_Rays = { forward_Center, forward_Up, forward_Down };
+        //Ray[] back_rays = { back_Center, back_Up, back_Down };
+
+        distanceToWall += distanceToWallPlus;
+
+        layermask = 1 << LayerMask.NameToLayer("StopWall");
+
         if (Physics.BoxCast(tr.position, new Vector3(xDistance, yDistance, zDistance), -GetPlayerDirection().normal, out hitInto, tr.rotation, distanceToWall / distanceToWallDivide, layermask))
         {
             if (pushDecision)
@@ -199,8 +215,9 @@ public class Block : MonoBehaviour
             }
         }
 
-        //Rayで壁と判定
         layermask = ~(1 << LayerMask.NameToLayer("IgnoredObj") | 1 << LayerMask.NameToLayer("Player") | LayerMask.NameToLayer("StopWall"));
+        //int layermask = 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9;
+        //new Vector3(xDistance, yDistance, zDistance) / 14.0f
         if (Physics.BoxCast(tr.position, new Vector3(xDistance, yDistance, zDistance), -GetPlayerDirection().normal, out hitInto, tr.rotation, distanceToWall / distanceToWallDivide, layermask, QueryTriggerInteraction.Ignore))
         {
             if (pushDecision)
@@ -217,11 +234,89 @@ public class Block : MonoBehaviour
             }
         }
 
+        //if (Physics.BoxCast(tr.position, new Vector3(xDistance, yDistance, zDistance) / 14.0f, GetPlayerDirection().normal, out hitInto, tr.rotation, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
+        //{
+        //    if (Input.GetAxis("Vertical") < -0.1f)
+        //    {
+        //        return;
+        //    }
+        //}
+
+        //foreach (Ray ray in forward_Rays)
+        //{
+        //    if (Physics.Raycast(ray, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
+        //    {
+        //        if (Input.GetAxis("Vertical") > 0.1f)
+        //        {
+        //            return;
+        //        }
+        //    }
+        //}
+
+        //foreach (Ray ray in back_rays)
+        //{
+        //    if (Physics.Raycast(ray, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
+        //    {
+        //        if (Input.GetAxis("Vertical") < -0.1f)
+        //        {
+        //            return;
+        //        }
+        //    }
+        //}
+
+        //Debug.DrawRay(forward_Center.origin, forward_Center.direction * distanceToWall, Color.black);
+        //Debug.DrawRay(forward_Up.origin, forward_Up.direction * distanceToWall, Color.white);
+        //Debug.DrawRay(forward_Down.origin, forward_Down.direction * distanceToWall, Color.yellow);
+
+        //[IgnoredObj]レイヤー以外と判定させる
+        //int layermask = ~(1 << 10);
+        //int layermask = 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9;
+        //壁に埋まらないようにする処理
+        //if (Physics.Raycast(center, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
+        //{
+        //    if (Input.GetAxis("Vertical") > 0.1f)
+        //    {
+        //        return;
+        //    }
+        //}
+        //if (Physics.Raycast(up, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
+        //{
+        //    if (Input.GetAxis("Vertical") > 0.1f)
+        //    {
+        //        return;
+        //    }
+        //}
+        //if (Physics.Raycast(down, out hitInto, distanceToWall, layermask, QueryTriggerInteraction.Ignore))
+        //{
+        //    if (Input.GetAxis("Vertical") > 0.1f)
+        //    {
+        //        return;
+        //    }
+        //}
+
         if (!Input.GetButton("Action") || isPush == false) return;
+
+        //print(player.up);
+        //print(GetPlayerDirection().normal);
+        //print(player.up + " " + GetPlayerDirection().normal + " " + Vector3.Dot(Vector3.Normalize(player.up), Vector3.Normalize(GetPlayerDirection().normal)));
+        //print("up,-forward" + tr.up + " " + -tr.forward + " " + Vector3.Dot(tr.up, -tr.forward));
+        //プレイヤーの上方向とブロックのプレイヤー方向の面の法線ベクトルで内積を作る
+
 
         float angle = Vector3.Angle(player.up, GetPlayerDirection().normal);
         //print(angle);
         if (angle <= 89.0f || angle >= 91.0f) return;
+        //float dot = Vector3.Dot(player.up, GetPlayerDirection().normal);
+        //内積の数値を補正
+        //float dotAbs = Mathf.Abs(dot);
+        //float dotInt = Mathf.FloorToInt(dotAbs);
+        //print(dotInt);
+        //dot = Mathf.Clamp(dot, 0.0f, 1.0f);
+        //print(player.up);
+        //print(GetPlayerDirection().normal);
+
+        //内積が0（90度）じゃなかったらreturn
+        //if (dotInt != 0) return;
 
         //ライトの明るさを変更
         blockLight.range = 2;
@@ -249,6 +344,23 @@ public class Block : MonoBehaviour
             player.GetComponent<NormalMove>().SetCollisionBlock(gameObject);
     }
 
+    //public void OnCollisionStay(Collision collision)
+    //{
+    //    if (Input.GetKeyDown(KeyCode.B))
+    //    {
+    //        moveDirection = Vector3.Normalize(GetPlayerDirection().normal);
+    //        isPush = true;
+    //        player.GetComponent<PlayerBlockPush>().SetCollisionBlock(gameObject);
+    //    }
+
+    //    if (Input.GetKeyUp(KeyCode.B))
+    //    {
+    //        isPush = false;
+    //        player.GetComponent<PlayerBlockPush>().SetCollisionBlock(null);
+    //    }
+    //}
+
+
     /// <summary>
     /// 押せる距離にプレイヤーがいるときの入力処理
     /// </summary>
@@ -257,6 +369,7 @@ public class Block : MonoBehaviour
         if (Vector3.Distance(tr.position, player.position + offset) > pushDistance)
         {
             isPush = false;
+            //player.GetComponent<NormalMove>().SetCollisionBlock(null);
             return;
         }
 
@@ -270,6 +383,7 @@ public class Block : MonoBehaviour
         else
         {
             isPush = false;
+            //player.GetComponent<NormalMove>().SetCollisionBlock(null);
         }
 
         Debug.DrawRay(tr.position, Vector3.Normalize

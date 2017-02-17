@@ -125,6 +125,7 @@ public class EventCamera : ICamera
 
     public void Update()
     {
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
         var syncSystem = GameObject.FindObjectOfType<UIandCameraSync>();
         if (syncSystem) return;
 
