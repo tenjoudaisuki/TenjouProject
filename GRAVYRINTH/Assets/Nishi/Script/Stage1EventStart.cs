@@ -11,9 +11,12 @@ public class Stage1EventStart : MonoBehaviour
 
     public Vector3 m_CenterOffset;
 
+    public float m_Timer;
+
     // Use this for initialization
     void Start()
     {
+        m_Timer = 0;
         if(GameObject.Find("Camera").GetComponent<CameraManager>().GetCurrentCameraState() == State.Clear)
         {
             Instantiate(m_FastDrawTexture);
@@ -25,28 +28,14 @@ public class Stage1EventStart : MonoBehaviour
     {
         if (GameObject.Find("Camera").GetComponent<CameraManager>().GetCurrentCameraState() == State.GamePlay)
         {
-            StartCoroutine(DelayMethod(mWaitTime, () =>
+            m_Timer += Time.deltaTime;
+            if(mWaitTime < m_Timer)
             {
                 Instantiate(m_DrawTexture);
                 GameObject.Find("Camera").GetComponent<Stage1EventCamera>().SetPosition(mGoalObject);
                 GameObject.Find("Camera").GetComponent<CameraManager>().StateChange(State.Stage1Event);
                 Destroy(this);
-            }));
+            }
         }
-    }
-
-
-
-    /// <summary>
-    /// 渡された処理を指定時間後に実行する
-    /// </summary>
-    /// <param name="delayFrameCount"></param>
-    /// <param name="action">実行したい処理</param>
-    /// <returns></returns>
-    private IEnumerator DelayMethod(float delayFrameCount, System.Action action)
-    {
-
-        yield return new WaitForSeconds(delayFrameCount);
-        action();
     }
 }
