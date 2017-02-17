@@ -170,6 +170,8 @@ public class PlayerMoveManager : MonoBehaviour
         {
             //カプセル無効
             cc.enabled = false;
+            // アニメーション
+            anm.SetBool("Pole_Jump", false);
         }
     }
 
