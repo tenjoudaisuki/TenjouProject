@@ -58,6 +58,11 @@ public class SwitchManager : MonoBehaviour
             gameObject.SetActive(false);
 
             GameObject.Find("BGMControl").GetComponent<BGMControl>().PlayerFinalDoorSwitchTouched();
+            var meshs = GameObject.Find("f_finaldoorswitch").GetComponentsInChildren<MeshCollider>();
+            foreach(var mesh in meshs)
+            {
+                Destroy(mesh);
+            }
         }
     }
 }
