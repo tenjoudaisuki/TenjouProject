@@ -42,7 +42,6 @@ public class EventCamera : ICamera
         mButtonEventEnd = false;
         //GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetEventInputDisable(true);
-        print("call EventCamera Start()");
 
         GameManager.Instance.SetPausePossible(false);
 

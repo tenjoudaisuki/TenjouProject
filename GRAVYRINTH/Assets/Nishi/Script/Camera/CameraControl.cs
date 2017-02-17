@@ -208,7 +208,6 @@ public class CameraControl : ICamera
     {
         if (mTimer > 1)
         {
-            print("call CameraControl StartMove()");
             PlayerMoveManager mm = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>();
             if(mm.GetState() == PlayerState.NONE)
                 mm.SetState(PlayerState.NORMAL);
