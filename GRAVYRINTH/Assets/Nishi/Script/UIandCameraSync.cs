@@ -64,7 +64,7 @@ public class UIandCameraSync : MonoBehaviour {
 
     public void SetIsCameraEvent(bool check)
     {
-        Debug.Log(check);
+        //Debug.Log(check);
         m_CameraEventEnd = check;
     }
 }

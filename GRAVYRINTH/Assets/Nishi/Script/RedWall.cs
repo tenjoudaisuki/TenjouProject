@@ -30,7 +30,7 @@ public class RedWall : MonoBehaviour
         if (other.tag == "Player")
         {
             Vector3 dir = GameObject.Find("GravityDirection").GetComponent<GravityDirection>().GetDirection();
-            Debug.Log(Vector3.Angle(transform.forward, dir));
+            //Debug.Log(Vector3.Angle(transform.forward, dir));
             if (Vector3.Angle(transform.forward, dir) < 30)
             {
                 if(!mCurrentUI) mCurrentUI = (GameObject)Instantiate(mEventUi);

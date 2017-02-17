@@ -55,7 +55,7 @@ public class CrimbMove : MonoBehaviour
         //        touchIronBar = true;
         //    }
         //}
-        print(pole);
+        //print(pole);
         if (touchIronBar == true)
         {
             rb.velocity = Vector3.zero;
