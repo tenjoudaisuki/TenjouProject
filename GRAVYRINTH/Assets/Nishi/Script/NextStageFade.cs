@@ -71,19 +71,19 @@ public class NextStageFade : MonoBehaviour {
                     if(!mCurrentMessage)
                     {
                         mCurrentMessage = (GameObject)Instantiate(mlastmessage,GameObject.Find("FadeCanvas").transform,false);
-                        LeanTween.alpha(mCurrentMessage.GetComponent<Image>().rectTransform, 1.0f, 1.0f);
-                    }
-                    else if(Input.GetButtonDown("PS4_Circle") || Input.GetKeyDown(KeyCode.Return))
-                    {
-                        LeanTween.alpha(mCurrentMessage.GetComponent<Image>().rectTransform, 0.0f, 1.0f).setOnComplete(()=>
-                        {
-                            GameManager.Instance.Reset();
-                            mState = FadeMode.FadeOut;
-                            mLastMode = false;
-                            mButtonMode = false;
-                            return;
-                        }
-                        );
+                        LeanTween.alpha(mCurrentMessage.GetComponent<Image>().rectTransform, 1.0f, 1.0f)
+                            .setOnComplete(() => 
+                            {
+                                  LeanTween.alpha(mCurrentMessage.GetComponent<Image>().rectTransform, 0.0f, 1.0f).setOnComplete(() =>
+                                  {
+                                       GameManager.Instance.Reset();
+                                       mState = FadeMode.FadeOut;
+                                       mLastMode = false;
+                                       mButtonMode = false;
+                                       return;
+                                    }
+                                ).setDelay(3.0f);
+                            });
                     }
                 }
                 else //UI表示モードでない
