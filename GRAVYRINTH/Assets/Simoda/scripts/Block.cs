@@ -151,30 +151,30 @@ public class Block : MonoBehaviour
         {
             distanceToWall = xDistance;
 
-            if (player.up == tr.up || player.up == -tr.up)
-                scale = new Vector3(0, yDistance + scaleCorrect, 0);
-            else
-                scale = new Vector3(0, 0, zDistance + scaleCorrect);
+            //if (player.up == tr.up || player.up == -tr.up)
+            //    scale = new Vector3(0, yDistance + scaleCorrect, 0);
+            //else
+            //    scale = new Vector3(0, 0, zDistance + scaleCorrect);
         }
 
         if (-GetPlayerDirection().normal == tr.up || -GetPlayerDirection().normal == -tr.up)
         {
             distanceToWall = yDistance;
 
-            if (player.up == tr.right || player.up == -tr.right)
-                scale = new Vector3(xDistance + scaleCorrect, 0, 0);
-            else
-                scale = new Vector3(0, 0, zDistance + scaleCorrect);
+            //if (player.up == tr.right || player.up == -tr.right)
+            //    scale = new Vector3(xDistance + scaleCorrect, 0, 0);
+            //else
+            //    scale = new Vector3(0, 0, zDistance + scaleCorrect);
         }
 
         if (-GetPlayerDirection().normal == tr.forward || -GetPlayerDirection().normal == -tr.forward)
         {
             distanceToWall = zDistance;
 
-            if (player.up == tr.right || player.up == -tr.right)
-                scale = new Vector3(xDistance + scaleCorrect, 0, 0);
-            else
-                scale = new Vector3(0, yDistance + scaleCorrect, 0);
+            //if (player.up == tr.right || player.up == -tr.right)
+            //    scale = new Vector3(xDistance + scaleCorrect, 0, 0);
+            //else
+            //    scale = new Vector3(0, yDistance + scaleCorrect, 0);
         }
 
         //Ray当たり判定を行う時の値の準備
