@@ -16,6 +16,8 @@
 
 バグ：
 
+クリアした後、ジャンプや落下ができない
+
 finaldoorswitchに触れたときにfinaldoorswitchred,yellow,green,blueの当たり判定を消す
 
 finaldoorが開き終わったらカメラが地面に入っちゃう
