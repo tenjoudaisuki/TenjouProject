@@ -25,6 +25,9 @@ public class DangleMove : MonoBehaviour
     //アニメーション
     private Animator anm;
 
+    //イベント時の操作不能用
+    private bool m_IsEventDisableInput = false;
+
     void Start()
     {
         tr = gameObject.transform;
@@ -37,10 +40,14 @@ public class DangleMove : MonoBehaviour
 
         //アニメーション
         anm = GetComponent<Animator>();
+
+        m_IsEventDisableInput = false;
     }
 
     void Update()
     {
+        if (m_IsEventDisableInput) return;
+
         if (touchIronBar == true)
         {
             rb.velocity = Vector3.zero;
@@ -228,4 +235,13 @@ public class DangleMove : MonoBehaviour
     //    if (hitInto.collider != null)
     //        Gizmos.DrawWireSphere(hitInto.point, 0.2f);
     //}
+
+    /// <summary>
+    /// イベント時の操作不能の開始・終了を行う
+    /// </summary>
+    public void SetEventInputDisable(bool isInputDisable)
+    {
+        m_IsEventDisableInput = isInputDisable;
+    }
+
 }

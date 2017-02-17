@@ -141,6 +141,9 @@ public class NormalMove : MonoBehaviour
     //*-ブロック
     private float m_Block;
 
+    //イベント時の操作不能用
+    private bool m_IsEventDisableInput = false;
+
     /*==外部参照変数==*/
 
     void Awake()
@@ -176,6 +179,8 @@ public class NormalMove : MonoBehaviour
 
         //null参照回避のため一度動かす
         m_LastSpeedCoroutine = StartCoroutine(LastSpeedCalc());
+
+        m_IsEventDisableInput = false;
     }
 
     void Update()
@@ -228,7 +233,7 @@ public class NormalMove : MonoBehaviour
 
     void LateUpdate()
     {
-
+        
     }
 
 
@@ -438,7 +443,7 @@ public class NormalMove : MonoBehaviour
         //移動方向入力
         Vector2 inputVec = Vector2.zero;
         //入力不可状態なら入力を取得しない
-        if (!m_DisableInput)
+        if (!m_DisableInput && !m_IsEventDisableInput)
             inputVec = MoveFunctions.GetMoveInputAxis();
         //スティックが入力されたら向きを変える
         if (inputVec.magnitude > 0.3f)
@@ -711,6 +716,9 @@ public class NormalMove : MonoBehaviour
     /// </summary>
     private void Jump()
     {
+        //操作不能状態ならジャンプしない
+        if (m_IsEventDisableInput) return;
+
         //地面にいるときのジャンプ始動処理
         if (m_GroundHitInfo.isHit && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
@@ -955,25 +963,6 @@ public class NormalMove : MonoBehaviour
         yield break;
     }
 
-    /// <summary>
-    /// イベント時の操作不能コルーチン
-    /// </summary>
-    IEnumerator EventInputDisable()
-    {
-        //操作不能にする
-        m_DisableInput = true;
-        while (true)
-        {
-            //ボタン入力で操作可能にする
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("PS4_Circle"))
-            {
-                m_DisableInput = false;
-                yield break;
-            }
-            yield return null;
-        }
-    }
-
     /**==============================================================================================*/
     /** 外部から使用する
     /**==============================================================================================*/
@@ -1081,14 +1070,6 @@ public class NormalMove : MonoBehaviour
     }
 
     /// <summary>
-    /// イベント時の操作不能コルーチンを開始
-    /// </summary>
-    public void StartEventInputDisable()
-    {
-        StartCoroutine(EventInputDisable());
-    }
-
-    /// <summary>
     /// SEを開始
     /// </summary>
     public void RestartSE()
@@ -1104,4 +1085,18 @@ public class NormalMove : MonoBehaviour
     {
         se.Stop();
     }
+
+    /// <summary>
+    /// イベント時の操作不能の開始・終了を行う trueで操作不能 falseで操作可能
+    /// </summary>
+    public void SetEventInputDisable(bool isInputDisable)
+    {
+        m_IsEventDisableInput = isInputDisable;
+
+        if (m_IsEventDisableInput)
+            StopSE();
+        else
+            RestartSE();
+    }
+
 }

@@ -27,6 +27,9 @@ public class CrimbMove : MonoBehaviour
     private Animator anm;
     private bool pole;
 
+    //イベント時の操作不能用
+    private bool m_IsEventDisableInput = false;
+
     void Start()
     {
         tr = gameObject.transform;
@@ -39,10 +42,14 @@ public class CrimbMove : MonoBehaviour
 
         //アニメーション
         anm = GetComponent<Animator>();
+
+        m_IsEventDisableInput = false;
     }
 
     void Update()
     {
+        if (m_IsEventDisableInput) return;
+
         //Ray forward = new Ray(tr.position, tr.forward);
         //RaycastHit hitInto;
 
@@ -290,4 +297,14 @@ public class CrimbMove : MonoBehaviour
     //    if (hitInto.collider != null)
     //        Gizmos.DrawWireSphere(hitInto.point, 0.2f);
     //}
+
+
+    /// <summary>
+    /// イベント時の操作不能の開始・終了を行う
+    /// </summary>
+    public void SetEventInputDisable(bool isInputDisable)
+    {
+        m_IsEventDisableInput = isInputDisable;
+    }
+
 }

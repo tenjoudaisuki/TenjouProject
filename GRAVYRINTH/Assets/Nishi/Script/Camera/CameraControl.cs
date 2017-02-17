@@ -208,7 +208,12 @@ public class CameraControl : ICamera
     {
         if (mTimer > 1)
         {
-            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NORMAL);
+            print("call CameraControl StartMove()");
+            PlayerMoveManager mm = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>();
+            if(mm.GetState() == PlayerState.NONE)
+                mm.SetState(PlayerState.NORMAL);
+            mm.SetEventInputDisable(false);
+
             mCurrentState = State.Normal;
             GameManager.Instance.SetPausePossible(true);
             return;

@@ -37,18 +37,21 @@ public class PlayerMoveManager : MonoBehaviour
 
     void Start()
     {
-        m_PrevPlayerState = PlayerState.NONE;
+
+        m_PrevPlayerState = m_StartState;
         m_PlayerState = m_StartState;
         m_Moves = new Dictionary<PlayerState, MonoBehaviour>()
         {
             {PlayerState.NORMAL, GetComponent<NormalMove>() },
-            {PlayerState.NOT_MOVE, GetComponent<NotMove>() },
+            //{PlayerState.NOT_MOVE, GetComponent<NotMove>() },
             {PlayerState.IRON_BAR_DANGLE, GetComponent<DangleMove>() },
             {PlayerState.IRON_BAR_CLIMB, GetComponent<CrimbMove>() },
             {PlayerState.CANNON_BLOCK, GetComponent<CannonBlockMove>() },
             {PlayerState.STAGE_CLEAR, GetComponent<StageClearMove>() },
             {PlayerState.STAGE_FINAL_CLEAR, GetComponent<StageFinalClearMove>() }
         };
+
+        //Action(m_PlayerState);
     }
 
     void Update()
@@ -66,6 +69,7 @@ public class PlayerMoveManager : MonoBehaviour
     /// </summary>
     void Action(PlayerState state)
     {
+
         foreach (KeyValuePair<PlayerState, MonoBehaviour> move in m_Moves)
         {
             if (state == move.Key)
@@ -81,6 +85,7 @@ public class PlayerMoveManager : MonoBehaviour
     /// </summary>
     public void SetState(PlayerState state)
     {
+
         m_PrevPlayerState = m_PlayerState;
         m_PlayerState = state;
 
@@ -144,26 +149,26 @@ public class PlayerMoveManager : MonoBehaviour
             //移動開始
             m_Moves[PlayerState.STAGE_FINAL_CLEAR].GetComponent<StageFinalClearMove>().StartMove();
         }
-        else if(m_PlayerState == PlayerState.NOT_MOVE)
-        {
-            // アニメーション
-            anm.SetTrigger("Reset");
-            anm.SetFloat("Jump_Velo", 0);
+        //else if(m_PlayerState == PlayerState.NOT_MOVE)
+        //{
+        //    // アニメーション
+        //    anm.SetTrigger("Reset");
+        //    anm.SetFloat("Jump_Velo", 0);
 
-            //SEを止める
-            m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().StopSE();
-            NotMove nm = m_Moves[PlayerState.NOT_MOVE].GetComponent<NotMove>();
-            nm.SetUpFront(tr.up, tr.forward);
-            AnimationInitialize();
-        }
-        else if (
-            m_PrevPlayerState == PlayerState.NOT_MOVE
-            && m_PlayerState == PlayerState.NORMAL)
-        {
-            //SE再開
-            m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().RestartSE();
-            m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().SetUpFront(tr.up, tr.forward);
-        }
+        //    //SEを止める
+        //    m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().StopSE();
+        //    NotMove nm = m_Moves[PlayerState.NOT_MOVE].GetComponent<NotMove>();
+        //    nm.SetUpFront(tr.up, tr.forward);
+        //    AnimationInitialize();
+        //}
+        //else if (
+        //    m_PrevPlayerState == PlayerState.NOT_MOVE
+        //    && m_PlayerState == PlayerState.NORMAL)
+        //{
+        //    //SE再開
+        //    m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().RestartSE();
+        //    m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().SetUpFront(tr.up, tr.forward);
+        //}
         else if (
             m_PrevPlayerState == PlayerState.NORMAL && m_PlayerState == PlayerState.IRON_BAR_DANGLE ||
             m_PrevPlayerState == PlayerState.NORMAL && m_PlayerState == PlayerState.IRON_BAR_CLIMB)
@@ -205,6 +210,16 @@ public class PlayerMoveManager : MonoBehaviour
     {
         anm.SetBool("IsTaihouRoll", false);
         anm.SetBool("Move", false);
+    }
+
+    /// <summary>
+    /// イベント時の操作不能の開始・終了
+    /// </summary>
+    public void SetEventInputDisable(bool isInputDisable)
+    {
+        m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().SetEventInputDisable(isInputDisable);
+        m_Moves[PlayerState.IRON_BAR_DANGLE].GetComponent<DangleMove>().SetEventInputDisable(isInputDisable);
+        m_Moves[PlayerState.IRON_BAR_CLIMB].GetComponent<CrimbMove>().SetEventInputDisable(isInputDisable);
     }
 
 }

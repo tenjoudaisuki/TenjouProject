@@ -40,7 +40,10 @@ public class EventCamera : ICamera
     public override void Start()
     {
         mButtonEventEnd = false;
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
+        //GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetEventInputDisable(true);
+        print("call EventCamera Start()");
+
         GameManager.Instance.SetPausePossible(false);
 
         LeanTween.move(gameObject, mToPosition, mMoveTime)
@@ -125,7 +128,7 @@ public class EventCamera : ICamera
 
     public void Update()
     {
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
+        //GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMoveManager>().SetState(PlayerState.NOT_MOVE);
         var syncSystem = GameObject.FindObjectOfType<UIandCameraSync>();
         if (syncSystem) return;
 
