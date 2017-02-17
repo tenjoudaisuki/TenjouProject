@@ -16,9 +16,9 @@
 
 バグ：
 
-クリアした後、ジャンプや落下ができない
+イベント中に〇押すとプレイヤー操作できちゃう
 
-finaldoorswitchに触れたときにfinaldoorswitchred,yellow,green,blueの当たり判定を消す
+クリアした後、プレイヤーが埋まる
 
 finaldoorが開き終わったらカメラが地面に入っちゃう
 
