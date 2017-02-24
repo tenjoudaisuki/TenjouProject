@@ -21,6 +21,7 @@ public class RedWall : MonoBehaviour
         if (mTarget.GetComponent<PlayerMoveManager>().GetState() == PlayerState.STAGE_FINAL_CLEAR)
         {
             Destroy(mRedWall.GetComponent<BoxCollider>());
+            Destroy(this);
         }
 
     }

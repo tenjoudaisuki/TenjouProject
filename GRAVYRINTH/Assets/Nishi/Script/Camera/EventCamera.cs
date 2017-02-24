@@ -80,7 +80,7 @@ public class EventCamera : ICamera
                 }
                 else
                 {
-                    mButtonEventEnd = true;
+                    StartCoroutine(DelayMethod(mEventEndTime, () => { mButtonEventEnd = true; }));
                     //同期システムにラムダを送る
                     var syncSystem = GameObject.FindObjectOfType<UIandCameraSync>();
                     if (!syncSystem) return;
@@ -110,7 +110,7 @@ public class EventCamera : ICamera
                         else
                         {
                             LeanTween.move(gameObject, gameObject.transform.position, 0.0f)
-                            .setDelay(mEventEndTime)
+                            //.setDelay(mEventEndTime)
                             .setOnComplete(() =>
                             {
                                 GetComponent<CameraManager>().StateChange(State.GamePlay);
@@ -240,12 +240,9 @@ public class EventCamera : ICamera
     /// <param name="delayFrameCount"></param>
     /// <param name="action">実行したい処理</param>
     /// <returns></returns>
-    private IEnumerator DelayMethod(int delayFrameCount, System.Action action)
+    private IEnumerator DelayMethod(float delaysecond, System.Action action)
     {
-        for (var i = 0; i < delayFrameCount; i++)
-        {
-            yield return null;
-        }
+        yield return new WaitForSeconds(delaysecond);
         action();
     }
 

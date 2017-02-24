@@ -44,7 +44,7 @@ public class SwitchManager : MonoBehaviour
             //ゴゴゴと扉が開く音
             SoundManager.Instance.PlayLoopSe("rumble");
             GameObject.Find("Camera").GetComponent<EventCamera>().SetMoveTime(2.0f);
-            GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(0.0f);
+            GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(mOpenTime);
             GameObject.Find("Camera").GetComponent<EventCamera>().SetBotton(true);
             GameObject.Find("Camera").GetComponent<EventCamera>().SetTarget(mCameraPos);
 
