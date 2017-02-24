@@ -18,6 +18,9 @@ stagef ‚Å‘å–CƒuƒƒbƒN‚Ì–Ê‚É•Ç‚¸‚è‚µ‚Ä‚éŽž‚ÉƒuƒƒbƒN’Í‚Þ‚Æ•Ç‚¸‚èƒ‚[ƒVƒ‡ƒ“‚Ì‚Ü‚Ü‚
 
 
 Žç‰®
+ƒuƒƒbƒNƒ{ƒ^ƒ“‰Ÿ‚·‚ÆƒJƒ‰ƒNƒŠ‰¹‚ªŽ~‚Ü‚é
+ƒS[ƒ‹‚µ‚½‚Æ‚«‚ÉAƒS[ƒ‹‚Ì‰œ•ûŒü‚ÖƒvƒŒƒCƒ„[‚ð“®‚©‚·
+ƒS[ƒ‹‚µ‚½‚Æ‚«AƒS[ƒ‹‚Ì’†S‚ÆƒvƒŒƒCƒ„[‚ÌŒ©‚½–Ú‚Ì’†S‚ð‡‚í‚¹‚é
 ‰Â”\‚Å‚ ‚ê‚Îspinchild‚ÅƒvƒŒƒCƒ„[‚ª‚­‚Á‚Â‚­Žd—l‚ð•Ç‚¸‚è‚É‚à‘Î‰ž‚µ‚Ä‚Ù‚µ‚¢
 •Ç‚¸‚è‚Ì—Ž‚¿‚Ä‚¢‚­‘¬“x‚ð•ÏX‚Å‚«‚é‚æ‚¤‚É‚µ‚Ä‚Ù‚µ‚¢
 stagef‚Ì‚a‚f‚lˆê•”•ÏX
