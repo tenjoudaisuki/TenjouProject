@@ -220,7 +220,7 @@ public class CameraControl : ICamera
             return;
         }
 
-        CameraPosDirection = m_Target.forward;
+        CameraPosDirection = -m_Target.forward;
         offset = m_Target.right * m_TargetOffset.x + m_Target.up * m_TargetOffset.y + m_Target.forward * m_TargetOffset.z;
         Vector3 next = (m_Target.position + offset) + (CameraPosDirection * m_Distance);
 
