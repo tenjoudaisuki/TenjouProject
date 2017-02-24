@@ -66,4 +66,9 @@ public class SwitchManager : MonoBehaviour
             }
         }
     }
+
+    public bool IsAllSwitchDown()
+    {
+        return isActive;
+    }
 }

@@ -117,6 +117,20 @@ public class BGMControl : MonoBehaviour
         //流れ終わったらstagef2再生
         SoundManager.Instance.PlayBgm("stagef2");
 
+        SwitchManager sm = GameObject.FindGameObjectWithTag("StageFSwitchManager").GetComponent<SwitchManager>();
+        //４つのスイッチが押されるまで待機
+        while (!sm.IsAllSwitchDown())
+        {
+            yield return null;
+        }
+        //押されたらＢＧＭが１周するまで待機
+        while (SoundManager.Instance.GetBGMSource().time < SoundManager.Instance.GetBGMClip("stagef2").length - 0.1f)
+        {
+            yield return null;
+        }
+        //１周したらstagef2.5再生
+        SoundManager.Instance.PlayBgm("stagef2.5");
+
         //プレイヤーがfinaldoorswitchに触れるまで待機
         m_IsTouchFinalDoorSwitch = false;
         while (!m_IsTouchFinalDoorSwitch)
@@ -125,7 +139,7 @@ public class BGMControl : MonoBehaviour
         }
 
         //触れたらＢＧＭが１周するまで待機
-        while (SoundManager.Instance.GetBGMSource().time < SoundManager.Instance.GetBGMClip("stagef2").length - 0.1f)
+        while (SoundManager.Instance.GetBGMSource().time < SoundManager.Instance.GetBGMClip("stagef2.5").length - 0.1f)
         {
             yield return null;
         }

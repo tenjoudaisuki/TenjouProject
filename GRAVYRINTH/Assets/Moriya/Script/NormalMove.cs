@@ -590,7 +590,7 @@ public class NormalMove : MonoBehaviour
             //前ベクトル×スティックの傾き×移動速度
             m_MoveVelocity = (tr.forward * inputVec.magnitude) * m_LastSpeed;
 
-            if (Input.GetButtonUp("Action"))
+            if (Input.GetButtonUp("Action") && m_CollisionBlock != null)
                 SoundManager.Instance.StopLoopSe();
 
             BlockArrow blockArrow = GameObject.FindGameObjectWithTag("BlockArrow").GetComponent<BlockArrow>();
