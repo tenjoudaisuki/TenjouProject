@@ -63,7 +63,7 @@ public class NextStageFade : MonoBehaviour {
         if (mColor.a >= 1)
         {
             //シーンをロードした　かつ　シーンがロードされた
-            if (isLoad && GameManager.Instance.isSceneload())
+            if ((isLoad && GameManager.Instance.isSceneload()) || mLastMode)
             {
                 //最後のUI表示状態である
                 if (mLastMode)
@@ -76,12 +76,9 @@ public class NextStageFade : MonoBehaviour {
                             {
                                   LeanTween.alpha(mCurrentMessage.GetComponent<Image>().rectTransform, 0.0f, 1.0f).setOnComplete(() =>
                                   {
-                                       GameManager.Instance.Reset();
-                                       mState = FadeMode.FadeOut;
-                                       mLastMode = false;
-                                       mButtonMode = false;
-                                       return;
-                                    }
+                                      StartCoroutine(StageLoad());
+                                      return;
+                                  }
                                 ).setDelay(3.0f);
                             });
                     }
@@ -111,7 +108,7 @@ public class NextStageFade : MonoBehaviour {
                 Time.timeScale = 1.0f;
                 mColor.a = 1;
             }
-            if (!isLoad)
+            if (!isLoad && !mLastMode)
             {
                 GameManager.Instance.SceneChange();
                 isLoad = true;
@@ -132,5 +129,20 @@ public class NextStageFade : MonoBehaviour {
             Destroy(gameObject);
             Destroy(mCurrentMessage);
         }
+    }
+
+    private IEnumerator StageLoad()
+    {
+        GameManager.Instance.SceneChange();
+
+        while(!GameManager.Instance.isSceneload())
+        {
+            yield return null;
+        }
+
+        GameManager.Instance.Reset();
+        mState = FadeMode.FadeOut;
+        mLastMode = false;
+        mButtonMode = false;
     }
 }
