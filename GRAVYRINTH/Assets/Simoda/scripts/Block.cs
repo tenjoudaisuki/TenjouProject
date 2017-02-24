@@ -124,7 +124,7 @@ public class Block : MonoBehaviour
         //壁に埋まった時に戻す処理
         RaycastHit hitIntoBox;
         int layermaskBox = ~(1 << LayerMask.NameToLayer("IgnoredObj") | 1 << LayerMask.NameToLayer("Player") | LayerMask.NameToLayer("StopWall"));
-        if (Physics.BoxCast(tr.position + GetPlayerDirection().normal * distanceToWall, new Vector3(xDistance, yDistance, zDistance), -GetPlayerDirection().normal, out hitIntoBox, tr.rotation, 10.0f, layermaskBox, QueryTriggerInteraction.Ignore))
+        if (Physics.BoxCast(tr.position + GetPlayerDirection().normal * distanceToWall, new Vector3(xDistance, yDistance, zDistance), -GetPlayerDirection().normal, out hitIntoBox, tr.rotation, 5.0f, layermaskBox, QueryTriggerInteraction.Ignore))
         {
             //print(hitIntoBox.distance);
             if (hitIntoBox.distance < distanceToWall)
