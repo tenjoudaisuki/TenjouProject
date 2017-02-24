@@ -14,6 +14,7 @@ public class DoorButton : MonoBehaviour
     public GameObject[] mEventUIs;
 
     private bool isDown = false;
+    public float mCameraDelayTime = 2.0f;
 
     // Use this for initialization
     void Start()
@@ -35,7 +36,7 @@ public class DoorButton : MonoBehaviour
         SoundManager.Instance.PlaySe("switch");
 
         GameObject.Find("Camera").GetComponent<EventCamera>().SetMoveTime(2.0f);
-        GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(1.5f);
+        GameObject.Find("Camera").GetComponent<EventCamera>().SetEventEndTime(mCameraDelayTime);
         GameObject.Find("Camera").GetComponent<EventCamera>().SetBotton(true);
         GameObject.Find("Camera").GetComponent<EventCamera>().SetTarget(mCameraPos);
 
