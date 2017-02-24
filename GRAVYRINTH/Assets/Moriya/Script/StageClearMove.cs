@@ -14,11 +14,15 @@ public class StageClearMove : MonoBehaviour
     private Rigidbody rb;
 
     /*==外部設定変数==*/
-    [SerializeField, Tooltip("移動にかける時間")]
-    private float m_MoveEndTime = 1.0f;
+    [SerializeField, Tooltip("位置を揃える移動にかける時間")]
+    private float m_JustMoveEndTime = 1.0f;
+    [SerializeField, Tooltip("奥へ進む移動にかける時間")]
+    private float m_ForwardMoveEndTime = 1.0f;
+    [SerializeField, Tooltip("奥へ進む距離")]
+    private float m_ForwardLength = 1.8f;
 
     /*==内部設定変数==*/
-    //クリア時の移動目標である、ステージクリアのドアのTransform
+    //ステージクリアのドアのTransform
     private Transform m_ClearDoorTr;
     //クリアした瞬間のプレイヤーの座標
     private Vector3 m_ClearPosition;
@@ -63,16 +67,24 @@ public class StageClearMove : MonoBehaviour
     IEnumerator ClearMove()
     {
         float timer = 0.0f;
-        while (true)
+        Vector3 end = m_ClearDoorTr.position + (-tr.up * 0.3f);
+        while (timer <= m_JustMoveEndTime)
         {
             //時間経過で移動
             timer += Time.deltaTime;
-            tr.position = Vector3.Lerp(m_ClearPosition, m_ClearDoorTr.position, timer / m_MoveEndTime);
-            if (timer > m_MoveEndTime)
-            {
-                yield break;
-            }
+            tr.position = Vector3.Lerp(m_ClearPosition, end, timer / m_JustMoveEndTime);
             yield return null;
         }
+        timer = 0.0f;
+        Vector3 start = end;
+        end = m_ClearDoorTr.position + (-m_ClearDoorTr.forward * m_ForwardLength) + (-tr.up * 0.3f);
+        while (timer <= m_ForwardMoveEndTime)
+        {
+            //時間経過で移動
+            timer += Time.deltaTime;
+            tr.position = Vector3.Lerp(start, end, timer / m_ForwardMoveEndTime);
+            yield return null;
+        }
+        yield break;
     }
 }
