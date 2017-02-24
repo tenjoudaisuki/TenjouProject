@@ -459,8 +459,10 @@ public class NormalMove : MonoBehaviour
         {
             //無理やりだけど、カメラと同じ計算方法でプレイヤーをカメラと同じ量回転させる
             m_InputAngleY -= m_Camera.GetComponent<CameraControl>().GetHorizontalInput();
+
             //外積をスティックの角度で回転させて前ベクトルを計算
-            m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * camerafoward;
+            if (!m_IsEventDisableInput)
+                m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * camerafoward;
 
             //SpinParentに乗っているときの前方向計算処理
             if (m_IsOnSpinParent)
@@ -574,12 +576,11 @@ public class NormalMove : MonoBehaviour
                 m_Front = -m_CollisionBlock.GetPlayerDirection().normal;
 
                 //向きを変更
-                if(!m_IsEventDisableInput)
-                {
-                    Quaternion rotateBlock = Quaternion.LookRotation(m_Front, m_Up);
-                    tr.localRotation = Quaternion.Slerp(transform.localRotation, rotateBlock, m_RotateLerpValue);
+                m_Front.Normalize();
+                m_Up.Normalize();
+                Quaternion rotateBlock = Quaternion.LookRotation(m_Front, m_Up);
+                tr.localRotation = Quaternion.Slerp(transform.localRotation, rotateBlock, m_RotateLerpValue);
 
-                }
                 //tr.localRotation = rotateBlock;
             }
         }
@@ -594,17 +595,14 @@ public class NormalMove : MonoBehaviour
 
             BlockArrow blockArrow = GameObject.FindGameObjectWithTag("BlockArrow").GetComponent<BlockArrow>();
             blockArrow.SetInfo(false, "Horizontal");
+            
             //向きを変更
             m_Front.Normalize();
             m_Up.Normalize();
-           
-
-            if (!m_IsEventDisableInput)
-            {
-                Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
-                tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, m_RotateLerpValue);
-                //tr.localRotation = rotate;
-            }
+            Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
+            tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, m_RotateLerpValue);
+            //tr.localRotation = rotate;
+            
 
             //アニメーション
             anm.SetBool("Block", false);
@@ -775,7 +773,10 @@ public class NormalMove : MonoBehaviour
     {
         SoundManager.Instance.PlaySe("land");
         //外積をスティックの角度で回転させて前ベクトルを計算
-        m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * cameraFoward;
+        if (!m_IsEventDisableInput)
+            m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * cameraFoward;
+        else
+            m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * tr.forward;
         //操作可能にする
         m_DisableInput = false;
     }
@@ -1103,6 +1104,7 @@ public class NormalMove : MonoBehaviour
     public void SetEventInputDisable(bool isInputDisable)
     {
         m_IsEventDisableInput = isInputDisable;
+        m_InputAngleY = 0.0f;
 
         if (m_IsEventDisableInput)
             StopSE();
