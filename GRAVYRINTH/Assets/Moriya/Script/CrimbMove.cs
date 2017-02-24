@@ -252,13 +252,23 @@ public class CrimbMove : MonoBehaviour
                 //print(ang);
 
                 tr.localRotation *= Quaternion.Euler(-ang, 0, 0);
-            }
-            else
-            {
+
+                StartCoroutine(DelayMethod(2, () =>
+                {
+                    if (!Physics.SphereCast(headRay, 0.1f, 0.3f, 1 << 8, QueryTriggerInteraction.Ignore))
+                    {
+                        rotate = Quaternion.LookRotation(tr.forward, ironBar.GetComponent<IronBar>().GetBarVector());
+                        tr.localRotation = rotate;
+                        ang = Vector3.Angle(tr.up, ironBar.GetComponent<IronBar>().GetBarVector());
+                        //print(ang);
+
+                        tr.localRotation *= Quaternion.Euler(-ang, 0, 0);
+                    }
+                }));
             }
         }));
 
-        StartCoroutine(DelayMethod(7, () =>
+        StartCoroutine(DelayMethod(10, () =>
         {
             touchIronBar = true;
         }));

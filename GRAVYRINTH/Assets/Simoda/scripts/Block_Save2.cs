@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Block : MonoBehaviour
+public class Block_Save2 : MonoBehaviour
 {
     private BlockCursorDraw cursorDraw;
     private GameObject blockCursorPrefab;
@@ -61,6 +61,40 @@ public class Block : MonoBehaviour
             blockLight.range = 1;
         }
 
+        ////Blockの各方向のSizeを取得
+        //float xDistance = Vector3.Distance(tr.position, tr.FindChild("x").position);
+        //float yDistance = Vector3.Distance(tr.position, tr.FindChild("y").position);
+        //float zDistance = Vector3.Distance(tr.position, tr.FindChild("z").position);
+        ////プレイヤーとの方向によってdistanceToWallを変更
+        ////ブロックの中心から端までの距離
+        //float distanceToWall = 0.0f;
+        //if (-GetPlayerDirection().normal == tr.right || -GetPlayerDirection().normal == -tr.right)
+        //{
+        //    distanceToWall = xDistance + 0.5f;
+        //}
+
+        //if (-GetPlayerDirection().normal == tr.up || -GetPlayerDirection().normal == -tr.up)
+        //{
+        //    distanceToWall = yDistance + 0.5f;
+        //}
+
+        //if (-GetPlayerDirection().normal == tr.forward || -GetPlayerDirection().normal == -tr.forward)
+        //{
+        //    distanceToWall = zDistance + 0.5f;
+        //}
+        //RaycastHit hitIntoBox;
+        //int layermaskBox = ~(1 << LayerMask.NameToLayer("IgnoredObj") | 1 << LayerMask.NameToLayer("Player") | LayerMask.NameToLayer("StopWall"));
+        //if (Physics.CheckBox(tr.position, new Vector3(xDistance, yDistance, zDistance), tr.rotation, layermaskBox, QueryTriggerInteraction.Ignore))
+        //{
+        //    if (Physics.BoxCast(tr.position, new Vector3(xDistance, yDistance, zDistance), -GetPlayerDirection().normal, out hitIntoBox, tr.rotation, 10.0f, layermaskBox, QueryTriggerInteraction.Ignore))
+        //    {
+        //        print(hitIntoBox.distance);
+        //        if (hitIntoBox.distance < distanceToWall)
+        //            tr.position += GetPlayerDirection().normal * Time.deltaTime;
+
+        //    }
+        //}
+
         if (player.GetComponent<NormalMove>().GetIsGroundHit() == false) return;
 
         //プレイヤーから自分へのRayがあたっているのが自身でなければ処理しない
@@ -99,32 +133,88 @@ public class Block : MonoBehaviour
     {
         //ブロックの中心から端までの距離
         float distanceToWall = 0.0f;
+        //ブロックを持っている面に対して上方向のScale
+        Vector3 scale = Vector3.zero;
+        //Scaleの補正値
+        float scaleCorrect = -0.1f;
 
         //Blockの各方向のSizeを取得
         float xDistance = Vector3.Distance(tr.position, tr.FindChild("x").position);
         float yDistance = Vector3.Distance(tr.position, tr.FindChild("y").position);
         float zDistance = Vector3.Distance(tr.position, tr.FindChild("z").position);
 
+        //float xDistanceBox = 0;
+        //float yDistanceBox = 0;
+        //float zDistanceBox = 0;
+
+        //if (-GetPlayerDirection().normal == tr.right || -GetPlayerDirection().normal == -tr.right)
+        //{
+        //    xDistanceBox = xDistance;
+        //    yDistanceBox = yDistance;
+        //    zDistanceBox = zDistance;
+        //}
+
+        //if (-GetPlayerDirection().normal == tr.up || -GetPlayerDirection().normal == -tr.up)
+        //{
+        //    distanceToWall = yDistance;
+
+        //    xDistanceBox = xDistance;
+        //    yDistanceBox = yDistance;
+        //    zDistanceBox = zDistance;
+        //}
+
+        //if (-GetPlayerDirection().normal == tr.forward || -GetPlayerDirection().normal == -tr.forward)
+        //{
+        //    distanceToWall = zDistance;
+
+        //    xDistanceBox = xDistance;
+        //    yDistanceBox = yDistance;
+        //    zDistanceBox = zDistance;
+        //}
+
+        //int layermask = ~(1 << LayerMask.NameToLayer("IgnoredObj") | 1 << LayerMask.NameToLayer("Player") | LayerMask.NameToLayer("StopWall"));
+        //Vector3 boxPos = tr.position + -GetPlayerDirection().normal * (distanceToWall + 0.025f);
+        //if (Physics.CheckBox(boxPos, new Vector3(xDistanceBox, yDistanceBox, zDistanceBox), tr.rotation, layermask, QueryTriggerInteraction.Ignore))
+        //{
+        //    tr.position += GetPlayerDirection().normal * Time.deltaTime;
+        //    return;
+        //}
+
         //プレイヤーとの方向によってdistanceToWallを変更
         if (-GetPlayerDirection().normal == tr.right || -GetPlayerDirection().normal == -tr.right)
         {
             distanceToWall = xDistance;
+
+            //if (player.up == tr.up || player.up == -tr.up)
+            //    scale = new Vector3(0, yDistance + scaleCorrect, 0);
+            //else
+            //    scale = new Vector3(0, 0, zDistance + scaleCorrect);
         }
 
         if (-GetPlayerDirection().normal == tr.up || -GetPlayerDirection().normal == -tr.up)
         {
             distanceToWall = yDistance;
+
+            //if (player.up == tr.right || player.up == -tr.right)
+            //    scale = new Vector3(xDistance + scaleCorrect, 0, 0);
+            //else
+            //    scale = new Vector3(0, 0, zDistance + scaleCorrect);
         }
 
         if (-GetPlayerDirection().normal == tr.forward || -GetPlayerDirection().normal == -tr.forward)
         {
             distanceToWall = zDistance;
+
+            //if (player.up == tr.right || player.up == -tr.right)
+            //    scale = new Vector3(xDistance + scaleCorrect, 0, 0);
+            //else
+            //    scale = new Vector3(0, yDistance + scaleCorrect, 0);
         }
 
         //壁に埋まった時に戻す処理
         RaycastHit hitIntoBox;
         int layermaskBox = ~(1 << LayerMask.NameToLayer("IgnoredObj") | 1 << LayerMask.NameToLayer("Player") | LayerMask.NameToLayer("StopWall"));
-        if (Physics.BoxCast(tr.position + GetPlayerDirection().normal * distanceToWall, new Vector3(xDistance, yDistance, zDistance), -GetPlayerDirection().normal, out hitIntoBox, tr.rotation, 5.0f, layermaskBox, QueryTriggerInteraction.Ignore))
+        if (Physics.BoxCast(tr.position + GetPlayerDirection().normal * distanceToWall, new Vector3(xDistance, yDistance, zDistance), -GetPlayerDirection().normal, out hitIntoBox, tr.rotation, 10.0f, layermaskBox, QueryTriggerInteraction.Ignore))
         {
             //print(hitIntoBox.distance);
             if (hitIntoBox.distance < distanceToWall)
@@ -133,6 +223,7 @@ public class Block : MonoBehaviour
                 return;
             }
         }
+
 
         //Ray当たり判定を行う時の値の準備
         RaycastHit hitInto;

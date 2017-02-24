@@ -233,7 +233,7 @@ public class NormalMove : MonoBehaviour
 
     void LateUpdate()
     {
-        
+
     }
 
 
@@ -477,7 +477,9 @@ public class NormalMove : MonoBehaviour
         }
 
         //ブロック移動ボタンを押していて、かつブロックが近くにある時
-        if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true)
+        if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true
+            && Vector3.Angle(tr.up, m_CollisionBlock.GetPlayerDirection().normal) >= 87.0f
+            && Vector3.Angle(tr.up, m_CollisionBlock.GetPlayerDirection().normal) <= 93.0f)
         {
             //ブロック移動ボタンを押した瞬間
             if (Input.GetButtonDown("Action"))
