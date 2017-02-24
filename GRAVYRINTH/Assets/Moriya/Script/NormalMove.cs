@@ -69,11 +69,15 @@ public class NormalMove : MonoBehaviour
     [SerializeField, TooltipAttribute("下方向の鉄棒をぶら下がりで判定するときの当たり判定の大きさ")]
     private float m_DangleDownHitSize = 0.2f;
     [SerializeField, TooltipAttribute("鉄棒をよじ登りで判定するときのレイの長さ 変えない方がいいかも")]
-    private float m_CrimRayLength = 0.1f;
+    private float m_CrimbRayLength = 0.1f;
     [SerializeField, TooltipAttribute("上方向の鉄棒をぶら下がりで判定するときのレイの長さ 変えない方がいいかも")]
     private float m_DangleUpRayLength = 0.7f;
     [SerializeField, TooltipAttribute("下方向の鉄棒をぶら下がりで判定するときのレイの長さ 変えない方がいいかも")]
     private float m_DangleDownRayLength = 0.2f;
+    [SerializeField, TooltipAttribute("鉄棒をよじ登りで判定するときのレイの位置の上方向への調整")]
+    private float m_CrimbPositionOffset = 0.0f;
+    [SerializeField, TooltipAttribute("下方向の鉄棒をぶら下がりで判定するときのレイの長さ 変えない方がいいかも")]
+    private float m_DangleDownPositionOffset = 0.0f;
     [SerializeField, TooltipAttribute("歩きのSE")]
     private AudioClip m_WalkMoveSEClip;
     [SerializeField, TooltipAttribute("壁ずりのSE")]
@@ -274,12 +278,13 @@ public class NormalMove : MonoBehaviour
         int layerMask = 1 << 8;
 
         //鉄棒をポールとして判定
-        if (Physics.BoxCast(forward.origin, Vector3.one * m_CrimbHitSize, forward.direction, out forwardHitInto, tr.localRotation, m_CrimRayLength, layerMask, QueryTriggerInteraction.Ignore))
+        if (Physics.BoxCast(forward.origin + m_CrimbPositionOffset * tr.up, Vector3.one * m_CrimbHitSize, forward.direction, out forwardHitInto, tr.localRotation, m_CrimbRayLength, layerMask, QueryTriggerInteraction.Ignore))
         {
             float angle = Vector3.Angle(tr.up, forwardHitInto.collider.GetComponent<IronBar>().GetBarVector());
 
             if (forwardHitInto.collider.tag == ("IronBar") && angle < 45.0f && m_IronBarHitDelay < 0.0f)
             {
+                print("Pole");
                 CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
                 col.enabled = false;
                 m_MoveManager.SetState(PlayerState.IRON_BAR_CLIMB);
@@ -297,13 +302,14 @@ public class NormalMove : MonoBehaviour
         //Debug.DrawRay(down.origin, down.direction * 0.7f, Color.black);
 
         //鉄棒を鉄棒として判定
-        if (Physics.BoxCast(down.origin, Vector3.one * m_DangleDownHitSize, down.direction, out downHitInto, tr.localRotation, m_DangleDownRayLength, layerMask, QueryTriggerInteraction.Ignore)
+        if (Physics.BoxCast(down.origin + m_DangleDownPositionOffset * tr.up, Vector3.one * m_DangleDownHitSize, down.direction, out downHitInto, tr.localRotation, m_DangleDownRayLength, layerMask, QueryTriggerInteraction.Ignore)
             && !GetIsGroundHit())
         {
             float angle = Vector3.Angle(tr.up, downHitInto.collider.GetComponent<IronBar>().GetBarVector());
 
             if (downHitInto.collider.tag == ("IronBar") && angle >= 45.0f && m_IronBarHitDelay < 0.0f)
             {
+                print("down");
                 CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
                 col.enabled = false;
                 m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
@@ -330,6 +336,7 @@ public class NormalMove : MonoBehaviour
 
             if (upHitInto.collider.tag == ("IronBar") && angle >= 45.0f && m_IronBarHitDelay < 0.0f)
             {
+                print("up");
                 CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
                 col.enabled = false;
                 m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
@@ -595,14 +602,14 @@ public class NormalMove : MonoBehaviour
 
             BlockArrow blockArrow = GameObject.FindGameObjectWithTag("BlockArrow").GetComponent<BlockArrow>();
             blockArrow.SetInfo(false, "Horizontal");
-            
+
             //向きを変更
             m_Front.Normalize();
             m_Up.Normalize();
             Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
             tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, m_RotateLerpValue);
             //tr.localRotation = rotate;
-            
+
 
             //アニメーション
             anm.SetBool("Block", false);

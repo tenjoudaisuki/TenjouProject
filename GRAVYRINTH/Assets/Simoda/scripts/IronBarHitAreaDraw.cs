@@ -20,11 +20,15 @@ public class IronBarHitAreaDraw : MonoBehaviour
     [SerializeField, TooltipAttribute("下方向の鉄棒をぶら下がりで判定するときの当たり判定の大きさ")]
     private float m_DangleDownHitSize = 0.2f;
     [SerializeField, TooltipAttribute("鉄棒をよじ登りで判定するときのレイの長さ 変えない方がいいかも")]
-    private float m_CrimRayLength = 0.1f;
+    private float m_CrimbRayLength = 0.1f;
     [SerializeField, TooltipAttribute("上方向の鉄棒をぶら下がりで判定するときのレイの長さ 変えない方がいいかも")]
     private float m_DangleUpRayLength = 0.7f;
     [SerializeField, TooltipAttribute("下方向の鉄棒をぶら下がりで判定するときのレイの長さ 変えない方がいいかも")]
     private float m_DangleDownRayLength = 0.2f;
+    [SerializeField, TooltipAttribute("鉄棒をよじ登りで判定するときのレイの位置の上方向への調整")]
+    private float m_CrimbPositionOffset = 0.0f;
+    [SerializeField, TooltipAttribute("下方向の鉄棒をぶら下がりで判定するときのレイの長さ 変えない方がいいかも")]
+    private float m_DangleDownPositionOffset = 0.0f;
 
     private Transform tr;
 
@@ -45,15 +49,15 @@ public class IronBarHitAreaDraw : MonoBehaviour
         if (crimb == true)
         {
             Ray forward = new Ray(tr.position, tr.forward);
-            Gizmos.DrawRay(forward.origin, forward.direction * m_CrimRayLength);
-            Gizmos.DrawWireCube(forward.origin + forward.direction * m_CrimRayLength, Vector3.one * m_CrimbHitSize * 2);
+            Gizmos.DrawRay(forward.origin + m_CrimbPositionOffset * tr.up, forward.direction * m_CrimbRayLength);
+            Gizmos.DrawWireCube(forward.origin + m_CrimbPositionOffset * tr.up + forward.direction * m_CrimbRayLength, Vector3.one * m_CrimbHitSize * 2);
         }
 
         if (dangleDown == true)
         {
             Ray down = new Ray(tr.position, -tr.up);
-            Gizmos.DrawRay(down.origin, down.direction * m_DangleDownRayLength);
-            Gizmos.DrawWireCube(down.origin + down.direction * m_DangleDownRayLength, Vector3.one * m_DangleDownHitSize * 2);
+            Gizmos.DrawRay(down.origin + m_DangleDownPositionOffset * tr.up, down.direction * m_DangleDownRayLength);
+            Gizmos.DrawWireCube(down.origin + m_DangleDownPositionOffset * tr.up + down.direction * m_DangleDownRayLength, Vector3.one * m_DangleDownHitSize * 2);
         }
 
         if (dangleUp == true)
