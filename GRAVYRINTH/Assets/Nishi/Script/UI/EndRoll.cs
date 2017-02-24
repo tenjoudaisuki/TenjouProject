@@ -53,7 +53,10 @@ public class EndRoll : MonoBehaviour {
             .setOnComplete(() => 
             {
                 Destroy(mCurrentImage.gameObject);
-                if (mIndex < mTexts.Length) TextCreate();
+                if (mIndex < mTexts.Length)
+                {
+                    TextCreate();
+                }
             }
             ).setDelay(mAliveTime[mIndex]);
             mIndex++;
