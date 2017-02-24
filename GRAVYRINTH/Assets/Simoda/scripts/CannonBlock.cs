@@ -115,6 +115,8 @@ public class CannonBlock : MonoBehaviour
             return;
         }
 
+        if (!player.GetComponent<NormalMove>().GetIsGroundHit()) return;
+
         //プレイヤーとの距離がpushDistanceより離れたら強制的にisPushをfalseに
         pushDistance = Vector3.Distance(tr.position, GetPlayerDirection().point) + pushDistancePlus;
 
