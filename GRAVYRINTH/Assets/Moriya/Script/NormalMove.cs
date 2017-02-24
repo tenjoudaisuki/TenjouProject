@@ -572,8 +572,12 @@ public class NormalMove : MonoBehaviour
                 m_Front = -m_CollisionBlock.GetPlayerDirection().normal;
 
                 //向きを変更
-                Quaternion rotateBlock = Quaternion.LookRotation(m_Front, m_Up);
-                tr.localRotation = Quaternion.Slerp(transform.localRotation, rotateBlock, m_RotateLerpValue);
+                if(!m_IsEventDisableInput)
+                {
+                    Quaternion rotateBlock = Quaternion.LookRotation(m_Front, m_Up);
+                    tr.localRotation = Quaternion.Slerp(transform.localRotation, rotateBlock, m_RotateLerpValue);
+
+                }
                 //tr.localRotation = rotateBlock;
             }
         }
@@ -591,9 +595,14 @@ public class NormalMove : MonoBehaviour
             //向きを変更
             m_Front.Normalize();
             m_Up.Normalize();
-            Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
-            tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, m_RotateLerpValue);
-            //tr.localRotation = rotate;
+           
+
+            if (!m_IsEventDisableInput)
+            {
+                Quaternion rotate = Quaternion.LookRotation(m_Front, m_Up);
+                tr.localRotation = Quaternion.Slerp(transform.localRotation, rotate, m_RotateLerpValue);
+                //tr.localRotation = rotate;
+            }
 
             //アニメーション
             anm.SetBool("Block", false);

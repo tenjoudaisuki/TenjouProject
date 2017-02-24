@@ -215,12 +215,17 @@ public class CameraControl : ICamera
 
             mCurrentState = State.Normal;
             GameManager.Instance.SetPausePossible(true);
+            mFastPosition = transform.position;
+            mUp = m_Target.up;
             return;
         }
 
-        CameraPosDirection = -m_Target.forward;
+        CameraPosDirection = m_Target.forward;
         offset = m_Target.right * m_TargetOffset.x + m_Target.up * m_TargetOffset.y + m_Target.forward * m_TargetOffset.z;
         Vector3 next = (m_Target.position + offset) + (CameraPosDirection * m_Distance);
+
+        mFastPosition = transform.position;
+        mFastRotate = transform.localRotation;
 
         transform.position = Vector3.Lerp(mFastPosition, next, mTimer);
 
