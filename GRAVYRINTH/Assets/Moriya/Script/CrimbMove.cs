@@ -204,7 +204,7 @@ public class CrimbMove : MonoBehaviour
 
         StartCoroutine(DelayMethod(6, () =>
         {
-            tr.localPosition += tr.forward * (0.17f + hitInto.distance / 2.0f);
+            tr.localPosition += tr.forward * (0.17f + hitInto.distance);
             //print(hitInto.distance);
         }));
 
