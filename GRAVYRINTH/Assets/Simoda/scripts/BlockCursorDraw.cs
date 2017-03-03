@@ -84,6 +84,8 @@ public class BlockCursorDraw : MonoBehaviour
 
     public void CannonBlockCursorControl()
     {
+        if (targetBlock == null) return;
+
         float currentDistance = Vector3.Distance(targetBlock.transform.position, player.position + offset);
 
         if (currentDistance <= targetBlock.GetComponent<CannonBlock>().GetPushDistance()
