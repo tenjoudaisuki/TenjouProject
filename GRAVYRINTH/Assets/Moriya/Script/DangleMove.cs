@@ -107,7 +107,7 @@ public class DangleMove : MonoBehaviour
         if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
             //アニメーション
-            anm.SetBool("Pole_Jump", true);
+            anm.SetTrigger("Pole_Jump");
 
             m_GravityDir.SetDirection(-tr.up);
             //カメラの視点をプレイヤーにする

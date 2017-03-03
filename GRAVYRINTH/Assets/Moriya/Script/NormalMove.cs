@@ -294,8 +294,6 @@ public class NormalMove : MonoBehaviour
                 m_MoveManager.SetState(PlayerState.IRON_BAR_CLIMB);
                 GetComponent<CrimbMove>().SetTouchIronBar(true, forwardHitInto);
 
-                //アニメーション
-                anm.SetTrigger("PoleV");
                 StopCoroutine(m_LastSpeedCoroutine);
 
                 return;
@@ -321,8 +319,6 @@ public class NormalMove : MonoBehaviour
                 m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
                 GetComponent<DangleMove>().SetTouchIronBar(true, downHitInto, "Down");
 
-                //アニメーション
-                anm.SetTrigger("PoleH");
                 StopCoroutine(m_LastSpeedCoroutine);
 
                 return;
@@ -348,8 +344,6 @@ public class NormalMove : MonoBehaviour
                 m_MoveManager.SetState(PlayerState.IRON_BAR_DANGLE);
                 GetComponent<DangleMove>().SetTouchIronBar(true, upHitInto, "Up");
 
-                //アニメーション
-                anm.SetTrigger("PoleH");
                 StopCoroutine(m_LastSpeedCoroutine);
 
             }
@@ -434,9 +428,11 @@ public class NormalMove : MonoBehaviour
     /// </summary>
     private void Move()
     {
+
         //アニメーション
         if ((anm.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash("Base Layer.PoleH_Wait") ||
-            anm.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash("Base Layer.PoleH_Move")) &&
+            anm.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash("Base Layer.PoleH_Move")||
+            anm.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash("Base Layer.PoleV_Jump")) &&
             m_GroundHitInfo.isHit)
         {
             anm.SetTrigger("Landing");
@@ -501,7 +497,7 @@ public class NormalMove : MonoBehaviour
 
         if (Input.GetButtonDown("Action"))
         {
-            anm.SetTrigger("BlockHold");
+            anm.SetTrigger("Block_Hold");
         }
         //ブロック移動ボタンを押していて、かつブロックが近くにある時
         if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true

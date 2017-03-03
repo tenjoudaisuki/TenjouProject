@@ -163,7 +163,7 @@ public class CrimbMove : MonoBehaviour
         if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
             //アニメーション
-            anm.SetBool("Pole_Jump", true);
+            anm.SetTrigger("Pole_Jump");
 
             SoundManager.Instance.PlaySe("jump");
             poleDownTimeCount = 0.0f;

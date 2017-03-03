@@ -113,7 +113,7 @@ public class PlayerMoveManager : MonoBehaviour
             //地面との当たり判定を有効にする
             m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().IronbarToNormal();
 
-            if(m_PrevPlayerState == PlayerState.IRON_BAR_DANGLE)
+            if (m_PrevPlayerState == PlayerState.IRON_BAR_DANGLE)
             {
                 //一定時間カプセルの当たり判定をオフにする処理を実行
                 m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().DangleToNormal();
@@ -122,6 +122,10 @@ public class PlayerMoveManager : MonoBehaviour
             {
                 PlayerPoleKick(Vector3.Normalize(-tr.forward + tr.up));
             }
+
+            //アニメーション
+            anm.SetBool("PoleH", false);
+            anm.SetBool("PoleV", false);
         }
         //通常→ステージクリアへの変更時
         else if (m_PrevPlayerState == PlayerState.NORMAL && m_PlayerState == PlayerState.STAGE_CLEAR)
@@ -138,8 +142,9 @@ public class PlayerMoveManager : MonoBehaviour
         // 通常→大砲ブロックへの変更時
         else if (m_PrevPlayerState == PlayerState.NORMAL && m_PlayerState == PlayerState.CANNON_BLOCK)
         {
+
             // アニメーション
-            anm.SetTrigger("BlockHold");
+            anm.SetTrigger("Block_Hold");
         }
         //大砲ブロック→通常への変更時
         else if (m_PrevPlayerState == PlayerState.CANNON_BLOCK && m_PlayerState == PlayerState.NORMAL)
@@ -178,14 +183,22 @@ public class PlayerMoveManager : MonoBehaviour
         //    m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().RestartSE();
         //    m_Moves[PlayerState.NORMAL].GetComponent<NormalMove>().SetUpFront(tr.up, tr.forward);
         //}
-        else if (
-            m_PrevPlayerState == PlayerState.NORMAL && m_PlayerState == PlayerState.IRON_BAR_DANGLE ||
-            m_PrevPlayerState == PlayerState.NORMAL && m_PlayerState == PlayerState.IRON_BAR_CLIMB)
+
+        else if (m_PrevPlayerState == PlayerState.NORMAL && m_PlayerState == PlayerState.IRON_BAR_DANGLE)
         {
             //カプセル無効
             cc.enabled = false;
-            // アニメーション
-            anm.SetBool("Pole_Jump", false);
+
+            //アニメーション
+            anm.SetTrigger("PoleH_Hold");
+        }
+        else if (m_PrevPlayerState == PlayerState.NORMAL && m_PlayerState == PlayerState.IRON_BAR_CLIMB)
+        {
+            //カプセル無効
+            cc.enabled = false;
+
+            //アニメーション
+            anm.SetTrigger("PoleV_Hold");
         }
     }
 
