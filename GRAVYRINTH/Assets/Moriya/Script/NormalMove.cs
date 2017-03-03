@@ -428,6 +428,14 @@ public class NormalMove : MonoBehaviour
     /// </summary>
     private void Move()
     {
+        //アニメーション
+        if ((anm.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash("Base Layer.PoleH_Wait") ||
+            anm.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash("Base Layer.PoleH_Move")) &&
+            m_GroundHitInfo.isHit)
+        {
+            anm.SetTrigger("Landing");
+        }
+
         //地面の上方向とカメラの右方向で外積を取得
         Vector3 camerafoward = -Vector3.Cross(m_Up, m_Camera.right);
 
@@ -485,17 +493,18 @@ public class NormalMove : MonoBehaviour
             m_CollisionBlock = null;
         }
 
-        //ブロック移動ボタンを押していて、かつブロックが近くにある時
-        if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true
+        if (Input.GetButtonDown("Action"))
+        {
+            anm.SetTrigger("BlockHold");
+        }
+            //ブロック移動ボタンを押していて、かつブロックが近くにある時
+            if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true
             && Vector3.Angle(tr.up, m_CollisionBlock.GetPlayerDirection().normal) >= 87.0f
             && Vector3.Angle(tr.up, m_CollisionBlock.GetPlayerDirection().normal) <= 93.0f)
         {
             //ブロック移動ボタンを押した瞬間
             if (Input.GetButtonDown("Action"))
             {
-                // アニメーション
-                anm.SetTrigger("BlockHold");
-
                 m_MoveVelocity = Vector3.zero;
                 SoundManager.Instance.PlaySe("block");
             }
