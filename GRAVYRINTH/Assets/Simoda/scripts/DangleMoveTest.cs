@@ -22,10 +22,11 @@ public class DangleMoveTest : MonoBehaviour
     //プレイヤーの状態管理クラス
     private PlayerMoveManager m_MoveManager;
 
-    private Vector3 forward;
-
     //アニメーション
     private Animator anm;
+
+    //イベント時の操作不能用
+    private bool m_IsEventDisableInput = false;
 
     void Start()
     {
@@ -39,10 +40,14 @@ public class DangleMoveTest : MonoBehaviour
 
         //アニメーション
         anm = GetComponent<Animator>();
+
+        m_IsEventDisableInput = false;
     }
 
     void Update()
     {
+        if (m_IsEventDisableInput) return;
+
         if (touchIronBar == true)
         {
             rb.velocity = Vector3.zero;
@@ -101,35 +106,29 @@ public class DangleMoveTest : MonoBehaviour
 
         if (touchIronBar == true && (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump")))
         {
-            //tr.parent = null;
-            //tr.parent = GameObject.Find("Pausable").transform;
-            //touchIronBar = false;
+            //アニメーション
+            anm.SetBool("Pole_Jump", true);
 
             m_GravityDir.SetDirection(-tr.up);
-            //プレイヤーの向きを更新する
-            //m_MoveManager.SetPlayerUpFront(tr.up, Vector3.Cross(tr.up, Camera.main.transform.right));
-            m_MoveManager.SetPlayerUpFront(tr.up, tr.forward);
-            //rb.AddForce(-tr.up * 200.0f);
-
             //カメラの視点をプレイヤーにする
             GameObject.Find("Camera").GetComponent<CameraControl>().SetTarget(gameObject);
+            m_MoveManager.SetPlayerUpFront(tr.up, tr.forward);
 
             GetComponent<NormalMove>().SetIronBarHitDelay(ironBarHitDelay);
-
             touchIronBar = false;
-
             jumpCursor.IsHit(false);
 
-            //CapsuleCollider col = this.gameObject.GetComponent<CapsuleCollider>();
-            //col.enabled = true;
-
-            //アニメーション
-
-            anm.SetTrigger("Pole_Jump");
+            //プレイヤーの向きを更新する
+            //m_MoveManager.SetPlayerUpFront(tr.up, Vector3.Cross(tr.up, Camera.main.transform.right));
+            //m_MoveManager.SetPlayerUpFront(tr.up, tr.forward);
 
             StartCoroutine(DelayMethod(1, () =>
             {
                 m_MoveManager.SetState(PlayerState.NORMAL);
+            }));
+            StartCoroutine(DelayMethod(3, () =>
+            {
+                m_MoveManager.SetPlayerUpFront(tr.up, tr.forward);
             }));
         }
 
@@ -193,9 +192,13 @@ public class DangleMoveTest : MonoBehaviour
 
         StartCoroutine(DelayMethod(3, () =>
         {
-            forward = Vector3.Cross(tr.up, ironBar.GetComponent<IronBar>().GetIronBarVector());
-            Quaternion rotate = Quaternion.LookRotation(-forward, tr.up);
+            rb.velocity = Vector3.zero;
+            Vector3 playerForward = Vector3.Cross(tr.up, ironBar.GetComponent<IronBar>().GetIronBarVector());
+            Quaternion rotate = Quaternion.LookRotation(-playerForward, tr.up);
             tr.localRotation = rotate;
+            float angle = 90.0f - Vector3.Angle(tr.up, ironBar.GetComponent<IronBar>().GetIronBarVector());
+            //print(angle);
+            tr.localRotation *= Quaternion.Euler(0, 0, angle);
         }));
     }
 
@@ -232,4 +235,13 @@ public class DangleMoveTest : MonoBehaviour
     //    if (hitInto.collider != null)
     //        Gizmos.DrawWireSphere(hitInto.point, 0.2f);
     //}
+
+    /// <summary>
+    /// イベント時の操作不能の開始・終了を行う
+    /// </summary>
+    public void SetEventInputDisable(bool isInputDisable)
+    {
+        m_IsEventDisableInput = isInputDisable;
+    }
+
 }

@@ -136,7 +136,7 @@ public class CrimbMove : MonoBehaviour
                     poleDownTimeCount += Time.deltaTime;
                     barVectorNor = Vector3.Normalize(ironBar.GetComponent<IronBar>().GetPoleVector());
                     Vector3 movement = barVectorNor * -1.0f * -moveSpeed * Time.deltaTime;
-                    tr.localPosition += movement;
+                    tr.position += movement;
                 }
             }
 
@@ -268,7 +268,7 @@ public class CrimbMove : MonoBehaviour
             }
         }));
 
-        StartCoroutine(DelayMethod(10, () =>
+        StartCoroutine(DelayMethod(7, () =>
         {
             touchIronBar = true;
         }));

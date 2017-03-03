@@ -62,6 +62,10 @@ public class NormalMove : MonoBehaviour
     private float m_RotateLerpValue = 0.3f;
     [SerializeField, TooltipAttribute("ブロックを掴んでいる状態のときの後ろ方向のレイの長さ")]
     private float m_BlockMoveBackwardRayLength = 0.5f;
+    [SerializeField, TooltipAttribute("ブロックを掴んでいる状態のときのレイの出発点の位置(高さ方向)")]
+    private float m_BlockMoveBackwardRayStartHeight = 0.1f;
+    [SerializeField, TooltipAttribute("ブロックを掴んでいる状態のときのレイの出発点の位置(背中方向)")]
+    private float m_BlockMoveBackwardRayStartBack = 0.2f;
     [SerializeField, TooltipAttribute("鉄棒をよじ登りで判定するときの当たり判定の大きさ")]
     private float m_CrimbHitSize = 0.1f;
     [SerializeField, TooltipAttribute("上方向の鉄棒をぶら下がりで判定するときの当たり判定の大きさ")]
@@ -293,6 +297,8 @@ public class NormalMove : MonoBehaviour
                 //アニメーション
                 anm.SetTrigger("PoleV");
                 StopCoroutine(m_LastSpeedCoroutine);
+
+                return;
             }
         }
 
@@ -428,6 +434,14 @@ public class NormalMove : MonoBehaviour
     /// </summary>
     private void Move()
     {
+        //アニメーション
+        if ((anm.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash("Base Layer.PoleH_Wait") ||
+            anm.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash("Base Layer.PoleH_Move")) &&
+            m_GroundHitInfo.isHit)
+        {
+            anm.SetTrigger("Landing");
+        }
+
         //地面の上方向とカメラの右方向で外積を取得
         Vector3 camerafoward = -Vector3.Cross(m_Up, m_Camera.right);
 
@@ -485,6 +499,10 @@ public class NormalMove : MonoBehaviour
             m_CollisionBlock = null;
         }
 
+        if (Input.GetButtonDown("Action"))
+        {
+            anm.SetTrigger("BlockHold");
+        }
         //ブロック移動ボタンを押していて、かつブロックが近くにある時
         if (Input.GetButton("Action") && m_CollisionBlock != null && m_GroundHitInfo.isHit == true
             && Vector3.Angle(tr.up, m_CollisionBlock.GetPlayerDirection().normal) >= 87.0f
@@ -554,12 +572,13 @@ public class NormalMove : MonoBehaviour
                 if (input >= 0)
                 {
                     //自身の後ろレイを飛ばして壁との判定
-                    Ray ray_back = new Ray(tr.position + tr.forward * 0.2f, -tr.forward);
+                    Ray ray_back = new Ray(tr.position + tr.forward * m_BlockMoveBackwardRayStartBack + tr.up * m_BlockMoveBackwardRayStartHeight, -tr.forward);
                     RaycastHit hit;
                     bool ishit;
                     //指定レイヤー以外と判定させる
                     int layermask = ~(1 << 10 | 1 << LayerMask.NameToLayer("IronBar"));
                     ishit = Physics.Raycast(ray_back, out hit, m_BlockMoveBackwardRayLength, layermask, QueryTriggerInteraction.Ignore);
+                    Debug.DrawRay(tr.position + tr.forward * m_BlockMoveBackwardRayStartBack + tr.up * m_BlockMoveBackwardRayStartHeight, -tr.forward);
 
                     if (ishit) stopspeed = 0.0f;
                 }
@@ -623,7 +642,13 @@ public class NormalMove : MonoBehaviour
             anm.SetFloat("Block_Velo", 0);
 
         //ジャンプ処理
-        Jump();
+        if (anm.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash("Base Layer.Landing"))
+        {
+            if (anm.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
+                Jump();
+        }
+        else
+            Jump();
 
         //進行方向に壁がある場合は移動しない
         if (!CollisionWall())
@@ -783,7 +808,17 @@ public class NormalMove : MonoBehaviour
         if (!m_IsEventDisableInput)
             m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * cameraFoward;
         else
-            m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * tr.forward;
+        {
+            
+            if(m_GroundHitInfo.hit.transform.tag == "FinalDoor")
+            {
+                print("f door touch");
+                m_Front = m_GroundHitInfo.hit.transform.up;
+            }
+            else
+                m_Front = Quaternion.AngleAxis(m_InputAngleY, m_Up) * tr.forward;
+        }
+            
         //操作可能にする
         m_DisableInput = false;
     }
