@@ -12,8 +12,8 @@ public class BGMControl : MonoBehaviour
     private float m_WaitTimeThreshold = 0.1f;
     //[SerializeField, Tooltip("ステージＦで、stagef2のフェードアウトにかける時間")]
     //private float m_Stagef2BGMFadeOutTime = 1.0f;
-    //[SerializeField, Tooltip("ステージＦで、stagef4のフェードアウトにかける時間")]
-    //private float m_Stagef4BGMFadeOutTime = 2.0f;
+    [SerializeField, Tooltip("ステージＦで、stagef4のフェードアウトにかける時間")]
+    private float m_Stagef4BGMFadeOutTime = 2.0f;
     //[SerializeField, Tooltip("ステージＦで、stagef6のフェードアウトにかける時間")]
     //private float m_Stagef6BGMFadeOutTime = 1.0f;
 
@@ -176,14 +176,14 @@ public class BGMControl : MonoBehaviour
 
         //大砲が完成したらstagef5再生
         SoundManager.Instance.PlaySe("stagef5");
-        ////ＢＧＭをフェードアウト
-        //timer = 0.0f;
-        //while (timer < m_Stagef4BGMFadeOutTime)
-        //{
-        //    timer += Time.deltaTime;
-        //    SoundManager.Instance.volume.bgm = Mathf.Lerp(1.0f, 0.0f, timer / m_Stagef4BGMFadeOutTime);
-        //    yield return null;
-        //}
+        //ＢＧＭをフェードアウト
+        timer = 0.0f;
+        while (timer < m_Stagef4BGMFadeOutTime)
+        {
+            timer += Time.deltaTime;
+            SoundManager.Instance.volume.bgm = Mathf.Lerp(1.0f, 0.0f, timer / m_Stagef4BGMFadeOutTime);
+            yield return null;
+        }
         SoundManager.Instance.StopBgm();
 
 
@@ -218,6 +218,15 @@ public class BGMControl : MonoBehaviour
         SoundManager.Instance.PlaySe("stagef7");
         SoundManager.Instance.volume.bgm = 1.0f;
         SoundManager.Instance.StopBgm();
+
+        //再生終了まで待機
+        timer = 0.0f;
+        while (timer < SoundManager.Instance.GetSEClip("stagef7").length)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
         yield break;
     }
 

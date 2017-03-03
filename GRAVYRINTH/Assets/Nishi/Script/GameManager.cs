@@ -182,7 +182,6 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.UnloadScene(mCurrentScene);
         SceneManager.LoadScene(mNextStageName, LoadSceneMode.Additive);
-        //bgmCtrl.ChangeBGM(mCurrentScene.name, mNextStageName);
         mCurrentScene = SceneManager.GetSceneByName(mNextStageName);
     }
 
