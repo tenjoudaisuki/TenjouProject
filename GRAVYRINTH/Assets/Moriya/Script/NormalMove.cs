@@ -293,6 +293,8 @@ public class NormalMove : MonoBehaviour
                 //アニメーション
                 anm.SetTrigger("PoleV");
                 StopCoroutine(m_LastSpeedCoroutine);
+
+                return;
             }
         }
 
