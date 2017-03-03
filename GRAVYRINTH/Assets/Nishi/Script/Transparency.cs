@@ -68,33 +68,5 @@ public class Transparency : MonoBehaviour {
                 materials[i].color = color;
             }
         }
-
-
-        //if (distance <= m_StartDistance)
-        //{
-        //    var skr = transform.GetComponent<SkinnedMeshRenderer>();
-        //    var materials = skr.materials;
-        //    float f = (distance / m_StartDistance);
-        //    for(int i = 0;i < 4;i++)
-        //    {
-        //        if (i == 3) return;
-        //        Color color = materials[i].color;
-        //        color.a = Mathf.Lerp(0.0f,1.0f,f) / 2;
-        //        materials[i].color = color;
-        //    }
-        //}
-        //else
-        //{
-        //    var skr = transform.GetComponent<SkinnedMeshRenderer>();
-        //    var materials = skr.materials;
-        //    float f = (distance / m_StartDistance);
-        //    for (int i = 0; i < 4; i++)
-        //    {
-        //        if (i == 3) return;
-        //        Color color = materials[i].color;
-        //        color.a = 1;
-        //        materials[i].color = color;
-        //    }
-        //}
 	}
 }

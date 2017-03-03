@@ -131,6 +131,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 最終面からタイトルに戻るための関数
+    /// </summary>
     public void GameModeChangTitleEx()
     {
         mCureentMode = GameMode.Title;

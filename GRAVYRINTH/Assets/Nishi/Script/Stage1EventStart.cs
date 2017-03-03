@@ -19,6 +19,10 @@ public class Stage1EventStart : MonoBehaviour
         m_Timer = 0;
         if(GameObject.Find("Camera").GetComponent<CameraManager>().GetCurrentCameraState() == State.Clear)
         {
+            if (GameManager.Instance.GetCurrentSceneName() == "stagef")
+            {
+                GameObject.FindObjectOfType<BGMControl>().StageFinalSelected();
+            }
             Instantiate(m_FastDrawTexture);
         }
         GameObject.Find("Camera").GetComponent<Stage1EventCamera>().SetCenterOffset(m_CenterOffset);

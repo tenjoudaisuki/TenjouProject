@@ -106,6 +106,8 @@ public class BGMControl : MonoBehaviour
         SoundManager.Instance.StopBgm();
         SoundManager.Instance.volume.bgm = 1.0f;
 
+        print("stage final bgm start");
+
         //開始
         SoundManager.Instance.PlaySe("stagef1");
         //stagef1が流れ終わるまで待機
