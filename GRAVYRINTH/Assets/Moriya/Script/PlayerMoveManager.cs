@@ -135,11 +135,20 @@ public class PlayerMoveManager : MonoBehaviour
             // アニメーション
             anm.SetTrigger("Reset");
         }
+        // 通常→大砲ブロックへの変更時
+        else if (m_PrevPlayerState == PlayerState.NORMAL && m_PlayerState == PlayerState.CANNON_BLOCK)
+        {
+            // アニメーション
+            anm.SetTrigger("BlockHold");
+        }
         //大砲ブロック→通常への変更時
         else if (m_PrevPlayerState == PlayerState.CANNON_BLOCK && m_PlayerState == PlayerState.NORMAL)
         {
             //上と前をNormalMoveへ引き継ぐ
             SetPlayerUpFront(tr.up, tr.forward);
+
+            // アニメーション
+            anm.SetTrigger("Reset");
         }
         //最終ステージクリア時
         else if (m_PlayerState == PlayerState.STAGE_FINAL_CLEAR)

@@ -493,6 +493,9 @@ public class NormalMove : MonoBehaviour
             //ブロック移動ボタンを押した瞬間
             if (Input.GetButtonDown("Action"))
             {
+                // アニメーション
+                anm.SetTrigger("BlockHold");
+
                 m_MoveVelocity = Vector3.zero;
                 SoundManager.Instance.PlaySe("block");
             }
@@ -623,7 +626,13 @@ public class NormalMove : MonoBehaviour
             anm.SetFloat("Block_Velo", 0);
 
         //ジャンプ処理
-        Jump();
+        if (anm.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash("Base Layer.Landing"))
+        {
+            if (anm.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
+                Jump();
+        }
+        else
+            Jump();
 
         //進行方向に壁がある場合は移動しない
         if (!CollisionWall())
