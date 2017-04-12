@@ -1,8 +1,14 @@
-﻿using UnityEngine;
+﻿/**
+*プレイヤーが通常時のカメラ
+*
+*   制作:西　貴大
+*/
+using UnityEngine;
 using System.Collections;
 
 public class CameraControl : ICamera
 {
+    //カメラの状態一覧
     private enum State
     {
         None,
@@ -66,6 +72,7 @@ public class CameraControl : ICamera
     public override void Start()
     {
         mTimer = 0.0f;
+        //状態をプレイヤーの後ろに行く状態に変えるための初期化
         mFastPosition = transform.position;
         mFastRotate = transform.localRotation;
         mCurrentState = State.StartMove;
@@ -74,16 +81,11 @@ public class CameraControl : ICamera
     public void LateUpdate()
     {
         StateUpdate();
-
-        //if (Input.GetButtonDown("CameraReset"))
-        //{
-        //    //カメラを元の位置に移動
-        //    CameraReset();
-        //}
     }
 
     /// <summary>
     /// ターゲットの周りを回転移動
+    /// 右ステイックの左右でカメラをプレイヤー軸に回転する処理
     /// </summary>
     private void TargetAroundMove(Vector3 up,Vector3 right)
     {
